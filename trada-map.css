@@ -1,0 +1,35 @@
+/* Tùy chỉnh thanh cuộn nền tối */
+.custom-scrollbar::-webkit-scrollbar { width: 5px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: #111; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #333; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #555; }
+
+/* Filter làm bản đồ Leaflet có cảm giác Dark Mode */
+.filter-dark-map {
+    filter: brightness(0.8) invert(1) contrast(1.2) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+}
+
+/* Tùy chỉnh Popup Bản đồ cho hợp tông */
+.leaflet-popup-content-wrapper {
+    background: #191919 !important;
+    color: white !important;
+    border: 1px solid #333 !important;
+    border-radius: 0 !important; 
+}
+.leaflet-popup-tip {
+    background: #191919 !important;
+}
+
+/* Ẩn/hiện modal */
+.modal-hidden { 
+    opacity: 0; 
+    pointer-events: none; 
+    transform: scale(0.98); 
+    z-index: -1;
+}
+.modal-visible { 
+    opacity: 1; 
+    pointer-events: auto; 
+    transform: scale(1); 
+    z-index: 9999;
+}
