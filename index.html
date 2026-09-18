@@ -65,10 +65,6 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
 
-        .filter-dark-map {
-            filter: brightness(0.8) invert(1) contrast(1.2) hue-rotate(200deg) saturate(0.3) brightness(0.7);
-        }
-
         .leaflet-popup-content-wrapper {
             background: rgba(20, 20, 20, 0.9) !important;
             backdrop-filter: blur(25px);
@@ -91,7 +87,7 @@
             <span class="text-white text-xs md:text-base font-light tracking-wider">TRÀ ĐÁ <b class="font-bold">HÀ NỘI</b></span>
         </div>
 
-        <nav id="main-nav" class="flex items-center gap-1 liquid-glass-pill px-1.5 py-0.5 rounded-full text-xs font-light text-gray-300 overflow-x-auto custom-scrollbar max-w-[45vw] md:max-w-none">
+        <nav id="main-nav" class="flex items-center gap-1 liquid-glass-pill px-1.5 py-0.5 rounded-full text-xs font-light text-gray-300 overflow-x-auto custom-scrollbar max-w-[42vw] md:max-w-none">
             <a href="#" data-target="screen-map" class="nav-item px-3 py-1.5 rounded-full active whitespace-nowrap text-center">Bản đồ</a>
             <a href="#" data-target="screen-category" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Phân loại</a>
             <a href="#" data-target="screen-new" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Mới</a>
@@ -99,11 +95,11 @@
         </nav>
         
         <div class="flex items-center gap-2 flex-none">
-            <button onclick="openAiChat()" class="liquid-glass-pill hover:bg-white/30 text-white text-xs px-3.5 py-2 rounded-full font-medium transition flex items-center gap-1.5 text-cyan-300 shadow-lg whitespace-nowrap">
+            <button onclick="openAiChat()" class="liquid-glass-pill hover:bg-white/30 text-white text-xs px-3 py-2 rounded-full font-medium transition flex items-center gap-1 text-cyan-300 shadow-lg whitespace-nowrap">
                 <span>✨</span> <span class="hidden sm:inline">Gemini AI</span>
             </button>
             <button onclick="openModalQuick()" class="liquid-glass-pill hover:bg-white/30 text-white text-xs px-3.5 py-2 rounded-full font-medium transition flex items-center gap-1.5 text-yellow-300 shadow-lg whitespace-nowrap">
-                <span class="text-sm font-bold">+</span> <span class="hidden sm:inline">Thêm quán</span>
+                <span class="text-sm font-bold">+</span> <span class="hidden sm:inline">Thêm quán mới</span>
             </button>
         </div>
     </header>
@@ -113,7 +109,7 @@
         
         <!-- 1. MÀN HÌNH BẢN ĐỒ -->
         <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0 z-10 animate-scale-up">
-            <div id="map" class="absolute inset-0 w-full h-full z-0 filter-dark-map"></div>
+            <div id="map" class="absolute inset-0 w-full h-full z-0 bg-[#0c0c0e]"></div>
 
             <div class="w-full lg:w-[420px] flex flex-col h-[42%] lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-3xl border border-white/20 z-25 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0 backdrop-blur-2xl">
                 <div class="p-3 md:p-4 flex-none border-b border-white/10 bg-white/5 flex items-center justify-between">
@@ -213,7 +209,7 @@
         </div>
     </div>
 
-    <!-- Modal Thêm Quán -->
+    <!-- Modal Thêm Quán Mới -->
     <div id="add-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-3xl modal-hidden">
         <div class="liquid-glass border border-white/30 p-6 md:p-8 w-full max-w-md relative rounded-3xl shadow-2xl">
             <button onclick="closeModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white bg-white/10 w-8 h-8 rounded-full flex items-center justify-center transition">✕</button>
@@ -272,20 +268,24 @@
 
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
 
-        let shops = JSON.parse(localStorage.getItem('trada_hanoi_shops_v19'));
+        let shops = JSON.parse(localStorage.getItem('trada_hanoi_shops_v21'));
         if (!shops || shops.length === 0) {
             shops = [
                 { id: 1, name: "Trà Đá Nhà Thờ Lớn", address: "Hoàn Kiếm", lat: 21.0287, lng: 105.8488, price: "15K", category: "Trà đá vỉa hè", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600" },
                 { id: 2, name: "Trà Đá Hồ Tây", address: "Thanh Niên, Tây Hồ", lat: 21.0487, lng: 105.8388, price: "10K", category: "Trà chanh chém gió", image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600" },
                 { id: 3, name: "Trà Đá Cầu Giấy", address: "Xuân Thủy, Cầu Giấy", lat: 21.0350, lng: 105.7950, price: "5K", category: "Cafe vỉa hè", image: "https://images.unsplash.com/photo-1525648199074-cee30ba79a4a?w=600" }
             ];
-            localStorage.setItem('trada_hanoi_shops_v19', JSON.stringify(shops));
+            localStorage.setItem('trada_hanoi_shops_v21', JSON.stringify(shops));
         }
 
+        // Khởi tạo bản đồ với CartoDB Dark Matter (Đảm bảo không bao giờ bị lỗi đen màn hình)
         const map = L.map('map', { zoomControl: false }).setView([21.0285, 105.8541], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap & CARTO',
+            subdomains: 'abcd',
             maxZoom: 19
         }).addTo(map);
+        
         L.control.zoom({ position: 'bottomright' }).addTo(map);
         mapMarkersLayer = L.layerGroup().addTo(map);
 
@@ -307,7 +307,6 @@
                 ? shops 
                 : shops.filter(s => s.category === currentFilter);
 
-            // 1. Render danh sách màn hình bản đồ
             filteredShops.forEach(shop => {
                 const shopCard = document.createElement('div');
                 shopCard.className = "liquid-glass-card rounded-xl overflow-hidden cursor-pointer flex gap-2.5 p-2 items-center group relative flex-none";
@@ -347,7 +346,6 @@
                     .addTo(mapMarkersLayer);
             });
 
-            // 2. Render tab Quán Mới độc lập
             if(newShopContainer) {
                 shops.forEach(s => {
                     const newCard = document.createElement('div');
@@ -560,7 +558,7 @@
 
             shops.unshift(newShop);
             try {
-                localStorage.setItem('trada_hanoi_shops_v19', JSON.stringify(shops));
+                localStorage.setItem('trada_hanoi_shops_v21', JSON.stringify(shops));
             } catch (err) {
                 alert("Dung lượng ảnh quá lớn!");
                 shops.shift(); 
@@ -576,13 +574,13 @@
             event.stopPropagation();
             if(confirm("Xóa quán này khỏi bản đồ?")) {
                 shops = shops.filter(s => s.id !== id);
-                localStorage.setItem('trada_hanoi_shops_v19', JSON.stringify(shops));
+                localStorage.setItem('trada_hanoi_shops_v21', JSON.stringify(shops));
                 renderApp();
             }
         }
 
         renderApp();
-        setTimeout(() => { map.invalidateSize(); }, 200);
+        setTimeout(() => { map.invalidateSize(); }, 250);
     </script>
 </body>
 </html>
