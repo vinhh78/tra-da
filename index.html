@@ -14,42 +14,47 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <style>
+        /* 💧 Hiệu ứng Liquid Glass (Giọt nước pha lê siêu thực) */
         .liquid-glass {
-            background: rgba(20, 20, 25, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.12), rgba(20, 20, 25, 0.65));
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
         }
 
         .liquid-glass-pill {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.2s ease;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2), 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .liquid-glass-pill:active { transform: scale(0.96); }
+        .liquid-glass-pill:active { transform: scale(0.95); }
 
-        .nav-item { transition: all 0.25s ease; }
+        .nav-item { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); white-space: nowrap; }
         .nav-item.active {
-            background: rgba(250, 204, 21, 0.25);
-            border: 1px solid rgba(250, 204, 21, 0.5);
+            background: linear-gradient(135deg, rgba(250, 204, 21, 0.35), rgba(250, 204, 21, 0.15));
+            border: 1px solid rgba(250, 204, 21, 0.6);
             color: #fde047;
             font-weight: 600;
+            box-shadow: 0 0 15px rgba(250, 204, 21, 0.25), inset 0 1px 1px rgba(255,255,255,0.4);
         }
 
         .liquid-glass-card {
-            background: rgba(30, 30, 35, 0.6);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            background: rgba(30, 30, 35, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.25s ease;
         }
         .liquid-glass-card:hover { border-color: rgba(250, 204, 21, 0.4); transform: translateY(-2px); }
 
+        /* Thanh trượt menu mượt mà như giọt nước chảy */
         .custom-scrollbar::-webkit-scrollbar { height: 0px; width: 3px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
-
+        
         .custom-dark-map {
             filter: brightness(0.9) invert(0.85) contrast(1.15) hue-rotate(190deg) saturate(0.4);
         }
@@ -68,18 +73,18 @@
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden">
     
-    <!-- Header 2 Tầng -->
-    <header class="w-full liquid-glass flex-none z-50 px-3 md:px-6 py-2 flex flex-col border-b border-white/10 gap-2">
+    <!-- Header Hiệu Ứng Giọt Nước Pha Lê (Liquid Glass) -->
+    <header class="w-full liquid-glass flex-none z-50 px-3 md:px-6 py-2.5 flex flex-col border-b border-white/15 gap-2.5 shadow-2xl">
         <div class="flex items-center justify-between">
             <div class="font-bold tracking-widest uppercase flex items-center gap-2 cursor-pointer" onclick="filterByCategory('Tất cả')">
-                <span class="text-yellow-400 text-xs">●</span>
+                <span class="text-yellow-400 text-xs animate-pulse">●</span>
                 <span class="text-white text-xs md:text-sm font-light tracking-wider">TRÀ ĐÁ <b class="font-bold text-yellow-400">HÀ NỘI</b></span>
             </div>
             
-            <!-- Khu vực phải Header: Nút Nhạc & Tài khoản (Thiết kế y hệt, nhưng logic Youtube) -->
+            <!-- Khu vực phải Header: Phát nhạc & Tài khoản -->
             <div class="flex items-center gap-2">
-                <div class="liquid-glass-pill px-2.5 py-1 rounded-full flex items-center gap-2 border border-yellow-500/30 cursor-pointer" onclick="togglePlayMusic()">
-                    <div id="vinyl-icon" class="w-5 h-5 rounded-full bg-gradient-to-tr from-yellow-500 to-black flex items-center justify-center transition-all duration-300">
+                <div class="liquid-glass-pill px-3 py-1 rounded-full flex items-center gap-2 border border-yellow-500/30 cursor-pointer" onclick="togglePlayMusic()">
+                    <div id="vinyl-icon" class="w-5 h-5 rounded-full bg-gradient-to-tr from-yellow-500 to-black flex items-center justify-center transition-all duration-300 shadow-md">
                         <span class="text-[8px]">💿</span>
                     </div>
                     <span class="text-[10px] text-yellow-300 font-medium hidden sm:inline">MCK - Liệm</span>
@@ -87,20 +92,21 @@
                 </div>
 
                 <div id="auth-container">
-                    <button onclick="promptLogin()" class="liquid-glass-pill bg-white/10 text-white text-xs px-2.5 py-1 rounded-full font-medium flex items-center gap-1">
+                    <button onclick="promptLogin()" class="liquid-glass-pill bg-white/10 text-white text-xs px-3 py-1 rounded-full font-medium flex items-center gap-1 shadow-sm">
                         <span>👤</span> <span id="auth-btn-text">Tên</span>
                     </button>
                 </div>
             </div>
         </div>
 
-        <nav id="main-nav" class="flex items-center gap-1.5 liquid-glass-pill px-1.5 py-1 rounded-full text-xs font-light text-gray-300 overflow-x-auto custom-scrollbar w-full">
-            <a href="#" data-target="screen-map" class="nav-item px-3.5 py-1.5 rounded-full active whitespace-nowrap text-center flex-none">🗺️ Bản đồ</a>
-            <a href="#" data-target="screen-category" class="nav-item px-3.5 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center flex-none">🍵 Phân loại</a>
-            <a href="#" data-target="screen-leaderboard" class="nav-item px-3.5 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center flex-none">🏆 Bảng vàng</a>
-            <a href="#" data-target="screen-highlight" class="nav-item px-3.5 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center flex-none">🔥 Tiêu điểm</a>
-            <a href="#" onclick="openAiChat(); return false;" class="nav-item px-3.5 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center text-cyan-300 flex-none">✨ Gemini AI</a>
-            <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-3.5 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center text-yellow-300 flex-none">➕ Thêm quán</a>
+        <!-- Menu Trượt Mượt Như Giọt Nước -->
+        <nav id="main-nav" class="flex items-center gap-1.5 liquid-glass-pill px-2 py-1.5 rounded-full text-xs font-light text-gray-200 overflow-x-auto custom-scrollbar w-full shadow-inner">
+            <a href="#" data-target="screen-map" class="nav-item px-4 py-1.5 rounded-full active text-center flex-none">🗺️ Bản đồ</a>
+            <a href="#" data-target="screen-category" class="nav-item px-4 py-1.5 rounded-full hover:text-white text-center flex-none">🍵 Phân loại</a>
+            <a href="#" data-target="screen-leaderboard" class="nav-item px-4 py-1.5 rounded-full hover:text-white text-center flex-none">🏆 Bảng vàng</a>
+            <a href="#" data-target="screen-highlight" class="nav-item px-4 py-1.5 rounded-full hover:text-white text-center flex-none">🔥 Tiêu điểm</a>
+            <a href="#" onclick="openAiChat(); return false;" class="nav-item px-4 py-1.5 rounded-full hover:text-white text-center text-cyan-300 flex-none">✨ Gemini AI</a>
+            <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-4 py-1.5 rounded-full hover:text-white text-center text-yellow-300 flex-none">➕ Thêm quán</a>
         </nav>
     </header>
 
@@ -118,7 +124,7 @@
                         <span id="active-filter-badge" class="hidden text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30"></span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <button onclick="requestUserLocation()" class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2.5 py-1 rounded-full border border-cyan-500/30 hover:bg-cyan-500/30 transition">📍 Gần tôi</button>
+                        <button onclick="requestUserLocation()" class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2.5 py-1 rounded-full border border-cyan-500/30 hover:bg-cyan-500/30 transition shadow-sm">📍 Gần tôi</button>
                     </div>
                 </div>
                 <div id="shop-list" class="flex-1 overflow-y-auto overscroll-contain grid grid-cols-1 gap-2 p-2.5 custom-scrollbar"></div>
@@ -278,7 +284,7 @@
                 events: {
                     'onReady': (event) => {
                         event.target.setVolume(100);
-                        event.target.playVideo(); // Cố gắng tự động phát
+                        event.target.playVideo();
                     },
                     'onStateChange': (event) => {
                         const playBtn = document.getElementById('play-btn');
@@ -297,7 +303,6 @@
             });
         }
 
-        // Tự động phát khi người dùng chạm bất kỳ đâu lần đầu trên mobile (vượt rào chặn autoplay)
         window.addEventListener('click', () => {
             if (player && player.playVideo && !isPlaying) {
                 player.playVideo();
@@ -310,7 +315,6 @@
             }
         }, { once: true });
 
-        // Hàm click vào nút Header
         function togglePlayMusic() {
             if (!player || !player.playVideo) return;
             if (isPlaying) {
