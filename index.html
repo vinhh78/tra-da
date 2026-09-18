@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+    <!-- Firebase SDKs (Chạy trực tiếp trên trình duyệt) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
     <style>
         @keyframes scaleUp {
             from { opacity: 0; transform: scale(0.96) translateY(10px); }
@@ -65,10 +69,6 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
 
-        .filter-dark-map {
-            filter: brightness(0.8) invert(1) contrast(1.2) hue-rotate(200deg) saturate(0.3) brightness(0.7);
-        }
-
         .leaflet-popup-content-wrapper {
             background: rgba(20, 20, 20, 0.9) !important;
             backdrop-filter: blur(25px);
@@ -91,7 +91,7 @@
             <span class="text-white text-xs md:text-base font-light tracking-wider">TRÀ ĐÁ <b class="font-bold">HÀ NỘI</b></span>
         </div>
 
-        <nav id="main-nav" class="flex items-center gap-1 liquid-glass-pill px-1.5 py-0.5 rounded-full text-xs font-light text-gray-300 overflow-x-auto custom-scrollbar max-w-[45vw] md:max-w-none">
+        <nav id="main-nav" class="flex items-center gap-1 liquid-glass-pill px-1.5 py-0.5 rounded-full text-xs font-light text-gray-300 overflow-x-auto custom-scrollbar max-w-[42vw] md:max-w-none">
             <a href="#" data-target="screen-map" class="nav-item px-3 py-1.5 rounded-full active whitespace-nowrap text-center">Bản đồ</a>
             <a href="#" data-target="screen-category" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Phân loại</a>
             <a href="#" data-target="screen-new" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Mới</a>
@@ -103,7 +103,7 @@
                 <span>✨</span> <span class="hidden sm:inline">Gemini AI</span>
             </button>
             <button onclick="openModalQuick()" class="liquid-glass-pill hover:bg-white/30 text-white text-xs px-3.5 py-2 rounded-full font-medium transition flex items-center gap-1.5 text-yellow-300 shadow-lg whitespace-nowrap">
-                <span class="text-sm font-bold">+</span> <span class="hidden sm:inline">Thêm quán</span>
+                <span class="text-sm font-bold">+</span> <span class="hidden sm:inline">Thêm quán mới</span>
             </button>
         </div>
     </header>
@@ -113,7 +113,7 @@
         
         <!-- 1. MÀN HÌNH BẢN ĐỒ -->
         <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0 z-10 animate-scale-up">
-            <div id="map" class="absolute inset-0 w-full h-full z-0 filter-dark-map"></div>
+            <div id="map" class="absolute inset-0 w-full h-full z-0 bg-[#0c0c0e]"></div>
 
             <div class="w-full lg:w-[420px] flex flex-col h-[42%] lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-3xl border border-white/20 z-25 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0 backdrop-blur-2xl">
                 <div class="p-3 md:p-4 flex-none border-b border-white/10 bg-white/5 flex items-center justify-between">
@@ -121,7 +121,7 @@
                         <h2 class="text-xs md:text-sm uppercase tracking-widest text-gray-300 font-medium" id="list-title">Danh sách quán</h2>
                         <span id="active-filter-badge" class="hidden text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30"></span>
                     </div>
-                    <span class="text-[9px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full border border-red-500/30 animate-pulse">Live</span>
+                    <span class="text-[9px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full border border-red-500/30 animate-pulse">Live Cloud</span>
                 </div>
                 <div id="shop-list" class="flex-1 overflow-y-auto overscroll-contain grid grid-cols-1 gap-2.5 p-3 custom-scrollbar"></div>
             </div>
@@ -197,7 +197,6 @@
                 <button onclick="closeAiChat()" class="text-gray-400 hover:text-white bg-white/10 w-7 h-7 rounded-full flex items-center justify-center transition">✕</button>
             </div>
 
-            <!-- Khung tin nhắn -->
             <div id="ai-chat-messages" class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-3 text-xs md:text-sm my-2">
                 <div class="flex items-start gap-2">
                     <span class="text-lg">✨</span>
@@ -207,7 +206,6 @@
                 </div>
             </div>
 
-            <!-- Ô nhập tin nhắn -->
             <div class="flex items-center gap-2 pt-2 border-t border-white/15">
                 <input id="ai-input" type="text" onkeypress="handleAiKeyPress(event)" placeholder="Hỏi Gemini AI (VD: Quán nào ở Hoàn Kiếm?)..." class="flex-1 px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 focus:border-cyan-400 focus:outline-none transition text-white text-xs md:text-sm">
                 <button onclick="sendGeminiMessage()" class="liquid-glass-pill hover:bg-white/30 text-cyan-300 px-4 py-2.5 rounded-xl font-medium transition text-xs shadow-lg whitespace-nowrap">Gửi</button>
@@ -215,7 +213,7 @@
         </div>
     </div>
 
-    <!-- Modal Thêm Quán -->
+    <!-- Modal Thêm Quán Mới -->
     <div id="add-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-3xl modal-hidden">
         <div class="liquid-glass border border-white/30 p-6 md:p-8 w-full max-w-md relative rounded-3xl shadow-2xl">
             <button onclick="closeModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white bg-white/10 w-8 h-8 rounded-full flex items-center justify-center transition">✕</button>
@@ -258,34 +256,44 @@
 
                 <div class="pt-2">
                     <button type="submit" class="w-full liquid-glass-pill text-white font-semibold tracking-wide py-3 rounded-xl hover:bg-white/30 transition-all uppercase text-xs shadow-lg">
-                        Xác nhận ghim lên bản đồ
+                        Xác nhận ghim lên bản đồ chung
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Script Xử Lý Logic & Gemini AI Thông Minh -->
+    <!-- Script Xử Lý Logic & Firebase Cloud -->
     <script>
+        // 🌟 Cấu hình Firebase Cloud từ dự án trada-be900 của bạn[cite: 10]
+        const firebaseConfig = {
+            apiKey: "AIzaSyCMayrZCPTTBiN43Aj9qu5doGRMPhliOvs",
+            authDomain: "trada-be900.firebaseapp.com",
+            projectId: "trada-be900",
+            storageBucket: "trada-be900.firebasestorage.app",
+            messagingSenderId: "722426334392",
+            appId: "1:722426334392:web:4ed75d3ab8e770d79db84d",
+            measurementId: "G-SC0DHB4L0D"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         let currentLatLng = { lat: 21.0285, lng: 105.8541 };
         let mapMarkersLayer = null;
         let uploadedImageBase64 = ''; 
         let currentFilter = 'Tất cả';
+        let shops = [];
 
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
 
-        let shops = JSON.parse(localStorage.getItem('trada_hanoi_shops_v17'));
-        if (!shops || shops.length === 0) {
-            shops = [
-                { id: 1, name: "Trà Đá Nhà Thờ Lớn", address: "Hoàn Kiếm", lat: 21.0287, lng: 105.8488, price: "15K", category: "Trà đá vỉa hè", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600" },
-                { id: 2, name: "Trà Đá Hồ Tây", address: "Thanh Niên, Tây Hồ", lat: 21.0487, lng: 105.8388, price: "10K", category: "Trà chanh chém gió", image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600" },
-                { id: 3, name: "Trà Đá Cầu Giấy", address: "Xuân Thủy, Cầu Giấy", lat: 21.0350, lng: 105.7950, price: "5K", category: "Cafe vỉa hè", image: "https://images.unsplash.com/photo-1525648199074-cee30ba79a4a?w=600" }
-            ];
-            localStorage.setItem('trada_hanoi_shops_v17', JSON.stringify(shops));
-        }
-
         const map = L.map('map', { zoomControl: false }).setView([21.0285, 105.8541], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap & CARTO',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+        
         L.control.zoom({ position: 'bottomright' }).addTo(map);
         mapMarkersLayer = L.layerGroup().addTo(map);
 
@@ -295,6 +303,30 @@
             iconSize: [26, 26],
             iconAnchor: [13, 13]
         });
+
+        // 🌟 Lấy dữ liệu thời gian thực từ Firebase Cloud (Mọi máy truy cập đều thấy giống nhau)
+        function loadShopsFromCloud() {
+            db.collection("shops").onSnapshot((snapshot) => {
+                shops = [];
+                snapshot.forEach((doc) => {
+                    shops.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Nếu Cloud chưa có quán nào, tự động thêm 3 quán mẫu ban đầu
+                if(shops.length === 0) {
+                    const defaultShops = [
+                        { name: "Trà Đá Nhà Thờ Lớn", address: "Hoàn Kiếm", lat: 21.0287, lng: 105.8488, price: "15K", category: "Trà đá vỉa hè", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600" },
+                        { name: "Trà Đá Hồ Tây", address: "Thanh Niên, Tây Hồ", lat: 21.0487, lng: 105.8388, price: "10K", category: "Trà chanh chém gió", image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600" },
+                        { name: "Trà Đá Cầu Giấy", address: "Xuân Thủy, Cầu Giấy", lat: 21.0350, lng: 105.7950, price: "5K", category: "Cafe vỉa hè", image: "https://images.unsplash.com/photo-1525648199074-cee30ba79a4a?w=600" }
+                    ];
+                    defaultShops.forEach(s => db.collection("shops").add(s));
+                } else {
+                    renderApp();
+                }
+            }, (error) => {
+                console.log("Lỗi tải dữ liệu Cloud:", error);
+            });
+        }
 
         function renderApp() {
             const listContainer = document.getElementById('shop-list');
@@ -322,7 +354,7 @@
                     </div>
                     <div class="flex flex-col gap-1 flex-none">
                         <button onclick="openGoogleMapsNav(${shop.lat}, ${shop.lng}, event)" class="bg-yellow-500 hover:bg-yellow-400 text-black font-semibold text-[10px] px-2.5 py-1 rounded-lg transition shadow">Chỉ đường</button>
-                        <button onclick="deleteShop(${shop.id}, event)" class="text-gray-500 hover:text-red-400 text-[10px] text-center">Xóa</button>
+                        <button onclick="deleteShop('${shop.id}', event)" class="text-gray-500 hover:text-red-400 text-[10px] text-center">Xóa</button>
                     </div>
                 `;
                 shopCard.onclick = (e) => {
@@ -370,7 +402,7 @@
             }
         }
 
-        // 🌟 GEMINI AI THÔNG MINH (XỬ LÝ DỮ LIỆU LOCAL THỜI GIAN THỰC KHÔNG LO LỖI MẠNG)
+        // 🌟 GEMINI AI THÔNG MINH
         function openAiChat() {
             document.getElementById('ai-modal').classList.remove('modal-hidden');
             document.getElementById('ai-modal').classList.add('modal-visible');
@@ -393,7 +425,6 @@
 
             const chatMessages = document.getElementById('ai-chat-messages');
             
-            // Hiển thị tin nhắn người dùng
             chatMessages.innerHTML += `
                 <div class="flex items-start justify-end gap-2">
                     <div class="bg-cyan-500/20 border border-cyan-500/30 p-3 rounded-2xl rounded-tr-none text-white">${text}</div>
@@ -403,12 +434,11 @@
             input.value = '';
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            // Hiệu ứng đang suy nghĩ
             const loadingId = 'loading-' + Date.now();
             chatMessages.innerHTML += `
                 <div id="${loadingId}" class="flex items-start gap-2">
                     <span class="text-lg">✨</span>
-                    <div class="liquid-glass-card p-3 rounded-2xl rounded-tl-none text-gray-400 italic animate-pulse">Gemini AI đang phân tích dữ liệu quán...</div>
+                    <div class="liquid-glass-card p-3 rounded-2xl rounded-tl-none text-gray-400 italic animate-pulse">Gemini AI đang phân tích dữ liệu Cloud...</div>
                 </div>
             `;
             chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -416,20 +446,20 @@
             setTimeout(() => {
                 document.getElementById(loadingId).remove();
                 
-                let reply = "Chào bạn! Hiện tại hệ thống đang có các quán sau: " + shops.map(s => `${s.name} (${s.address}, giá ${s.price})`).join('; ') + ". Bạn muốn ghé quán nào để mình chỉ đường?";
+                let reply = "Chào bạn! Hiện tại trên Cloud hệ thống đang có các quán sau: " + shops.map(s => `${s.name} (${s.address}, giá ${s.price})`).join('; ') + ". Bạn muốn ghé quán nào để mình chỉ đường?";
                 
                 const query = text.toLowerCase();
                 if(query.includes('rẻ') || query.includes('5k') || query.includes('10k')) {
                     const cheapShops = shops.filter(s => s.price.includes('5K') || s.price.includes('10K'));
                     if(cheapShops.length > 0) {
-                        reply = `Dạ, các quán có giá hạt dẻ siêu hời cho bạn đây: ` + cheapShops.map(s => `🔹 **${s.name}** ở ${s.address} (${s.price})`).join('. ') + `. Bạn cứ qua làm ngụm trà đá ngắm phố phường nhé!`;
+                        reply = `Dạ, các quán có giá hạt dẻ siêu hời trên Cloud cho bạn đây: ` + cheapShops.map(s => `🔹 **${s.name}** ở ${s.address} (${s.price})`).join('. ') + `. Bạn cứ qua làm ngụm trà đá nhé!`;
                     }
                 } else if(query.includes('hoàn kiếm') || query.includes('phố cổ') || query.includes('nhà thờ')) {
                     reply = `Ở khu vực trung tâm Hoàn Kiếm, bạn nhất định phải ghé **Trà Đá Nhà Thờ Lớn** nha, ngồi vỉa hè ngắm phố cổ cực kỳ chill luôn!`;
                 } else if(query.includes('hồ tây') || query.includes('thanh niên')) {
-                    reply = `Hồ Tây buổi tối thì tuyệt cú mèo rồi! Bạn có thể ghé quán **Trà Đá Hồ Tây** đường Thanh Niên hóng gió và thưởng thức trà chanh chém gió nhé.`;
+                    reply = `Hồ Tây buổi tối thì tuyệt cú mèo rồi! Bạn có thể ghé quán **Trà Đá Hồ Tây** đường Thanh Niên hóng gió nhé.`;
                 } else if(query.includes('chào') || query.includes('hi') || query.includes('helu')) {
-                    reply = `Chào bạn sành điệu! Tôi là trợ lý Gemini AI chuyên săn lùng những góc trà đá vỉa hè chất nhất Hà Nội. Bạn cần tôi tư vấn quán nào nào?`;
+                    reply = `Chào bạn sành điệu! Tôi là trợ lý Gemini AI kết nối Cloud. Bạn cần tôi tư vấn quán nào nào?`;
                 }
 
                 chatMessages.innerHTML += `
@@ -477,7 +507,7 @@
             if (targetId === 'screen-map') {
                 targetScreen.classList.remove('hidden');
                 targetScreen.classList.add('flex', 'z-10');
-                setTimeout(() => { map.invalidateSize(); }, 100);
+                setTimeout(() => { map.invalidateSize(); }, 150);
             } else {
                 targetScreen.classList.remove('hidden');
                 targetScreen.classList.add('block', 'z-10');
@@ -541,10 +571,10 @@
             form.reset();
         }
 
+        // 🌟 Đẩy dữ liệu lên Firebase Cloud Firestore khi bấm Thêm Quán Mới
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             const newShop = {
-                id: Date.now(),
                 name: document.getElementById('shop-name').value,
                 address: document.getElementById('shop-address').value,
                 price: document.getElementById('shop-price').value,
@@ -554,30 +584,34 @@
                 image: uploadedImageBase64 || defaultImage
             };
 
-            shops.unshift(newShop);
-            try {
-                localStorage.setItem('trada_hanoi_shops_v17', JSON.stringify(shops));
-            } catch (err) {
-                alert("Dung lượng ảnh quá lớn!");
-                shops.shift(); 
-                return;
-            }
-            
-            closeModal();
-            filterByCategory('Tất cả');
-            map.flyTo([newShop.lat, newShop.lng], 16, { duration: 1.5 });
+            db.collection("shops").add(newShop)
+                .then(() => {
+                    closeModal();
+                    filterByCategory('Tất cả');
+                    map.flyTo([newShop.lat, newShop.lng], 16, { duration: 1.5 });
+                })
+                .catch((err) => {
+                    alert("Lỗi khi thêm lên Cloud: " + err.message);
+                });
         });
 
+        // 🌟 Xóa quán trên Firebase Cloud chung cho mọi người
         window.deleteShop = function(id, event) {
             event.stopPropagation();
-            if(confirm("Xóa quán này khỏi bản đồ?")) {
-                shops = shops.filter(s => s.id !== id);
-                localStorage.setItem('trada_hanoi_shops_v17', JSON.stringify(shops));
-                renderApp();
+            if(confirm("Xóa quán này khỏi bản đồ chung của mọi người?")) {
+                db.collection("shops").doc(id).delete()
+                    .then(() => {
+                        console.log("Đã xóa thành công khỏi Cloud!");
+                    })
+                    .catch((err) => {
+                        alert("Lỗi khi xóa: " + err.message);
+                    });
             }
         }
 
-        renderApp();
+        // Khởi động đồng bộ dữ liệu thời gian thực từ Cloud
+        loadShopsFromCloud();
+        setTimeout(() => { map.invalidateSize(); }, 250);
     </script>
 </body>
 </html>
