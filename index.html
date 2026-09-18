@@ -98,7 +98,10 @@
             <a href="#" data-target="screen-highlight" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Tiêu điểm</a>
         </nav>
         
-        <div class="flex items-center flex-none">
+        <div class="flex items-center gap-2 flex-none">
+            <button onclick="openAiChat()" class="liquid-glass-pill hover:bg-white/30 text-white text-xs px-3.5 py-2 rounded-full font-medium transition flex items-center gap-1.5 text-cyan-300 shadow-lg whitespace-nowrap">
+                <span>🤖</span> <span class="hidden sm:inline">AI Trà Đá</span>
+            </button>
             <button onclick="openModalQuick()" class="liquid-glass-pill hover:bg-white/30 text-white text-xs px-3.5 py-2 rounded-full font-medium transition flex items-center gap-1.5 text-yellow-300 shadow-lg whitespace-nowrap">
                 <span class="text-sm font-bold">+</span> <span class="hidden sm:inline">Thêm quán</span>
             </button>
@@ -120,7 +123,6 @@
                     </div>
                     <span class="text-[9px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full border border-red-500/30 animate-pulse">Live</span>
                 </div>
-                <!-- Vùng chứa danh sách cuộn mượt -->
                 <div id="shop-list" class="flex-1 overflow-y-auto overscroll-contain grid grid-cols-1 gap-2.5 p-3 custom-scrollbar"></div>
             </div>
         </div>
@@ -184,6 +186,35 @@
         </div>
     </div>
 
+    <!-- MODAL AI CHATBOT -->
+    <div id="ai-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-3xl modal-hidden">
+        <div class="liquid-glass border border-cyan-500/30 p-5 md:p-6 w-full max-w-lg relative rounded-3xl shadow-2xl flex flex-col h-[500px]">
+            <div class="flex items-center justify-between border-b border-white/15 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">🤖</span>
+                    <h2 class="text-base font-medium tracking-wide text-cyan-300">Trợ Lý AI Trà Đá Hà Nội</h2>
+                </div>
+                <button onclick="closeAiChat()" class="text-gray-400 hover:text-white bg-white/10 w-7 h-7 rounded-full flex items-center justify-center transition">✕</button>
+            </div>
+
+            <!-- Khung tin nhắn -->
+            <div id="ai-chat-messages" class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-3 text-xs md:text-sm my-2">
+                <div class="flex items-start gap-2">
+                    <span class="text-lg">🤖</span>
+                    <div class="liquid-glass-card p-3 rounded-2xl rounded-tl-none text-gray-200">
+                        Chào bạn! Mình là AI hỗ trợ tìm quán trà đá vỉa hè tại Hà Nội. Bạn muốn tìm quán ở khu vực nào hoặc cần tư vấn gì không?
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ô nhập tin nhắn -->
+            <div class="flex items-center gap-2 pt-2 border-t border-white/15">
+                <input id="ai-input" type="text" onkeypress="handleAiKeyPress(event)" placeholder="Hỏi AI (VD: Quán nào rẻ ở Hoàn Kiếm?)..." class="flex-1 px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 focus:border-cyan-400 focus:outline-none transition text-white text-xs md:text-sm">
+                <button onclick="sendAiMessage()" class="liquid-glass-pill hover:bg-white/30 text-cyan-300 px-4 py-2.5 rounded-xl font-medium transition text-xs shadow-lg whitespace-nowrap">Gửi</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Thêm Quán -->
     <div id="add-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-3xl modal-hidden">
         <div class="liquid-glass border border-white/30 p-6 md:p-8 w-full max-w-md relative rounded-3xl shadow-2xl">
@@ -234,7 +265,7 @@
         </div>
     </div>
 
-    <!-- Script Xử Lý Logic & Chỉ Đường Qua Google Maps App -->
+    <!-- Script Xử Lý Logic, AI & Bản Đồ -->
     <script>
         let currentLatLng = { lat: 21.0285, lng: 105.8541 };
         let mapMarkersLayer = null;
@@ -243,14 +274,14 @@
 
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
 
-        let shops = JSON.parse(localStorage.getItem('trada_hanoi_shops_v14'));
+        let shops = JSON.parse(localStorage.getItem('trada_hanoi_shops_v15'));
         if (!shops || shops.length === 0) {
             shops = [
                 { id: 1, name: "Trà Đá Nhà Thờ Lớn", address: "Hoàn Kiếm", lat: 21.0287, lng: 105.8488, price: "15K", category: "Trà đá vỉa hè", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600" },
                 { id: 2, name: "Trà Đá Hồ Tây", address: "Thanh Niên, Tây Hồ", lat: 21.0487, lng: 105.8388, price: "10K", category: "Trà chanh chém gió", image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600" },
                 { id: 3, name: "Trà Đá Cầu Giấy", address: "Xuân Thủy, Cầu Giấy", lat: 21.0350, lng: 105.7950, price: "5K", category: "Cafe vỉa hè", image: "https://images.unsplash.com/photo-1525648199074-cee30ba79a4a?w=600" }
             ];
-            localStorage.setItem('trada_hanoi_shops_v14', JSON.stringify(shops));
+            localStorage.setItem('trada_hanoi_shops_v15', JSON.stringify(shops));
         }
 
         const map = L.map('map', { zoomControl: false }).setView([21.0285, 105.8541], 13);
@@ -300,7 +331,6 @@
                 };
                 listContainer.appendChild(shopCard);
 
-                // Marker bản đồ
                 L.marker([shop.lat, shop.lng], { icon: teaIcon })
                     .bindPopup(`
                         <div class="font-sans font-light tracking-wide w-48 p-1">
@@ -316,7 +346,6 @@
                     .addTo(mapMarkersLayer);
             });
 
-            // Render tab Quán Mới
             if(newShopContainer) {
                 shops.forEach(s => {
                     const newCard = document.createElement('div');
@@ -341,12 +370,63 @@
             }
         }
 
-        // 🌟 MỞ APP GOOGLE MAPS / APPLE MAPS CHỈ ĐƯỜNG TRỰC TIẾP TRÊN MOBILE
+        // 🌟 TÍNH NĂNG TRỢ LÝ AI CHATBOT
+        function openAiChat() {
+            document.getElementById('ai-modal').classList.remove('modal-hidden');
+            document.getElementById('ai-modal').classList.add('modal-visible');
+            document.getElementById('ai-input').focus();
+        }
+
+        function closeAiChat() {
+            document.getElementById('ai-modal').classList.remove('modal-visible');
+            document.getElementById('ai-modal').classList.add('modal-hidden');
+        }
+
+        function handleAiKeyPress(e) {
+            if(e.key === 'Enter') sendAiMessage();
+        }
+
+        function sendAiMessage() {
+            const input = document.getElementById('ai-input');
+            const text = input.value.trim();
+            if(!text) return;
+
+            const chatMessages = document.getElementById('ai-chat-messages');
+            
+            // Thêm tin nhắn người dùng
+            chatMessages.innerHTML += `
+                <div class="flex items-start justify-end gap-2">
+                    <div class="bg-cyan-500/20 border border-cyan-500/30 p-3 rounded-2xl rounded-tr-none text-white">${text}</div>
+                    <span class="text-base">👤</span>
+                </div>
+            `;
+            input.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Xử lý phản hồi từ AI dựa trên danh sách quán
+            setTimeout(() => {
+                let aiReply = "Mình đã ghi nhận yêu cầu của bạn. Hiện tại hệ thống có các quán nổi bật như: " + shops.map(s => s.name).join(', ') + ". Bạn có thể bấm vào tên quán trên bản đồ để xem chi tiết hoặc nhận chỉ đường nhé!";
+                
+                const lowerText = text.toLowerCase();
+                if(lowerText.includes('rẻ') || lowerText.includes('giá')) {
+                    aiReply = "Các quán có mức giá siêu hạt dẻ từ 5K - 10K hiện đang có mặt tại Cầu Giấy và Hồ Tây. Bạn ghé qua thử nhé!";
+                } else if(lowerText.includes('hoàn kiếm') || lowerText.includes('phố cổ')) {
+                    aiReply = "Ở khu vực Hoàn Kiếm, quán 'Trà Đá Nhà Thờ Lớn' là điểm tụ tập quen thuộc cực kỳ nhộn nhịp đấy!";
+                }
+
+                chatMessages.innerHTML += `
+                    <div class="flex items-start gap-2 animate-scale-up">
+                        <span class="text-lg">🤖</span>
+                        <div class="liquid-glass-card p-3 rounded-2xl rounded-tl-none text-gray-200">${aiReply}</div>
+                    </div>
+                `;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 600);
+        }
+
         window.openGoogleMapsNav = function(destLat, destLng, event) {
             if(event) event.stopPropagation();
-            // Link chuẩn toàn cầu mở ứng dụng bản đồ gốc của điện thoại
-            const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}&travelmode=driving`;
-            window.open(mapsUrl, '_blank');
+            window.open(`https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}&travelmode=driving`, '_blank');
         }
 
         window.filterByCategory = function(category) {
@@ -458,7 +538,7 @@
 
             shops.unshift(newShop);
             try {
-                localStorage.setItem('trada_hanoi_shops_v14', JSON.stringify(shops));
+                localStorage.setItem('trada_hanoi_shops_v15', JSON.stringify(shops));
             } catch (err) {
                 alert("Dung lượng ảnh quá lớn!");
                 shops.shift(); 
@@ -474,7 +554,7 @@
             event.stopPropagation();
             if(confirm("Xóa quán này khỏi bản đồ?")) {
                 shops = shops.filter(s => s.id !== id);
-                localStorage.setItem('trada_hanoi_shops_v14', JSON.stringify(shops));
+                localStorage.setItem('trada_hanoi_shops_v15', JSON.stringify(shops));
                 renderApp();
             }
         }
