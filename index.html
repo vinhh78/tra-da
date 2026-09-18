@@ -164,13 +164,24 @@
                     </div>
                 </div>
 
-                <div class="text-center text-xs text-gray-500 border-t border-white/10 pt-6">
-                    © 2026 dembevinh. All rights reserved.
+                <!-- Footer Liên Hệ & Bản Quyền -->
+                <div class="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="text-xs text-gray-500">
+                        © 2026 dembevinh. All rights reserved.
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <a href="https://facebook.com" target="_blank" class="liquid-glass-pill px-4 py-2 rounded-full text-xs text-blue-400 hover:text-white transition flex items-center gap-1.5 shadow-md">
+                            <span>🌐</span> Facebook
+                        </a>
+                        <a href="https://instagram.com" target="_blank" class="liquid-glass-pill px-4 py-2 rounded-full text-xs text-pink-400 hover:text-white transition flex items-center gap-1.5 shadow-md">
+                            <span>📸</span> Instagram
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- 3. MÀN HÌNH BẢNG VÀNG GAMIFICATION (VINH DANH ĐÓNG GÓP) -->
+        <!-- 3. MÀN HÌNH BẢN VÀNG GAMIFICATION -->
         <div id="screen-leaderboard" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20 animate-scale-up">
             <div class="max-w-3xl mx-auto pb-16">
                 <div class="flex items-center gap-3 mb-2">
@@ -214,8 +225,19 @@
                     </div>
                 </div>
 
-                <div class="text-center text-xs text-gray-500 border-t border-white/10 pt-6">
-                    © 2026 dembevinh. All rights reserved.
+                <!-- Footer Liên Hệ & Bản Quyền -->
+                <div class="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="text-xs text-gray-500">
+                        © 2026 dembevinh. All rights reserved.
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <a href="https://facebook.com" target="_blank" class="liquid-glass-pill px-4 py-2 rounded-full text-xs text-blue-400 hover:text-white transition flex items-center gap-1.5 shadow-md">
+                            <span>🌐</span> Facebook
+                        </a>
+                        <a href="https://instagram.com" target="_blank" class="liquid-glass-pill px-4 py-2 rounded-full text-xs text-pink-400 hover:text-white transition flex items-center gap-1.5 shadow-md">
+                            <span>📸</span> Instagram
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -230,8 +252,19 @@
                     <p class="text-xs text-gray-400 mt-2 max-w-md">Được cộng đồng bình chọn là điểm dừng chân có không gian và hướng nhìn ngắm phố phường đẹp nhất tuần qua.</p>
                 </div>
                 
-                <div class="text-center text-xs text-gray-500 border-t border-white/10 pt-6">
-                    © 2026 dembevinh. All rights reserved.
+                <!-- Footer Liên Hệ & Bản Quyền -->
+                <div class="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="text-xs text-gray-500">
+                        © 2026 dembevinh. All rights reserved.
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <a href="https://www.facebook.com/vinh.875951">
+                            <span>🌐</span> Facebook
+                        </a>
+                        <a href="https://www.instagram.com/ivan_goodly/">
+                            <span>📸</span> Instagram
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -378,9 +411,7 @@
 
         function renderApp() {
             const listContainer = document.getElementById('shop-list');
-            const newShopContainer = document.getElementById('new-shop-list');
             listContainer.innerHTML = '';
-            if(newShopContainer) newShopContainer.innerHTML = '';
             mapMarkersLayer.clearLayers();
 
             const filteredShops = currentFilter === 'Tất cả' 
