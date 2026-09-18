@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- Firebase SDKs (App, Auth, Firestore) -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -74,7 +74,7 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 15px rgba(250, 204, 21, 0.2);
         }
 
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar { height: 0px; width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
 
         .custom-dark-map {
@@ -97,34 +97,31 @@
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden">
     
-    <!-- Header -->
-    <header class="w-full liquid-glass flex-none z-50 px-3.5 md:px-6 py-2.5 flex items-center justify-between border-b border-white/10 gap-2">
-        <div class="font-bold tracking-widest uppercase flex items-center gap-2 flex-none cursor-pointer" onclick="filterByCategory('Tất cả')">
-            <span class="text-yellow-400 text-xs animate-ping">●</span>
-            <span class="text-white text-xs md:text-base font-light tracking-wider">TRÀ ĐÁ <b class="font-bold text-yellow-400">HÀ NỘI</b></span>
-        </div>
-
-        <nav id="main-nav" class="flex items-center gap-1 liquid-glass-pill px-1.5 py-0.5 rounded-full text-xs font-light text-gray-300 overflow-x-auto custom-scrollbar max-w-[32vw] md:max-w-none">
-            <a href="#" data-target="screen-map" class="nav-item px-3 py-1.5 rounded-full active whitespace-nowrap text-center">Bản đồ</a>
-            <a href="#" data-target="screen-category" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Phân loại</a>
-            <a href="#" data-target="screen-leaderboard" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">🏆 Bảng vàng</a>
-            <a href="#" data-target="screen-highlight" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Tiêu điểm</a>
-        </nav>
-        
-        <div class="flex items-center gap-2 flex-none">
-            <button onclick="openAiChat()" class="liquid-glass-pill hover:bg-white/30 text-white text-xs px-3 py-2 rounded-full font-medium transition flex items-center gap-1 text-cyan-300 shadow-lg whitespace-nowrap">
-                <span>✨</span> <span class="hidden sm:inline">AI</span>
-            </button>
-            <button onclick="openModalQuick()" class="liquid-glass-pill hover:bg-white/30 text-white text-xs px-3.5 py-2 rounded-full font-medium transition flex items-center gap-1.5 text-yellow-300 shadow-lg whitespace-nowrap">
-                <span class="text-sm font-bold">+</span> <span class="hidden sm:inline">Thêm quán</span>
-            </button>
-            <!-- Nút Đăng nhập Google -->
+    <!-- Header Thiết kế 2 Tầng Thoáng Đãng Chuyên Nghiệp -->
+    <header class="w-full liquid-glass flex-none z-50 px-3 md:px-6 py-2.5 flex flex-col border-b border-white/10 gap-2">
+        <!-- Tầng 1: Logo & Tài khoản đăng nhập -->
+        <div class="flex items-center justify-between">
+            <div class="font-bold tracking-widest uppercase flex items-center gap-2 cursor-pointer" onclick="filterByCategory('Tất cả')">
+                <span class="text-yellow-400 text-xs animate-ping">●</span>
+                <span class="text-white text-xs md:text-sm font-light tracking-wider">TRÀ ĐÁ <b class="font-bold text-yellow-400">HÀ NỘI</b></span>
+            </div>
+            
             <div id="auth-container">
-                <button onclick="loginWithGoogle()" class="liquid-glass-pill bg-white/10 hover:bg-white/20 text-white text-xs px-3 py-2 rounded-full font-medium transition flex items-center gap-1 shadow-lg whitespace-nowrap">
-                    <span>👤</span> <span class="hidden md:inline">Đăng nhập</span>
+                <button onclick="loginWithGoogle()" class="liquid-glass-pill bg-white/10 hover:bg-white/20 text-white text-xs px-3.5 py-1.5 rounded-full font-medium transition flex items-center gap-1.5 shadow-md whitespace-nowrap">
+                    <span>👤</span> <span>Đăng nhập Google</span>
                 </button>
             </div>
         </div>
+
+        <!-- Tầng 2: Thanh Menu cuộn ngang (Pill Navigation) -->
+        <nav id="main-nav" class="flex items-center gap-1.5 liquid-glass-pill px-1.5 py-1 rounded-full text-xs font-light text-gray-300 overflow-x-auto custom-scrollbar w-full">
+            <a href="#" data-target="screen-map" class="nav-item px-3.5 py-1.5 rounded-full active whitespace-nowrap text-center flex-none">🗺️ Bản đồ</a>
+            <a href="#" data-target="screen-category" class="nav-item px-3.5 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center flex-none">🍵 Phân loại</a>
+            <a href="#" data-target="screen-leaderboard" class="nav-item px-3.5 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center flex-none">🏆 Bảng vàng</a>
+            <a href="#" data-target="screen-highlight" class="nav-item px-3.5 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center flex-none">🔥 Tiêu điểm</a>
+            <a href="#" onclick="openAiChat(); return false;" class="nav-item px-3.5 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center text-cyan-300 flex-none">✨ Gemini AI</a>
+            <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-3.5 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center text-yellow-300 flex-none">➕ Thêm quán</a>
+        </nav>
     </header>
 
     <!-- App Screens -->
@@ -173,7 +170,6 @@
                     </div>
                 </div>
 
-                <!-- Footer Liên Hệ -->
                 <div class="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div class="text-xs text-gray-500">© 2026 dembevinh. All rights reserved.</div>
                     <div class="flex items-center gap-3">
@@ -325,7 +321,7 @@
         </div>
     </div>
 
-    <!-- Script Xử Lý Logic, Firebase Auth & GPS Distance -->
+    <!-- Script Xử Lý Logic, Firebase Auth (Hỗ trợ Redirect Mobile tránh bị chặn Popup) & GPS Distance -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCMayrZCPTTBiN43Aj9qu5doGRMPhliOvs",
@@ -342,7 +338,7 @@
         const auth = firebase.auth();
 
         let currentLatLng = { lat: 21.0285, lng: 105.8541 };
-        let userLocation = null; // Lưu vị trí GPS thực tế của người dùng
+        let userLocation = null;
         let mapMarkersLayer = null;
         let uploadedImageBase64 = ''; 
         let currentFilter = 'Tất cả';
@@ -368,13 +364,18 @@
             iconAnchor: [13, 13]
         });
 
-        // 🌟 Đăng nhập Google
+        // 🌟 Đăng nhập Google tối ưu cho Mobile (Dùng signInWithRedirect để không bị trình duyệt chặn popup)
         function loginWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch((error) => {
+            auth.signInWithRedirect(provider).catch((error) => {
                 alert("Lỗi đăng nhập: " + error.message);
             });
         }
+
+        // Kiểm tra kết quả đăng nhập sau khi redirect trên mobile
+        auth.getRedirectResult().catch((error) => {
+            console.log("Lỗi redirect auth:", error);
+        });
 
         function logoutGoogle() {
             auth.signOut();
@@ -387,42 +388,35 @@
                 authContainer.innerHTML = `
                     <div class="flex items-center gap-2 liquid-glass-pill px-3 py-1 rounded-full text-xs">
                         <img src="${user.photoURL || defaultImage}" class="w-6 h-6 rounded-full object-cover">
-                        <span class="hidden md:inline font-medium text-yellow-300">${user.displayName.split(' ').pop()}</span>
-                        <button onclick="logoutGoogle()" class="text-red-400 hover:text-white ml-1">Đăng xuất</button>
+                        <span class="font-medium text-yellow-300 truncate max-w-[100px]">${user.displayName.split(' ').pop()}</span>
+                        <button onclick="logoutGoogle()" class="text-red-400 hover:text-white ml-1 font-bold">Thoát</button>
                     </div>
                 `;
             } else {
                 authContainer.innerHTML = `
-                    <button onclick="loginWithGoogle()" class="liquid-glass-pill bg-white/10 hover:bg-white/20 text-white text-xs px-3 py-2 rounded-full font-medium transition flex items-center gap-1 shadow-lg whitespace-nowrap">
-                        <span>👤</span> <span class="hidden md:inline">Đăng nhập</span>
+                    <button onclick="loginWithGoogle()" class="liquid-glass-pill bg-white/10 hover:bg-white/20 text-white text-xs px-3.5 py-1.5 rounded-full font-medium transition flex items-center gap-1.5 shadow-md whitespace-nowrap">
+                        <span>👤</span> <span>Đăng nhập Google</span>
                     </button>
                 `;
             }
         });
 
-        // 🌟 Tính khoảng cách GPS thực tế (Km) giữa 2 tọa độ
         function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Bán kính trái đất (km)
+            const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
             const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
                       Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                       Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c; // Khoảng cách tính bằng km
+            return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
         }
 
-        // Lấy vị trí GPS của người dùng
         function requestUserLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition((position) => {
-                    userLocation = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
+                    userLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
                     map.flyTo([userLocation.lat, userLocation.lng], 15, { duration: 1.5 });
                     
-                    // Thêm marker vị trí của tôi
                     L.marker([userLocation.lat, userLocation.lng], {
                         icon: L.divIcon({
                             html: `<div style="font-size: 20px; background: #06b6d4; border-radius: 50%; padding: 4px; box-shadow: 0 0 15px #06b6d4;">🔵</div>`,
@@ -434,10 +428,8 @@
 
                     renderApp();
                 }, () => {
-                    alert("Không thể lấy vị trí GPS của bạn. Hãy bật định vị!");
+                    alert("Không thể lấy vị trí GPS. Hãy bật định vị trên điện thoại!");
                 });
-            } else {
-                alert("Trình duyệt không hỗ trợ định vị GPS.");
             }
         }
 
@@ -472,7 +464,6 @@
                 ? [...shops] 
                 : shops.filter(s => s.category === currentFilter);
 
-            // Nếu có GPS người dùng, tính khoảng cách và sắp xếp quán gần nhất lên đầu
             if (userLocation) {
                 filteredShops.forEach(shop => {
                     shop.distance = calculateDistance(userLocation.lat, userLocation.lng, shop.lat, shop.lng);
@@ -569,9 +560,9 @@
                 if(query.includes('gần') || query.includes('gần tôi')) {
                     if(userLocation) {
                         let sorted = [...shops].map(s => ({...s, dist: calculateDistance(userLocation.lat, userLocation.lng, s.lat, s.lng)})).sort((a,b)=>a.dist-b.dist);
-                        reply = `🔹 Quán gần bạn nhất lúc này là **${sorted[0].name}** ở ${sorted[0].address} (Cách bạn khoảng ${(sorted[0].dist < 1 ? (sorted[0].dist*1000).toFixed(0)+'m' : sorted[0].dist.toFixed(1)+'km')}). Ra đó làm ngụm trà đá thôi!`;
+                        reply = `🔹 Quán gần bạn nhất lúc này là **${sorted[0].name}** ở ${sorted[0].address} (Cách khoảng ${(sorted[0].dist < 1 ? (sorted[0].dist*1000).toFixed(0)+'m' : sorted[0].dist.toFixed(1)+'km')}). Ra đó làm ngụm trà đá thôi!`;
                     } else {
-                        reply = `Bạn hãy bấm nút **"📍 Gần tôi"** ở góc trái danh sách để mình bật định vị và tìm quán gần bạn nhất nhé!`;
+                        reply = `Bạn hãy bấm nút **"📍 Gần tôi"** ở góc trái danh sách để mở định vị GPS nhé!`;
                     }
                 }
 
@@ -636,8 +627,11 @@
 
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function(e) {
-                e.preventDefault();
-                switchScreen(this.getAttribute('data-target'));
+                const target = this.getAttribute('data-target');
+                if(target) {
+                    e.preventDefault();
+                    switchScreen(target);
+                }
             });
         });
 
@@ -690,12 +684,6 @@
         });
 
         function openModalQuick() {
-            currentLatLng = map.getCenter();
-            openModal();
-        }
-
-        function openModal() {
-            // Yêu cầu đăng nhập trước khi mở modal thêm quán
             if (!currentUser) {
                 alert("Vui lòng đăng nhập tài khoản Google trước khi thêm quán mới!");
                 loginWithGoogle();
