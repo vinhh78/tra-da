@@ -43,7 +43,7 @@
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
         }
         .liquid-glass-card:hover { border-color: rgba(250, 204, 21, 0.4); transform: translateY(-2px); }
 
@@ -68,12 +68,7 @@
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden">
     
-    <!-- 🎛️ NÚT KÍCH HOẠT NHẠC ĐẦU TRANG (Bắt buộc để vượt qua cơ chế chặn Audio của Trình duyệt) -->
-    <div id="audio-banner" class="fixed top-14 left-1/2 -translate-x-1/2 z-[99999] bg-gradient-to-r from-yellow-500 to-amber-600 text-black px-4 py-2 rounded-full shadow-2xl flex items-center gap-2 cursor-pointer font-bold text-xs animate-bounce" onclick="unlockAndPlayAudio()">
-        <span>🎵 Bấm vào đây để bật nhạc Chill nền!</span>
-    </div>
-
-    <!-- Header 2 Tầng Tối Ưu Tốc Độ & Bố Cục -->
+    <!-- Header 2 Tầng -->
     <header class="w-full liquid-glass flex-none z-50 px-3 md:px-6 py-2 flex flex-col border-b border-white/10 gap-2">
         <div class="flex items-center justify-between">
             <div class="font-bold tracking-widest uppercase flex items-center gap-2 cursor-pointer" onclick="filterByCategory('Tất cả')">
@@ -81,14 +76,14 @@
                 <span class="text-white text-xs md:text-sm font-light tracking-wider">TRÀ ĐÁ <b class="font-bold text-yellow-400">HÀ NỘI</b></span>
             </div>
             
-            <!-- Khu vực phải Header: Phát nhạc & Tài khoản -->
+            <!-- Khu vực phải Header: Nút Nhạc & Tài khoản (Thiết kế y hệt, nhưng logic Youtube) -->
             <div class="flex items-center gap-2">
-                <div class="liquid-glass-pill px-2.5 py-1 rounded-full flex items-center gap-2 border border-yellow-500/30">
-                    <div id="vinyl-icon" class="w-5 h-5 rounded-full bg-gradient-to-tr from-yellow-500 to-black flex items-center justify-center">
+                <div class="liquid-glass-pill px-2.5 py-1 rounded-full flex items-center gap-2 border border-yellow-500/30 cursor-pointer" onclick="togglePlayMusic()">
+                    <div id="vinyl-icon" class="w-5 h-5 rounded-full bg-gradient-to-tr from-yellow-500 to-black flex items-center justify-center transition-all duration-300">
                         <span class="text-[8px]">💿</span>
                     </div>
-                    <span class="text-[10px] text-yellow-300 font-medium hidden sm:inline">MCK - Chill</span>
-                    <button onclick="togglePlayMusic()" id="play-btn" class="text-xs text-yellow-300 font-bold px-1 cursor-pointer">▶</button>
+                    <span class="text-[10px] text-yellow-300 font-medium hidden sm:inline">MCK - Liệm</span>
+                    <button id="play-btn" class="text-xs text-yellow-300 font-bold px-1 cursor-pointer pointer-events-none">▶</button>
                 </div>
 
                 <div id="auth-container">
@@ -182,10 +177,8 @@
         </div>
     </div>
 
-    <!-- 🎵 AUDIO NHẠC MCK / CHILL (Nguồn stream trực tiếp mượt mà) -->
-    <audio id="bg-audio" loop preload="auto">
-        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=lofi-study-112191.mp3" type="audio/mp3">
-    </audio>
+    <!-- 🎶 TRÌNH PHÁT YOUTUBE ẨN (MCK - Liệm) -->
+    <div id="youtube-player-container" style="display:none;"></div>
 
     <!-- MODAL GEMINI AI -->
     <div id="ai-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md modal-hidden">
@@ -241,7 +234,10 @@
         </div>
     </div>
 
-    <!-- Script Xử Lý Logic & Audio Unlock -->
+    <!-- YouTube IFrame API Script -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <!-- Script Xử Lý Logic & YouTube Audio -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCMayrZCPTTBiN43Aj9qu5doGRMPhliOvs",
@@ -264,38 +260,63 @@
         let shops = [];
         let currentUserName = localStorage.getItem('trada_username') || '';
 
-        const bgAudio = document.getElementById('bg-audio');
-        const playBtn = document.getElementById('play-btn');
-        const vinylIcon = document.getElementById('vinyl-icon');
-        const audioBanner = document.getElementById('audio-banner');
+        // 🎵 YouTube Player API Tự Động Phát & Max Volume
+        let player;
         let isPlaying = false;
 
-        function unlockAndPlayAudio() {
-            bgAudio.volume = 1.0;
-            bgAudio.play().then(() => {
-                isPlaying = true;
-                playBtn.innerText = "⏸";
-                vinylIcon.classList.add('animate-spin');
-                audioBanner.style.transition = 'opacity 0.3s ease';
-                audioBanner.style.opacity = '0';
-                setTimeout(() => audioBanner.remove(), 300);
-            }).catch(e => {
-                alert("Không thể phát nhạc, hãy kiểm tra lại trình duyệt!");
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player-container', {
+                height: '0',
+                width: '0',
+                videoId: 'hEUlsNMNiXQ', // MCK - Liệm
+                playerVars: {
+                    'autoplay': 1,
+                    'loop': 1,
+                    'playlist': 'hEUlsNMNiXQ',
+                    'controls': 0
+                },
+                events: {
+                    'onReady': (event) => {
+                        event.target.setVolume(100);
+                        event.target.playVideo(); // Cố gắng tự động phát
+                    },
+                    'onStateChange': (event) => {
+                        const playBtn = document.getElementById('play-btn');
+                        const vinylIcon = document.getElementById('vinyl-icon');
+                        if (event.data === YT.PlayerState.PLAYING) {
+                            isPlaying = true;
+                            playBtn.innerText = "⏸";
+                            vinylIcon.classList.add('animate-spin');
+                        } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+                            isPlaying = false;
+                            playBtn.innerText = "▶";
+                            vinylIcon.classList.remove('animate-spin');
+                        }
+                    }
+                }
             });
         }
 
+        // Tự động phát khi người dùng chạm bất kỳ đâu lần đầu trên mobile (vượt rào chặn autoplay)
+        window.addEventListener('click', () => {
+            if (player && player.playVideo && !isPlaying) {
+                player.playVideo();
+            }
+        }, { once: true });
+
+        window.addEventListener('touchstart', () => {
+            if (player && player.playVideo && !isPlaying) {
+                player.playVideo();
+            }
+        }, { once: true });
+
+        // Hàm click vào nút Header
         function togglePlayMusic() {
+            if (!player || !player.playVideo) return;
             if (isPlaying) {
-                bgAudio.pause();
-                playBtn.innerText = "▶";
-                vinylIcon.classList.remove('animate-spin');
-                isPlaying = false;
+                player.pauseVideo();
             } else {
-                bgAudio.play().then(() => {
-                    playBtn.innerText = "⏸";
-                    vinylIcon.classList.add('animate-spin');
-                    isPlaying = true;
-                });
+                player.playVideo();
             }
         }
 
@@ -458,7 +479,7 @@
                 category: document.getElementById('shop-category').value,
                 lat: currentLatLng.lat, lng: currentLatLng.lng,
                 image: uploadedImageBase64 || defaultImage,
-                    author: currentUserName
+                author: currentUserName
             };
             db.collection("shops").add(newShop).then(() => { closeModal(); filterByCategory('Tất cả'); });
         });
