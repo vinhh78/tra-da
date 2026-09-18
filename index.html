@@ -30,9 +30,7 @@
         }
         .liquid-glass-pill:active { transform: scale(0.96); }
 
-        .nav-item {
-            transition: all 0.25s ease;
-        }
+        .nav-item { transition: all 0.25s ease; }
         .nav-item.active {
             background: rgba(250, 204, 21, 0.25);
             border: 1px solid rgba(250, 204, 21, 0.5);
@@ -47,10 +45,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.25s ease;
         }
-        .liquid-glass-card:hover {
-            border-color: rgba(250, 204, 21, 0.4);
-            transform: translateY(-2px);
-        }
+        .liquid-glass-card:hover { border-color: rgba(250, 204, 21, 0.4); transform: translateY(-2px); }
 
         .custom-scrollbar::-webkit-scrollbar { height: 0px; width: 3px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
@@ -171,20 +166,18 @@
         </div>
     </div>
 
-    <!-- 🎶 MUSIC PLAYER MCK (Tự động phát nhạc ngầm) -->
-    <div class="fixed bottom-3 left-3 z-[999] liquid-glass px-3 py-2 rounded-xl flex items-center gap-2.5 shadow-xl border border-yellow-500/30 max-w-[200px]">
+    <!-- 🎶 TRÌNH PHÁT YOUTUBE MCK "LIỆM" (Ẩn để phát âm thanh tối đa) -->
+    <div id="youtube-player-container" style="display:none;"></div>
+    
+    <div class="fixed bottom-3 left-3 z-[999] liquid-glass px-3 py-2 rounded-xl flex items-center gap-2.5 shadow-xl border border-yellow-500/30 max-w-[220px]">
         <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-yellow-500 to-black border border-yellow-400/50 flex items-center justify-center flex-none animate-spin">
             <span class="text-[9px]">💿</span>
         </div>
         <div class="flex-1 min-w-0">
-            <div class="text-[10px] text-yellow-400 font-medium truncate">MCK - Hit Chill Mới</div>
+            <div class="text-[10px] text-yellow-400 font-medium truncate">MCK - Liệm (Reup)[cite: 11]</div>
+            <div class="text-[8px] text-gray-400">Âm lượng tối đa 🔊</div>
         </div>
         <button onclick="togglePlayMusic()" id="play-btn" class="liquid-glass-pill w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-yellow-300 flex-none">⏸</button>
-        <!-- Audio nhạc MCK tự động load -->
-        <audio id="bg-audio" autoplay loop>
-            <source src="https://audio.jukehost.co.uk/gK5f5Nn675WlFvj3Q4S28vK12j75n675" type="audio/mp3">
-            <source src="https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg" type="audio/ogg">
-        </audio>
     </div>
 
     <!-- MODAL GEMINI AI -->
@@ -241,7 +234,10 @@
         </div>
     </div>
 
-    <!-- Script Tối Ưu Hóa Tốc Độ & Âm Thanh -->
+    <!-- YouTube IFrame API Script -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <!-- Script Xử Lý Logic Siêu Mượt -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCMayrZCPTTBiN43Aj9qu5doGRMPhliOvs",
@@ -264,32 +260,52 @@
         let shops = [];
         let currentUserName = localStorage.getItem('trada_username') || '';
 
-        // 🎵 Tự động phát nhạc MCK khi vào web
-        const bgAudio = document.getElementById('bg-audio');
-        const playBtn = document.getElementById('play-btn');
+        // 🎵 YouTube Player API Tự Động Phát & Max Volume
+        let player;
         let isPlaying = true;
 
-        window.addEventListener('DOMContentLoaded', () => {
-            bgAudio.volume = 0.5;
-            bgAudio.play().catch(() => {
-                // Xử lý nếu trình duyệt chặn autoplay ngầm
-                document.body.addEventListener('click', () => {
-                    if(!isPlaying) { bgAudio.play(); isPlaying = true; playBtn.innerText = "⏸"; }
-                }, { once: true });
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player-container', {
+                height: '0',
+                width: '0',
+                videoId: 'hEUlsNMNiXQ',
+                playerVars: {
+                    'autoplay': 1,
+                    'loop': 1,
+                    'playlist': 'hEUlsNMNiXQ',
+                    'controls': 0
+                },
+                events: {
+                    'onReady': (event) => {
+                        event.target.setVolume(100); // Đẩy âm lượng lên tối đa
+                        event.target.playVideo();
+                    }
+                }
             });
-        });
+        }
 
         function togglePlayMusic() {
+            if (!player) return;
+            const playBtn = document.getElementById('play-btn');
             if (isPlaying) {
-                bgAudio.pause();
+                player.pauseVideo();
                 playBtn.innerText = "▶";
                 isPlaying = false;
             } else {
-                bgAudio.play();
+                player.playVideo();
                 playBtn.innerText = "⏸";
                 isPlaying = true;
             }
         }
+
+        // Tương tác đầu tiên để kích hoạt audio trên mobile nếu bị chặn
+        window.addEventListener('click', () => {
+            if (player && player.playVideo && !isPlaying) {
+                player.playVideo();
+                isPlaying = true;
+                document.getElementById('play-btn').innerText = "⏸";
+            }
+        }, { once: true });
 
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
         const map = L.map('map', { zoomControl: false, fadeAnimation: false, markerZoomAnimation: false }).setView([21.0285, 105.8541], 13);
@@ -410,7 +426,6 @@
             });
         });
 
-        // Tối ưu nén ảnh
         document.getElementById('shop-image').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if(file) {
