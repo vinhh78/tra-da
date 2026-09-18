@@ -69,6 +69,11 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
 
+        /* Bộ lọc màu tối vừa phải, sắc nét, không bị tối quá và cực kỳ hợp giao diện web */
+        .custom-dark-map {
+            filter: brightness(0.9) invert(0.85) contrast(1.15) hue-rotate(190deg) saturate(0.4);
+        }
+
         .leaflet-popup-content-wrapper {
             background: rgba(20, 20, 20, 0.9) !important;
             backdrop-filter: blur(25px);
@@ -113,8 +118,8 @@
         
         <!-- 1. MÀN HÌNH BẢN ĐỒ -->
         <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0 z-10 animate-scale-up">
-            <!-- Đã đổi sang nền bản đồ sáng rõ, dễ nhìn, không bị lỗi API Key -->
-            <div id="map" class="absolute inset-0 w-full h-full z-0 bg-[#e5e3df]"></div>
+            <!-- Bản đồ áp dụng bộ lọc màu tối vừa phải, dịu mắt -->
+            <div id="map" class="absolute inset-0 w-full h-full z-0 custom-dark-map"></div>
 
             <div class="w-full lg:w-[420px] flex flex-col h-[42%] lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-3xl border border-white/20 z-25 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0 backdrop-blur-2xl">
                 <div class="p-3 md:p-4 flex-none border-b border-white/10 bg-white/5 flex items-center justify-between">
@@ -289,7 +294,6 @@
 
         const map = L.map('map', { zoomControl: false }).setView([21.0285, 105.8541], 13);
         
-        // Sử dụng nền bản đồ sáng chuẩn OpenStreetMap không bị lỗi API key
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; OpenStreetMap contributors'
