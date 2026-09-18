@@ -83,7 +83,7 @@
                         <span class="text-[8px]">💿</span>
                     </div>
                     <span class="text-[10px] text-yellow-300 font-medium hidden sm:inline">MCK - Chill</span>
-                    <button onclick="togglePlayMusic()" id="play-btn" class="text-xs text-yellow-300 font-bold px-1">▶</button>
+                    <button onclick="togglePlayMusic()" id="play-btn" class="text-xs text-yellow-300 font-bold px-1 cursor-pointer">⏸</button>
                 </div>
 
                 <div id="auth-container">
@@ -177,8 +177,8 @@
         </div>
     </div>
 
-    <!-- 🎵 AUDIO TRỰC TIẾP PHÁT NHẠC CHILL (Âm lượng tối đa 100%) -->
-    <audio id="bg-audio" loop preload="auto">
+    <!-- 🎵 AUDIO NHẠC TỰ ĐỘNG PHÁT NGẦM -->
+    <audio id="bg-audio" loop preload="auto" autoplay>
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=lofi-study-112191.mp3" type="audio/mp3">
     </audio>
 
@@ -236,7 +236,7 @@
         </div>
     </div>
 
-    <!-- Script Xử Lý Logic Siêu Mượt -->
+    <!-- Script Xử Lý Logic & Auto Play Audio -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCMayrZCPTTBiN43Aj9qu5doGRMPhliOvs",
@@ -259,11 +259,33 @@
         let shops = [];
         let currentUserName = localStorage.getItem('trada_username') || '';
 
-        // 🎵 Điều khiển âm thanh trực tiếp ổn định tuyệt đối trên Mobile
+        // 🎵 Cơ chế tự động phát nhạc khi mở trang & tương tác đầu tiên
         const bgAudio = document.getElementById('bg-audio');
         const playBtn = document.getElementById('play-btn');
         const vinylIcon = document.getElementById('vinyl-icon');
         let isPlaying = false;
+
+        function forcePlayAudio() {
+            bgAudio.volume = 1.0;
+            bgAudio.play().then(() => {
+                isPlaying = true;
+                playBtn.innerText = "⏸";
+                vinylIcon.classList.add('animate-spin');
+            }).catch(err => console.log("Autoplay blocked:", err));
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            forcePlayAudio();
+        });
+
+        // Bắt mọi sự kiện chạm/click đầu tiên trên toàn trang để mở khóa âm thanh nếu bị trình duyệt chặn
+        ['click', 'touchstart', 'scroll'].forEach(evt => {
+            window.addEventListener(evt, () => {
+                if (!isPlaying) {
+                    forcePlayAudio();
+                }
+            }, { once: true });
+        });
 
         function togglePlayMusic() {
             if (isPlaying) {
@@ -272,35 +294,9 @@
                 vinylIcon.classList.remove('animate-spin');
                 isPlaying = false;
             } else {
-                bgAudio.play().then(() => {
-                    playBtn.innerText = "⏸";
-                    vinylIcon.classList.add('animate-spin');
-                    isPlaying = true;
-                }).catch(e => console.log("Audio play error:", e));
+                forcePlayAudio();
             }
         }
-
-        // Tự động kích hoạt phát nhạc ngay khi người dùng chạm bất kỳ đâu lần đầu trên mobile
-        window.addEventListener('DOMContentLoaded', () => {
-            bgAudio.volume = 1.0;
-            bgAudio.play().then(() => {
-                playBtn.innerText = "⏸";
-                vinylIcon.classList.add('animate-spin');
-                isPlaying = true;
-            }).catch(() => {
-                const unlockAudio = () => {
-                    bgAudio.play().then(() => {
-                        playBtn.innerText = "⏸";
-                        vinylIcon.classList.add('animate-spin');
-                        isPlaying = true;
-                        window.removeEventListener('click', unlockAudio);
-                        window.removeEventListener('touchstart', unlockAudio);
-                    });
-                };
-                window.addEventListener('click', unlockAudio);
-                window.addEventListener('touchstart', unlockAudio);
-            });
-        });
 
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
         const map = L.map('map', { zoomControl: false, fadeAnimation: false, markerZoomAnimation: false }).setView([21.0285, 105.8541], 13);
