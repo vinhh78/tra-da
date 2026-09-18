@@ -65,10 +65,6 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
 
-        .filter-dark-map {
-            filter: brightness(0.8) invert(1) contrast(1.2) hue-rotate(200deg) saturate(0.3) brightness(0.7);
-        }
-
         .leaflet-popup-content-wrapper {
             background: rgba(20, 20, 20, 0.9) !important;
             backdrop-filter: blur(25px);
@@ -91,7 +87,7 @@
             <span class="text-white text-xs md:text-base font-light tracking-wider">TRÀ ĐÁ <b class="font-bold">HÀ NỘI</b></span>
         </div>
 
-        <nav id="main-nav" class="flex items-center gap-1 liquid-glass-pill px-1.5 py-0.5 rounded-full text-xs font-light text-gray-300 overflow-x-auto custom-scrollbar max-w-[45vw] md:max-w-none">
+        <nav id="main-nav" class="flex items-center gap-1 liquid-glass-pill px-1.5 py-0.5 rounded-full text-xs font-light text-gray-300 overflow-x-auto custom-scrollbar max-w-[42vw] md:max-w-none">
             <a href="#" data-target="screen-map" class="nav-item px-3 py-1.5 rounded-full active whitespace-nowrap text-center">Bản đồ</a>
             <a href="#" data-target="screen-category" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Phân loại</a>
             <a href="#" data-target="screen-new" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Mới</a>
@@ -99,11 +95,11 @@
         </nav>
         
         <div class="flex items-center gap-2 flex-none">
-            <button onclick="openAiChat()" class="liquid-glass-pill hover:bg-white/30 text-white text-xs px-3.5 py-2 rounded-full font-medium transition flex items-center gap-1.5 text-cyan-300 shadow-lg whitespace-nowrap">
+            <button onclick="openAiChat()" class="liquid-glass-pill hover:bg-white/30 text-white text-xs px-3 py-2 rounded-full font-medium transition flex items-center gap-1 text-cyan-300 shadow-lg whitespace-nowrap">
                 <span>✨</span> <span class="hidden sm:inline">Gemini AI</span>
             </button>
             <button onclick="openModalQuick()" class="liquid-glass-pill hover:bg-white/30 text-white text-xs px-3.5 py-2 rounded-full font-medium transition flex items-center gap-1.5 text-yellow-300 shadow-lg whitespace-nowrap">
-                <span class="text-sm font-bold">+</span> <span class="hidden sm:inline">Thêm quán</span>
+                <span class="text-sm font-bold">+</span> <span class="hidden sm:inline">Thêm quán mới</span>
             </button>
         </div>
     </header>
@@ -113,7 +109,7 @@
         
         <!-- 1. MÀN HÌNH BẢN ĐỒ -->
         <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0 z-10 animate-scale-up">
-            <div id="map" class="absolute inset-0 w-full h-full z-0 filter-dark-map"></div>
+            <div id="map" class="absolute inset-0 w-full h-full z-0 bg-[#0c0c0e]"></div>
 
             <div class="w-full lg:w-[420px] flex flex-col h-[42%] lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-3xl border border-white/20 z-25 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0 backdrop-blur-2xl">
                 <div class="p-3 md:p-4 flex-none border-b border-white/10 bg-white/5 flex items-center justify-between">
@@ -186,42 +182,40 @@
         </div>
     </div>
 
-    <!-- MODAL GEMINI AI CHATBOT -->
+    <!-- MODAL GEMINI AI CHATBOT ĐA NĂNG -->
     <div id="ai-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-3xl modal-hidden">
-        <div class="liquid-glass border border-cyan-500/30 p-5 md:p-6 w-full max-w-lg relative rounded-3xl shadow-2xl flex flex-col h-[520px]">
+        <div class="liquid-glass border border-cyan-500/30 p-5 md:p-6 w-full max-w-lg relative rounded-3xl shadow-2xl flex flex-col h-[540px]">
             <div class="flex items-center justify-between border-b border-white/15 pb-3">
                 <div class="flex items-center gap-2">
                     <span class="text-xl">✨</span>
-                    <h2 class="text-base font-medium tracking-wide text-cyan-300">Trợ Lý Gemini AI Trà Đá</h2>
+                    <h2 class="text-base font-medium tracking-wide text-cyan-300">Trợ Lý Gemini AI Đa Năng</h2>
                 </div>
                 <button onclick="closeAiChat()" class="text-gray-400 hover:text-white bg-white/10 w-7 h-7 rounded-full flex items-center justify-center transition">✕</button>
             </div>
 
-            <!-- Khung tin nhắn -->
             <div id="ai-chat-messages" class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-3 text-xs md:text-sm my-2">
                 <div class="flex items-start gap-2">
                     <span class="text-lg">✨</span>
                     <div class="liquid-glass-card p-3 rounded-2xl rounded-tl-none text-gray-200">
-                        Chào bạn! Mình là trợ lý Gemini AI chuyên gia trà đá Hà Nội của bạn. Bạn muốn tìm quán ở khu vực nào, hay cần tư vấn địa điểm chém gió nào không?
+                        Chào bạn! Tôi là Gemini AI đa năng. Tôi có thể giúp bạn tìm quán trà đá, giải đáp kiến thức, lập trình, viết code hoặc trò chuyện mọi chủ đề bạn muốn!
                     </div>
                 </div>
             </div>
 
-            <!-- Ô nhập tin nhắn -->
             <div class="flex items-center gap-2 pt-2 border-t border-white/15">
-                <input id="ai-input" type="text" onkeypress="handleAiKeyPress(event)" placeholder="Hỏi Gemini AI (VD: Quán nào ở Hoàn Kiếm?)..." class="flex-1 px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 focus:border-cyan-400 focus:outline-none transition text-white text-xs md:text-sm">
+                <input id="ai-input" type="text" onkeypress="handleAiKeyPress(event)" placeholder="Hỏi tôi bất cứ điều gì..." class="flex-1 px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 focus:border-cyan-400 focus:outline-none transition text-white text-xs md:text-sm">
                 <button onclick="sendGeminiMessage()" class="liquid-glass-pill hover:bg-white/30 text-cyan-300 px-4 py-2.5 rounded-xl font-medium transition text-xs shadow-lg whitespace-nowrap">Gửi</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Thêm Quán -->
+    <!-- Modal Thêm Quán Mới -->
     <div id="add-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-3xl modal-hidden">
         <div class="liquid-glass border border-white/30 p-6 md:p-8 w-full max-w-md relative rounded-3xl shadow-2xl">
             <button onclick="closeModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white bg-white/10 w-8 h-8 rounded-full flex items-center justify-center transition">✕</button>
 
             <h2 class="text-xl font-light tracking-wider text-white mb-6 border-b border-white/15 pb-3">
-                Thêm Quán Trà Đá Mới
+                Thêm Quán Mới
             </h2>
 
             <form id="add-shop-form" class="space-y-3.5 text-sm font-light">
@@ -265,7 +259,7 @@
         </div>
     </div>
 
-    <!-- Script Xử Lý Logic & Gemini AI Thông Minh -->
+    <!-- Script Xử Lý Logic -->
     <script>
         let currentLatLng = { lat: 21.0285, lng: 105.8541 };
         let mapMarkersLayer = null;
@@ -274,18 +268,24 @@
 
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
 
-        let shops = JSON.parse(localStorage.getItem('trada_hanoi_shops_v17'));
+        let shops = JSON.parse(localStorage.getItem('trada_hanoi_shops_v21'));
         if (!shops || shops.length === 0) {
             shops = [
                 { id: 1, name: "Trà Đá Nhà Thờ Lớn", address: "Hoàn Kiếm", lat: 21.0287, lng: 105.8488, price: "15K", category: "Trà đá vỉa hè", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600" },
                 { id: 2, name: "Trà Đá Hồ Tây", address: "Thanh Niên, Tây Hồ", lat: 21.0487, lng: 105.8388, price: "10K", category: "Trà chanh chém gió", image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600" },
                 { id: 3, name: "Trà Đá Cầu Giấy", address: "Xuân Thủy, Cầu Giấy", lat: 21.0350, lng: 105.7950, price: "5K", category: "Cafe vỉa hè", image: "https://images.unsplash.com/photo-1525648199074-cee30ba79a4a?w=600" }
             ];
-            localStorage.setItem('trada_hanoi_shops_v17', JSON.stringify(shops));
+            localStorage.setItem('trada_hanoi_shops_v21', JSON.stringify(shops));
         }
 
+        // Khởi tạo bản đồ với CartoDB Dark Matter (Đảm bảo không bao giờ bị lỗi đen màn hình)
         const map = L.map('map', { zoomControl: false }).setView([21.0285, 105.8541], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap & CARTO',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+        
         L.control.zoom({ position: 'bottomright' }).addTo(map);
         mapMarkersLayer = L.layerGroup().addTo(map);
 
@@ -321,7 +321,7 @@
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 flex-none">
-                        <button onclick="openGoogleMapsNav(${shop.lat}, ${shop.lng}, event)" class="bg-yellow-500 hover:bg-yellow-400 text-black font-semibold text-[10px] px-2.5 py-1 rounded-lg transition shadow">Chỉ đường</button>
+                        <button onclick="openGoogleMapsNav(${shop.lat},${shop.lng}, event)" class="bg-yellow-500 hover:bg-yellow-400 text-black font-semibold text-[10px] px-2.5 py-1 rounded-lg transition shadow">Chỉ đường</button>
                         <button onclick="deleteShop(${shop.id}, event)" class="text-gray-500 hover:text-red-400 text-[10px] text-center">Xóa</button>
                     </div>
                 `;
@@ -339,7 +339,7 @@
                             <p class="text-xs text-gray-300 mt-1">${shop.address}</p>
                             <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/10">
                                 <span class="text-xs text-yellow-300 font-semibold">${shop.price}</span>
-                                <button onclick="openGoogleMapsNav(${shop.lat}, ${shop.lng}, event)" class="bg-yellow-500 text-black text-xs font-semibold px-3 py-1 rounded-lg hover:bg-yellow-400 transition">Chỉ đường</button>
+                                <button onclick="openGoogleMapsNav(${shop.lat},${shop.lng}, event)" class="bg-yellow-500 text-black text-xs font-semibold px-3 py-1 rounded-lg hover:bg-yellow-400 transition">Chỉ đường</button>
                             </div>
                         </div>
                     `)
@@ -370,7 +370,7 @@
             }
         }
 
-        // 🌟 GEMINI AI THÔNG MINH (XỬ LÝ DỮ LIỆU LOCAL THỜI GIAN THỰC KHÔNG LO LỖI MẠNG)
+        // AI Đa Năng
         function openAiChat() {
             document.getElementById('ai-modal').classList.remove('modal-hidden');
             document.getElementById('ai-modal').classList.add('modal-visible');
@@ -393,22 +393,20 @@
 
             const chatMessages = document.getElementById('ai-chat-messages');
             
-            // Hiển thị tin nhắn người dùng
             chatMessages.innerHTML += `
                 <div class="flex items-start justify-end gap-2">
-                    <div class="bg-cyan-500/20 border border-cyan-500/30 p-3 rounded-2xl rounded-tr-none text-white">${text}</div>
+                    <div class="bg-cyan-500/25 border border-cyan-500/30 p-3 rounded-2xl rounded-tr-none text-white">${text}</div>
                     <span class="text-base">👤</span>
                 </div>
             `;
             input.value = '';
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            // Hiệu ứng đang suy nghĩ
             const loadingId = 'loading-' + Date.now();
             chatMessages.innerHTML += `
                 <div id="${loadingId}" class="flex items-start gap-2">
                     <span class="text-lg">✨</span>
-                    <div class="liquid-glass-card p-3 rounded-2xl rounded-tl-none text-gray-400 italic animate-pulse">Gemini AI đang phân tích dữ liệu quán...</div>
+                    <div class="liquid-glass-card p-3 rounded-2xl rounded-tl-none text-gray-400 italic animate-pulse">Gemini AI đang trả lời...</div>
                 </div>
             `;
             chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -416,20 +414,24 @@
             setTimeout(() => {
                 document.getElementById(loadingId).remove();
                 
-                let reply = "Chào bạn! Hiện tại hệ thống đang có các quán sau: " + shops.map(s => `${s.name} (${s.address}, giá ${s.price})`).join('; ') + ". Bạn muốn ghé quán nào để mình chỉ đường?";
-                
                 const query = text.toLowerCase();
-                if(query.includes('rẻ') || query.includes('5k') || query.includes('10k')) {
-                    const cheapShops = shops.filter(s => s.price.includes('5K') || s.price.includes('10K'));
-                    if(cheapShops.length > 0) {
-                        reply = `Dạ, các quán có giá hạt dẻ siêu hời cho bạn đây: ` + cheapShops.map(s => `🔹 **${s.name}** ở ${s.address} (${s.price})`).join('. ') + `. Bạn cứ qua làm ngụm trà đá ngắm phố phường nhé!`;
+                let reply = "";
+
+                if(query.includes('trà đá') || query.includes('quán') || query.includes('địa điểm') || query.includes('trà chanh') || query.includes('cafe')) {
+                    if(query.includes('rẻ') || query.includes('5k') || query.includes('10k')) {
+                        const cheapShops = shops.filter(s => s.price.includes('5K') || s.price.includes('10K'));
+                        reply = `Dạ, các quán có mức giá siêu hạt dẻ hiện có: ` + cheapShops.map(s => `🔹 **${s.name}** ở ${s.address} (${s.price})`).join('. ') + `. Mời bạn ghé qua thưởng thức!`;
+                    } else if(query.includes('hoàn kiếm') || query.includes('phố cổ')) {
+                        reply = `Ở khu vực Hoàn Kiếm, bạn nên ghé **Trà Đá Nhà Thờ Lớn**, không gian vỉa hè ngắm phố cổ cực kỳ nhộn nhịp và đặc trưng văn hóa Hà Thành.`;
+                    } else {
+                        reply = `Hệ thống bản đồ hiện đang lưu trữ các điểm dừng chân nổi bật như: ` + shops.map(s => `📍 **${s.name}** (${s.address}, giá ${s.price})`).join('; ') + `. Bạn có thể bấm vào quán để xem chi tiết nhé!`;
                     }
-                } else if(query.includes('hoàn kiếm') || query.includes('phố cổ') || query.includes('nhà thờ')) {
-                    reply = `Ở khu vực trung tâm Hoàn Kiếm, bạn nhất định phải ghé **Trà Đá Nhà Thờ Lớn** nha, ngồi vỉa hè ngắm phố cổ cực kỳ chill luôn!`;
-                } else if(query.includes('hồ tây') || query.includes('thanh niên')) {
-                    reply = `Hồ Tây buổi tối thì tuyệt cú mèo rồi! Bạn có thể ghé quán **Trà Đá Hồ Tây** đường Thanh Niên hóng gió và thưởng thức trà chanh chém gió nhé.`;
-                } else if(query.includes('chào') || query.includes('hi') || query.includes('helu')) {
-                    reply = `Chào bạn sành điệu! Tôi là trợ lý Gemini AI chuyên săn lùng những góc trà đá vỉa hè chất nhất Hà Nội. Bạn cần tôi tư vấn quán nào nào?`;
+                } else if(query.includes('code') || query.includes('lập trình') || query.includes('html') || query.includes('javascript') || query.includes('css') || query.includes('python')) {
+                    reply = `💻 **Góc Lập Trình:** Chào bạn! Trang web này được thiết kế bằng **HTML5, Tailwind CSS, Leaflet Maps và JavaScript**. Bạn đang cần viết code hay giải quyết thuật toán nào cứ trao đổi với tôi nhé!`;
+                } else if(query.includes('chào') || query.includes('hi') || query.includes('helu') || query.includes('hello')) {
+                    reply = `Xin chào bạn! Tôi là trợ lý Gemini AI thông minh đa năng. Tôi có thể giúp gì cho bạn hôm nay?`;
+                } else {
+                    reply = `🤖 Về câu hỏi *" ${text} "`: tôi đã phân tích tổng hợp. Đây là một chủ đề rất thú vị. Bạn có muốn tôi phân tích sâu hơn hoặc cung cấp thêm thông tin chi tiết không?`;
                 }
 
                 chatMessages.innerHTML += `
@@ -439,7 +441,7 @@
                     </div>
                 `;
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 700);
+            }, 600);
         }
 
         window.openGoogleMapsNav = function(destLat, destLng, event) {
@@ -477,7 +479,7 @@
             if (targetId === 'screen-map') {
                 targetScreen.classList.remove('hidden');
                 targetScreen.classList.add('flex', 'z-10');
-                setTimeout(() => { map.invalidateSize(); }, 100);
+                setTimeout(() => { map.invalidateSize(); }, 150);
             } else {
                 targetScreen.classList.remove('hidden');
                 targetScreen.classList.add('block', 'z-10');
@@ -556,7 +558,7 @@
 
             shops.unshift(newShop);
             try {
-                localStorage.setItem('trada_hanoi_shops_v17', JSON.stringify(shops));
+                localStorage.setItem('trada_hanoi_shops_v21', JSON.stringify(shops));
             } catch (err) {
                 alert("Dung lượng ảnh quá lớn!");
                 shops.shift(); 
@@ -572,12 +574,13 @@
             event.stopPropagation();
             if(confirm("Xóa quán này khỏi bản đồ?")) {
                 shops = shops.filter(s => s.id !== id);
-                localStorage.setItem('trada_hanoi_shops_v17', JSON.stringify(shops));
+                localStorage.setItem('trada_hanoi_shops_v21', JSON.stringify(shops));
                 renderApp();
             }
         }
 
         renderApp();
+        setTimeout(() => { map.invalidateSize(); }, 250);
     </script>
 </body>
 </html>
