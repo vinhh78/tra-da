@@ -76,15 +76,14 @@
                 <span class="text-white text-xs md:text-sm font-light tracking-wider">TRÀ ĐÁ <b class="font-bold text-yellow-400">HÀ NỘI</b></span>
             </div>
             
-            <!-- Khu vực phải Header: Phát nhạc & Tài khoản (Không bị đè) -->
+            <!-- Khu vực phải Header: Phát nhạc & Tài khoản -->
             <div class="flex items-center gap-2">
-                <!-- Trình phát nhạc mini gọn gàng trên header -->
                 <div class="liquid-glass-pill px-2.5 py-1 rounded-full flex items-center gap-2 border border-yellow-500/30">
-                    <div id="vinyl-icon" class="w-5 h-5 rounded-full bg-gradient-to-tr from-yellow-500 to-black flex items-center justify-center animate-spin">
+                    <div id="vinyl-icon" class="w-5 h-5 rounded-full bg-gradient-to-tr from-yellow-500 to-black flex items-center justify-center">
                         <span class="text-[8px]">💿</span>
                     </div>
-                    <span class="text-[10px] text-yellow-300 font-medium hidden sm:inline">MCK - Liệm</span>
-                    <button onclick="togglePlayMusic()" id="play-btn" class="text-xs text-yellow-300 font-bold px-1">⏸</button>
+                    <span class="text-[10px] text-yellow-300 font-medium hidden sm:inline">MCK - Chill</span>
+                    <button onclick="togglePlayMusic()" id="play-btn" class="text-xs text-yellow-300 font-bold px-1">▶</button>
                 </div>
 
                 <div id="auth-container">
@@ -178,9 +177,9 @@
         </div>
     </div>
 
-    <!-- 🎵 AUDIO PHÁT NHẠC MCK "LIỆM" (Tự động chạy ngầm, âm lượng tối đa 100%) -->
-    <audio id="bg-audio" autoplay loop preload="auto">
-        <source src="https://audio.jukehost.co.uk/gK5f5Nn675WlFvj3Q4S28vK12j75n675" type="audio/mp3">
+    <!-- 🎵 AUDIO TRỰC TIẾP PHÁT NHẠC CHILL (Âm lượng tối đa 100%) -->
+    <audio id="bg-audio" loop preload="auto">
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=lofi-study-112191.mp3" type="audio/mp3">
     </audio>
 
     <!-- MODAL GEMINI AI -->
@@ -260,26 +259,11 @@
         let shops = [];
         let currentUserName = localStorage.getItem('trada_username') || '';
 
-        // 🎵 Điều khiển nhạc tự động phát & max volume
+        // 🎵 Điều khiển âm thanh trực tiếp ổn định tuyệt đối trên Mobile
         const bgAudio = document.getElementById('bg-audio');
         const playBtn = document.getElementById('play-btn');
         const vinylIcon = document.getElementById('vinyl-icon');
-        let isPlaying = true;
-
-        window.addEventListener('DOMContentLoaded', () => {
-            bgAudio.volume = 1.0; // Đặt âm lượng tối đa
-            bgAudio.play().catch(() => {
-                // Xử lý tự động phát nếu bị trình duyệt chặn trên mobile
-                const enableAudio = () => {
-                    bgAudio.play();
-                    isPlaying = true;
-                    playBtn.innerText = "⏸";
-                    vinylIcon.classList.add('animate-spin');
-                    window.removeEventListener('click', enableAudio);
-                };
-                window.addEventListener('click', enableAudio);
-            });
-        });
+        let isPlaying = false;
 
         function togglePlayMusic() {
             if (isPlaying) {
@@ -288,12 +272,35 @@
                 vinylIcon.classList.remove('animate-spin');
                 isPlaying = false;
             } else {
-                bgAudio.play();
+                bgAudio.play().then(() => {
+                    playBtn.innerText = "⏸";
+                    vinylIcon.classList.add('animate-spin');
+                    isPlaying = true;
+                }).catch(e => console.log("Audio play error:", e));
+            }
+        }
+
+        // Tự động kích hoạt phát nhạc ngay khi người dùng chạm bất kỳ đâu lần đầu trên mobile
+        window.addEventListener('DOMContentLoaded', () => {
+            bgAudio.volume = 1.0;
+            bgAudio.play().then(() => {
                 playBtn.innerText = "⏸";
                 vinylIcon.classList.add('animate-spin');
                 isPlaying = true;
-            }
-        }
+            }).catch(() => {
+                const unlockAudio = () => {
+                    bgAudio.play().then(() => {
+                        playBtn.innerText = "⏸";
+                        vinylIcon.classList.add('animate-spin');
+                        isPlaying = true;
+                        window.removeEventListener('click', unlockAudio);
+                        window.removeEventListener('touchstart', unlockAudio);
+                    });
+                };
+                window.addEventListener('click', unlockAudio);
+                window.addEventListener('touchstart', unlockAudio);
+            });
+        });
 
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
         const map = L.map('map', { zoomControl: false, fadeAnimation: false, markerZoomAnimation: false }).setView([21.0285, 105.8541], 13);
