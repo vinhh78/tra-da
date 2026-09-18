@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+    <!-- Leaflet Routing Machine CSS & JS (Hỗ trợ chỉ đường) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
     <style>
         @keyframes scaleUp {
             from { opacity: 0; transform: scale(0.96) translateY(10px); }
@@ -62,6 +66,9 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
+        /* Tùy chỉnh ẩn bớt bảng hướng dẫn text mặc định của leaflet-routing để giao diện gọn gàng */
+        .leaflet-routing-container { display: none !important; }
+
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
 
@@ -112,20 +119,19 @@
         <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0 z-10 animate-scale-up">
             <div id="map" class="absolute inset-0 w-full h-full z-0 filter-dark-map"></div>
 
-            <div class="w-full lg:w-[420px] flex flex-col h-[40%] lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-3xl border border-white/20 z-25 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0 backdrop-blur-2xl">
+            <div class="w-full lg:w-[420px] flex flex-col h-[42%] lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-3xl border border-white/20 z-25 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0 backdrop-blur-2xl">
                 <div class="p-3 md:p-4 flex-none border-b border-white/10 bg-white/5 flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <h2 class="text-xs md:text-sm uppercase tracking-widest text-gray-300 font-medium" id="list-title">Danh sách quán</h2>
                         <span id="active-filter-badge" class="hidden text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30"></span>
                     </div>
-                    <span class="text-[9px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full border border-red-500/30 animate-pulse">Live</span>
+                    <button onclick="clearRoute()" id="clear-route-btn" class="hidden text-[10px] bg-red-500/20 text-red-300 px-2 py-0.5 rounded-full border border-red-500/30">Xóa đường đi</button>
                 </div>
-                <!-- Vùng chứa danh sách cuộn mượt -->
                 <div id="shop-list" class="flex-1 overflow-y-auto overscroll-contain grid grid-cols-1 gap-2.5 p-3 custom-scrollbar"></div>
             </div>
         </div>
 
-        <!-- 2. MÀN HÌNH PHÂN LOẠI (Bấm vào để lọc bản đồ) -->
+        <!-- 2. MÀN HÌNH PHÂN LOẠI -->
         <div id="screen-category" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20 animate-scale-up">
             <div class="max-w-4xl mx-auto pb-16">
                 <h2 class="text-2xl md:text-3xl font-light tracking-wide mb-2">Phân Loại Cửa Hàng</h2>
@@ -149,7 +155,6 @@
                     </div>
                 </div>
 
-                <!-- Bản quyền cuối trang -->
                 <div class="text-center text-xs text-gray-500 border-t border-white/10 pt-6">
                     © 2026 dembevinh. All rights reserved.
                 </div>
@@ -160,7 +165,6 @@
         <div id="screen-new" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20 animate-scale-up">
             <div class="max-w-4xl mx-auto pb-16">
                 <h2 class="text-2xl md:text-3xl font-light tracking-wide mb-6">Quán Mới Cập Nhật</h2>
-                <p class="text-gray-400 text-sm mb-6">Danh sách các địa điểm mới nhất vừa được ghim lên bản đồ cộng đồng.</p>
                 <div id="new-shop-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12"></div>
                 
                 <div class="text-center text-xs text-gray-500 border-t border-white/10 pt-6">
@@ -186,7 +190,7 @@
         </div>
     </div>
 
-    <!-- Modal Thêm Quán (Có chọn phân loại) -->
+    <!-- Modal Thêm Quán -->
     <div id="add-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-3xl modal-hidden">
         <div class="liquid-glass border border-white/30 p-6 md:p-8 w-full max-w-md relative rounded-3xl shadow-2xl">
             <button onclick="closeModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white bg-white/10 w-8 h-8 rounded-full flex items-center justify-center transition">✕</button>
@@ -236,23 +240,24 @@
         </div>
     </div>
 
-    <!-- Script Xử Lý Logic, LocalStorage & Lọc Phân Loại -->
+    <!-- Script Xử Lý Logic & Chỉ Đường -->
     <script>
         let currentLatLng = { lat: 21.0285, lng: 105.8541 };
         let mapMarkersLayer = null;
+        let routingControl = null;
         let uploadedImageBase64 = ''; 
         let currentFilter = 'Tất cả';
 
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
 
-        let shops = JSON.parse(localStorage.getItem('trada_hanoi_shops_v12'));
+        let shops = JSON.parse(localStorage.getItem('trada_hanoi_shops_v13'));
         if (!shops || shops.length === 0) {
             shops = [
                 { id: 1, name: "Trà Đá Nhà Thờ Lớn", address: "Hoàn Kiếm", lat: 21.0287, lng: 105.8488, price: "15K", category: "Trà đá vỉa hè", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600" },
                 { id: 2, name: "Trà Đá Hồ Tây", address: "Thanh Niên, Tây Hồ", lat: 21.0487, lng: 105.8388, price: "10K", category: "Trà chanh chém gió", image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600" },
                 { id: 3, name: "Trà Đá Cầu Giấy", address: "Xuân Thủy, Cầu Giấy", lat: 21.0350, lng: 105.7950, price: "5K", category: "Cafe vỉa hè", image: "https://images.unsplash.com/photo-1525648199074-cee30ba79a4a?w=600" }
             ];
-            localStorage.setItem('trada_hanoi_shops_v12', JSON.stringify(shops));
+            localStorage.setItem('trada_hanoi_shops_v13', JSON.stringify(shops));
         }
 
         const map = L.map('map', { zoomControl: false }).setView([21.0285, 105.8541], 13);
@@ -274,14 +279,13 @@
             if(newShopContainer) newShopContainer.innerHTML = '';
             mapMarkersLayer.clearLayers();
 
-            // Lọc danh sách theo phân loại
             const filteredShops = currentFilter === 'Tất cả' 
                 ? shops 
                 : shops.filter(s => s.category === currentFilter);
 
             filteredShops.forEach(shop => {
                 const shopCard = document.createElement('div');
-                shopCard.className = "liquid-glass-card rounded-xl overflow-hidden cursor-pointer flex gap-2.5 p-2 items-center group relative flex-none";
+                shopCard.className = "liquid-glass-card rounded-xl overflow-hidden cursor-pointer flex gap-2.5 p-2.5 items-center group relative flex-none";
                 shopCard.innerHTML = `
                     <img src="${shop.image || defaultImage}" class="w-12 h-12 rounded-lg object-cover flex-none group-hover:scale-105 transition duration-300" alt="Shop">
                     <div class="flex-1 min-w-0">
@@ -292,55 +296,113 @@
                             <span class="text-[10px] text-gray-400 bg-white/5 px-1.5 py-0.5 rounded">${shop.category || 'Trà đá'}</span>
                         </div>
                     </div>
-                    <button onclick="deleteShop(${shop.id}, event)" class="absolute top-1.5 right-1.5 text-gray-500 hover:text-red-400 text-xs px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity">✕</button>
+                    <div class="flex flex-col gap-1 flex-none">
+                        <button onclick="getDirections(${shop.lat}, ${shop.lng}, event)" class="bg-yellow-500/20 hover:bg-yellow-500/40 text-yellow-300 text-[10px] px-2 py-1 rounded-lg border border-yellow-500/30 transition">Chỉ đường</button>
+                        <button onclick="deleteShop(${shop.id}, event)" class="text-gray-500 hover:text-red-400 text-[10px] text-center">Xóa</button>
+                    </div>
                 `;
-                shopCard.onclick = () => {
+                shopCard.onclick = (e) => {
+                    if(e.target.tagName === 'BUTTON') return;
                     map.flyTo([shop.lat, shop.lng], 16, { duration: 1.2 });
                 };
                 listContainer.appendChild(shopCard);
 
-                // Marker bản đồ
+                // Render tab Quán Mới
+                if(newShopContainer) {
+                    shops.forEach(s => {
+                        const newCard = document.createElement('div');
+                        newCard.className = "liquid-glass-card rounded-2xl p-4 flex gap-4 items-center cursor-pointer";
+                        newCard.innerHTML = `
+                            <img src="${s.image || defaultImage}" class="w-20 h-20 rounded-xl object-cover flex-none">
+                            <div class="flex-1 min-w-0">
+                                <h3 class="text-sm font-medium text-white">${s.name}</h3>
+                                <p class="text-xs text-gray-400 mt-1">📍 ${s.address}</p>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <span class="text-xs font-medium text-yellow-300 bg-yellow-500/10 px-2.5 py-0.5 rounded-full border border-yellow-500/20">${s.price}</span>
+                                    <span class="text-xs text-gray-300 bg-white/5 px-2 py-0.5 rounded">${s.category || 'Trà đá'}</span>
+                                </div>
+                            </div>
+                        `;
+                        newCard.onclick = () => {
+                            filterByCategory('Tất cả');
+                            map.flyTo([s.lat, s.lng], 16, { duration: 1.2 });
+                        };
+                        newShopContainer.appendChild(newCard);
+                    });
+                }
+
+                // Marker bản đồ với Popup kèm nút chỉ đường
                 L.marker([shop.lat, shop.lng], { icon: teaIcon })
                     .bindPopup(`
-                        <div class="font-sans font-light tracking-wide w-44 p-1">
+                        <div class="font-sans font-light tracking-wide w-48 p-1">
                             <img src="${shop.image || defaultImage}" class="w-full h-24 object-cover mb-2 rounded-xl border border-white/20">
                             <span class="text-white font-medium">${shop.name}</span>
                             <p class="text-xs text-gray-300 mt-1">${shop.address}</p>
-                            <div class="flex items-center justify-between mt-2">
+                            <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/10">
                                 <span class="text-xs text-yellow-300 font-semibold">${shop.price}</span>
-                                <span class="text-[10px] text-gray-300 bg-white/10 px-2 py-0.5 rounded">${shop.category || 'Trà đá'}</span>
+                                <button onclick="getDirections(${shop.lat}, ${shop.lng}, event)" class="bg-yellow-500 text-black text-xs font-medium px-2.5 py-1 rounded-lg hover:bg-yellow-400 transition">Chỉ đường</button>
                             </div>
                         </div>
                     `)
                     .addTo(mapMarkersLayer);
             });
+        }
 
-            // Render tab Quán Mới
-            if(newShopContainer) {
-                shops.forEach(shop => {
-                    const newCard = document.createElement('div');
-                    newCard.className = "liquid-glass-card rounded-2xl p-4 flex gap-4 items-center cursor-pointer";
-                    newCard.innerHTML = `
-                        <img src="${shop.image || defaultImage}" class="w-20 h-20 rounded-xl object-cover flex-none">
-                        <div class="flex-1 min-w-0">
-                            <h3 class="text-sm font-medium text-white">${shop.name}</h3>
-                            <p class="text-xs text-gray-400 mt-1">📍 ${shop.address}</p>
-                            <div class="flex items-center gap-2 mt-2">
-                                <span class="text-xs font-medium text-yellow-300 bg-yellow-500/10 px-2.5 py-0.5 rounded-full border border-yellow-500/20">${shop.price}</span>
-                                <span class="text-xs text-gray-300 bg-white/5 px-2 py-0.5 rounded">${shop.category || 'Trà đá'}</span>
-                            </div>
-                        </div>
-                    `;
-                    newCard.onclick = () => {
-                        filterByCategory('Tất cả');
-                        map.flyTo([shop.lat, shop.lng], 16, { duration: 1.2 });
-                    };
-                    newShopContainer.appendChild(newCard);
+        // 🌟 TÍNH NĂNG CHỈ ĐƯỜNG GIỐNG GOOGLE MAP
+        window.getDirections = function(destLat, destLng, event) {
+            if(event) event.stopPropagation();
+            
+            // Sử dụng định vị thực tế của người dùng nếu cho phép, nếu không lấy tâm Hà Nội
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    drawRoute(userLat, userLng, destLat, destLng);
+                }, () => {
+                    // Mặc định xuất phát từ Nhà Thờ Lớn nếu không lấy được GPS
+                    drawRoute(21.0287, 105.8488, destLat, destLng);
                 });
+            } else {
+                drawRoute(21.0287, 105.8488, destLat, destLng);
             }
         }
 
-        // Hàm lọc danh mục
+        function drawRoute(startLat, startLng, destLat, destLng) {
+            switchScreen('screen-map');
+            if (routingControl) {
+                map.removeControl(routingControl);
+            }
+
+            // Vẽ tuyến đường trực tiếp trên bản đồ
+            routingControl = L.Routing.control({
+                waypoints: [
+                    L.latLng(startLat, startLng),
+                    L.latLng(destLat, destLng)
+                ],
+                routeWhileDragging: false,
+                addWaypoints: false,
+                createMarker: function() { return null; }, // Ẩn marker mặc định của routing để giữ icon đẹp của quán
+                lineOptions: {
+                    styles: [{ color: '#facc15', opacity: 0.8, weight: 5 }]
+                }
+            }).addTo(map);
+
+            document.getElementById('clear-route-btn').classList.remove('hidden');
+            
+            // Mở rộng tùy chọn mở sang Google Maps ứng dụng ngoài nếu muốn
+            if(confirm("Bạn có muốn mở chỉ đường chi tiết bằng Google Maps ứng dụng không?")) {
+                window.open(`https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}`, '_blank');
+            }
+        }
+
+        window.clearRoute = function() {
+            if (routingControl) {
+                map.removeControl(routingControl);
+                routingControl = null;
+            }
+            document.getElementById('clear-route-btn').classList.add('hidden');
+        }
+
         window.filterByCategory = function(category) {
             currentFilter = category;
             switchScreen('screen-map');
@@ -450,7 +512,7 @@
 
             shops.unshift(newShop);
             try {
-                localStorage.setItem('trada_hanoi_shops_v12', JSON.stringify(shops));
+                localStorage.setItem('trada_hanoi_shops_v13', JSON.stringify(shops));
             } catch (err) {
                 alert("Dung lượng ảnh quá lớn!");
                 shops.shift(); 
@@ -466,7 +528,7 @@
             event.stopPropagation();
             if(confirm("Xóa quán này khỏi bản đồ?")) {
                 shops = shops.filter(s => s.id !== id);
-                localStorage.setItem('trada_hanoi_shops_v12', JSON.stringify(shops));
+                localStorage.setItem('trada_hanoi_shops_v13', JSON.stringify(shops));
                 renderApp();
             }
         }
