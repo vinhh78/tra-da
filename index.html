@@ -19,24 +19,31 @@
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
+        @keyframes borderGlow {
+            0% { border-color: rgba(255, 255, 255, 0.2); }
+            50% { border-color: rgba(250, 204, 21, 0.6); }
+            100% { border-color: rgba(255, 255, 255, 0.2); }
+        }
+
         .animate-scale-up {
             animation: scaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
+        /* Hiệu ứng Liquid Glass siêu việt có chiều sâu đa tầng */
         .liquid-glass {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.03));
-            backdrop-filter: blur(40px) saturate(200%);
-            -webkit-backdrop-filter: blur(40px) saturate(200%);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 20px 40px rgba(0, 0, 0, 0.6);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02));
+            backdrop-filter: blur(50px) saturate(220%);
+            -webkit-backdrop-filter: blur(50px) saturate(220%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.4), 0 25px 50px rgba(0, 0, 0, 0.7);
         }
 
         .liquid-glass-pill {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04));
-            backdrop-filter: blur(30px) saturate(180%);
-            -webkit-backdrop-filter: blur(30px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5), 0 8px 25px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.03));
+            backdrop-filter: blur(35px) saturate(190%);
+            -webkit-backdrop-filter: blur(35px) saturate(190%);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6), 0 10px 30px rgba(0, 0, 0, 0.5);
             transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .liquid-glass-pill:active { transform: scale(0.95); }
@@ -46,24 +53,25 @@
             transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .nav-item.active {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.12));
-            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.8), 0 4px 15px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.45);
-            color: #ffffff;
-            font-weight: 500;
+            background: linear-gradient(135deg, rgba(250, 204, 21, 0.3), rgba(255, 255, 255, 0.1));
+            box-shadow: inset 0 1px 3px rgba(250, 204, 21, 0.8), 0 6px 20px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(250, 204, 21, 0.6);
+            color: #fde047;
+            font-weight: 600;
         }
 
         .liquid-glass-card {
-            background: linear-gradient(135deg, rgba(35, 35, 35, 0.6), rgba(15, 15, 15, 0.4));
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            background: linear-gradient(135deg, rgba(40, 40, 40, 0.55), rgba(15, 15, 15, 0.35));
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            animation: borderGlow 6s infinite;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .liquid-glass-card:hover {
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-3px) scale(1.01);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-color: rgba(250, 204, 21, 0.5);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 15px rgba(250, 204, 21, 0.2);
         }
 
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
@@ -77,8 +85,9 @@
             background: rgba(20, 20, 20, 0.9) !important;
             backdrop-filter: blur(25px);
             color: white !important;
-            border: 1px solid rgba(255, 255, 255, 0.25) !important;
+            border: 1px solid rgba(250, 204, 21, 0.4) !important;
             border-radius: 20px !important;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
         }
         .leaflet-popup-tip { background: rgba(20, 20, 20, 0.9) !important; }
 
@@ -91,14 +100,14 @@
     <!-- Header -->
     <header class="w-full liquid-glass flex-none z-50 px-3.5 md:px-6 py-2.5 flex items-center justify-between border-b border-white/10 gap-2">
         <div class="font-bold tracking-widest uppercase flex items-center gap-2 flex-none cursor-pointer" onclick="filterByCategory('Tất cả')">
-            <span class="text-red-500 text-xs animate-pulse">●</span>
-            <span class="text-white text-xs md:text-base font-light tracking-wider">TRÀ ĐÁ <b class="font-bold">HÀ NỘI</b></span>
+            <span class="text-yellow-400 text-xs animate-ping">●</span>
+            <span class="text-white text-xs md:text-base font-light tracking-wider">TRÀ ĐÁ <b class="font-bold text-yellow-400">HÀ NỘI</b></span>
         </div>
 
-        <nav id="main-nav" class="flex items-center gap-1 liquid-glass-pill px-1.5 py-0.5 rounded-full text-xs font-light text-gray-300 overflow-x-auto custom-scrollbar max-w-[42vw] md:max-w-none">
+        <nav id="main-nav" class="flex items-center gap-1 liquid-glass-pill px-1.5 py-0.5 rounded-full text-xs font-light text-gray-300 overflow-x-auto custom-scrollbar max-w-[38vw] md:max-w-none">
             <a href="#" data-target="screen-map" class="nav-item px-3 py-1.5 rounded-full active whitespace-nowrap text-center">Bản đồ</a>
             <a href="#" data-target="screen-category" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Phân loại</a>
-            <a href="#" data-target="screen-new" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Mới</a>
+            <a href="#" data-target="screen-leaderboard" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">🏆 Bảng vàng</a>
             <a href="#" data-target="screen-highlight" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Tiêu điểm</a>
         </nav>
         
@@ -125,7 +134,7 @@
                         <h2 class="text-xs md:text-sm uppercase tracking-widest text-gray-300 font-medium" id="list-title">Danh sách quán</h2>
                         <span id="active-filter-badge" class="hidden text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30"></span>
                     </div>
-                    <span class="text-[9px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full border border-red-500/30 animate-pulse">Live Cloud</span>
+                    <span class="text-[9px] bg-red-500/20 text-red-400 px-2.5 py-0.5 rounded-full border border-red-500/30 animate-pulse font-medium">🔥 Live Cloud</span>
                 </div>
                 <div id="shop-list" class="flex-1 overflow-y-auto overscroll-contain grid grid-cols-1 gap-2.5 p-3 custom-scrollbar"></div>
             </div>
@@ -161,12 +170,50 @@
             </div>
         </div>
 
-        <!-- 3. MÀN HÌNH MỚI -->
-        <div id="screen-new" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20 animate-scale-up">
-            <div class="max-w-4xl mx-auto pb-16">
-                <h2 class="text-2xl md:text-3xl font-light tracking-wide mb-6">Quán Mới Cập Nhật</h2>
-                <div id="new-shop-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12"></div>
+        <!-- 3. MÀN HÌNH BẢNG VÀNG GAMIFICATION (VINH DANH ĐÓNG GÓP) -->
+        <div id="screen-leaderboard" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20 animate-scale-up">
+            <div class="max-w-3xl mx-auto pb-16">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="text-3xl">🏆</span>
+                    <h2 class="text-2xl md:text-3xl font-light tracking-wide">Bảng Vàng Thánh Trà Đá</h2>
+                </div>
+                <p class="text-gray-400 text-sm mb-8">Vinh danh những thành viên tích cực săn lùng và chia sẻ nhiều tọa độ vỉa hè nhất cho cộng đồng.</p>
                 
+                <div class="liquid-glass rounded-3xl p-6 space-y-4 mb-8 shadow-2xl">
+                    <div class="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-yellow-500/20 to-transparent border border-yellow-500/40">
+                        <div class="flex items-center gap-4">
+                            <span class="text-2xl font-bold text-yellow-400">👑 1</span>
+                            <div>
+                                <h4 class="font-medium text-white">Phạm Công Vinh</h4>
+                                <span class="text-[10px] bg-yellow-500/30 text-yellow-300 px-2 py-0.5 rounded-full">Đại Sư Trà Đá</span>
+                            </div>
+                        </div>
+                        <span class="text-sm font-bold text-yellow-300">12 Tọa độ</span>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10">
+                        <div class="flex items-center gap-4">
+                            <span class="text-2xl font-bold text-gray-300">🥈 2</span>
+                            <div>
+                                <h4 class="font-medium text-white">Hà Anh Chill</h4>
+                                <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full">Sành Sỏi Phố Cổ</span>
+                            </div>
+                        </div>
+                        <span class="text-sm font-bold text-gray-300">8 Tọa độ</span>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10">
+                        <div class="flex items-center gap-4">
+                            <span class="text-2xl font-bold text-amber-600">🥉 3</span>
+                            <div>
+                                <h4 class="font-medium text-white">Cộng Đồng Hà Nội</h4>
+                                <span class="text-[10px] bg-white/10 text-gray-300 px-2 py-0.5 rounded-full">Thám Tử Vỉa Hè</span>
+                            </div>
+                        </div>
+                        <span class="text-sm font-bold text-gray-300">5 Tọa độ</span>
+                    </div>
+                </div>
+
                 <div class="text-center text-xs text-gray-500 border-t border-white/10 pt-6">
                     © 2026 dembevinh. All rights reserved.
                 </div>
@@ -223,7 +270,7 @@
             <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-white/10 w-8 h-8 rounded-full flex items-center justify-center transition z-10">✕</button>
 
             <h2 class="text-xl font-light tracking-wider text-white mb-4 border-b border-white/15 pb-3">
-                Thêm Quán Mới
+                Thêm Quán Mới (+ Điểm Vinh Danh)
             </h2>
 
             <form id="add-shop-form" class="space-y-3 text-sm font-light">
@@ -378,29 +425,6 @@
                     `)
                     .addTo(mapMarkersLayer);
             });
-
-            if(newShopContainer) {
-                shops.forEach(s => {
-                    const newCard = document.createElement('div');
-                    newCard.className = "liquid-glass-card rounded-2xl p-4 flex gap-4 items-center cursor-pointer";
-                    newCard.innerHTML = `
-                        <img src="${s.image || defaultImage}" class="w-20 h-20 rounded-xl object-cover flex-none">
-                        <div class="flex-1 min-w-0">
-                            <h3 class="text-sm font-medium text-white">${s.name}</h3>
-                            <p class="text-xs text-gray-400 mt-1">📍 ${s.address}</p>
-                            <div class="flex items-center gap-2 mt-2">
-                                <span class="text-xs font-medium text-yellow-300 bg-yellow-500/10 px-2.5 py-0.5 rounded-full border border-yellow-500/20">${s.price}</span>
-                                <span class="text-xs text-gray-300 bg-white/5 px-2 py-0.5 rounded">${s.category || 'Trà đá'}</span>
-                            </div>
-                        </div>
-                    `;
-                    newCard.onclick = () => {
-                        filterByCategory('Tất cả');
-                        map.flyTo([s.lat, s.lng], 16, { duration: 1.2 });
-                    };
-                    newShopContainer.appendChild(newCard);
-                });
-            }
         }
 
         function openAiChat() {
@@ -450,7 +474,7 @@
                 
                 const query = text.toLowerCase();
                 if(query.includes('rẻ') || query.includes('5k') || query.includes('10k')) {
-                    const cheapShops = shops.filter(s => s.price.includes('5K') || s.price.includes('10K'));
+                    const cheapShops = shops.filter(s => s.price.includes('5K') || s.price.includes('10K') || s.price.includes('5k'));
                     if(cheapShops.length > 0) {
                         reply = `Dạ, các quán có giá hạt dẻ siêu hời trên Cloud cho bạn đây: ` + cheapShops.map(s => `🔹 **${s.name}** ở ${s.address} (${s.price})`).join('. ') + `. Bạn cứ qua làm ngụm trà đá nhé!`;
                     }
@@ -529,7 +553,6 @@
             });
         });
 
-        // 🌟 Xử lý nén ảnh thông minh cho điện thoại (Có trạng thái khóa/mở nút bấm trực quan)
         document.getElementById('shop-image').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if(file) {
@@ -568,7 +591,6 @@
                         uploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.65);
                         document.getElementById('image-preview-container').innerHTML = `<img src="${uploadedImageBase64}" class="w-full h-24 object-cover rounded-xl border border-white/20">`;
                         
-                        // Mở khóa nút bấm khi nén xong
                         submitBtn.disabled = false;
                         submitBtn.innerText = "✓ Xác nhận ghim lên bản đồ chung";
                         submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
