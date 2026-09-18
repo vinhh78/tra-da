@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Trà Đá Hà Nội - Bản Đồ Tra Đá</title>
+    <title>Trà Đá Hà Nội - Bản Đồ Cộng Đồng</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -15,13 +15,8 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes pulseGlow {
-            0%, 100% { border-color: rgba(255, 255, 255, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-            50% { border-color: rgba(255, 255, 255, 0.4); box-shadow: 0 15px 40px rgba(255, 255, 255, 0.1); }
-        }
-
         .animate-fade-in {
-            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .liquid-glass {
@@ -30,7 +25,6 @@
             -webkit-backdrop-filter: blur(40px) saturate(220%);
             border: 1px solid rgba(255, 255, 255, 0.22);
             box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.5), 0 20px 40px rgba(0, 0, 0, 0.6);
-            animation: pulseGlow 6s infinite ease-in-out;
         }
 
         .liquid-glass-pill {
@@ -41,9 +35,7 @@
             box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6), 0 8px 25px rgba(0, 0, 0, 0.4);
             transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        .liquid-glass-pill:active {
-            transform: scale(0.96);
-        }
+        .liquid-glass-pill:active { transform: scale(0.96); }
 
         .nav-item {
             position: relative;
@@ -62,17 +54,17 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s ease;
         }
         .liquid-glass-card:hover {
-            background: linear-gradient(135deg, rgba(55, 55, 55, 0.7), rgba(25, 25, 25, 0.5));
             border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-3px) scale(1.01);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: translateY(-2px);
         }
 
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.25); border-radius: 10px; }
+        /* Tối ưu thanh cuộn mượt cho điện thoại */
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
 
         .filter-dark-map {
             filter: brightness(0.8) invert(1) contrast(1.2) hue-rotate(200deg) saturate(0.3) brightness(0.7);
@@ -84,24 +76,22 @@
             color: white !important;
             border: 1px solid rgba(255, 255, 255, 0.25) !important;
             border-radius: 20px !important;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6) !important;
         }
         .leaflet-popup-tip { background: rgba(20, 20, 20, 0.9) !important; }
 
-        .modal-hidden { opacity: 0; pointer-events: none; transform: scale(0.9) translateY(20px); visibility: hidden; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-        .modal-visible { opacity: 1; pointer-events: auto; transform: scale(1) translateY(0); visibility: visible; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .modal-hidden { opacity: 0; pointer-events: none; transform: scale(0.9) translateY(20px); visibility: hidden; transition: all 0.3s ease; }
+        .modal-visible { opacity: 1; pointer-events: auto; transform: scale(1) translateY(0); visibility: visible; transition: all 0.3s ease; }
     </style>
 </head>
 <body class="bg-[#030305] text-white font-sans h-screen flex flex-col overflow-hidden">
     
-    <!-- Header Động Phong Cách Liquid Glass -->
+    <!-- Header -->
     <header class="w-full liquid-glass flex-none z-50 px-3.5 md:px-6 py-3 flex items-center justify-between border-b border-white/10 gap-2 animate-fade-in">
         <div class="font-bold tracking-widest uppercase flex items-center gap-2 flex-none">
             <span class="text-red-500 text-xs animate-pulse">●</span>
             <span class="text-white text-sm md:text-base font-light tracking-wider">TRÀ ĐÁ <b class="font-bold">HÀ NỘI</b></span>
         </div>
 
-        <!-- Menu điều hướng động -->
         <nav id="main-nav" class="flex items-center gap-1.5 liquid-glass-pill px-2 py-1 rounded-full text-xs font-light text-gray-300 overflow-x-auto custom-scrollbar max-w-[48vw] md:max-w-none">
             <a href="#" data-target="screen-map" class="nav-item px-3 py-1.5 rounded-full active whitespace-nowrap text-center">Bản đồ</a>
             <a href="#" data-target="screen-category" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Phân loại</a>
@@ -122,13 +112,14 @@
         <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0 z-10 animate-fade-in">
             <div id="map" class="absolute inset-0 w-full h-full z-0 filter-dark-map"></div>
 
-            <!-- Khung danh sách quán trượt mượt trên mobile & desktop -->
-            <div class="w-full lg:w-[420px] flex flex-col h-[36%] lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-3xl border border-white/20 z-25 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0 backdrop-blur-2xl">
+            <!-- Khung danh sách quán hỗ trợ cuộn dọc mượt mà -->
+            <div class="w-full lg:w-[420px] flex flex-col h-[42%] lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-3xl border border-white/20 z-25 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0 backdrop-blur-2xl">
                 <div class="p-3 md:p-4 flex-none border-b border-white/10 bg-white/5 flex items-center justify-between">
                     <h2 class="text-xs md:text-sm uppercase tracking-widest text-gray-300 font-medium">Danh sách quán gần đây</h2>
                     <span class="text-[10px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full border border-red-500/30 animate-pulse">Live</span>
                 </div>
-                <div id="shop-list" class="flex-1 overflow-y-auto grid grid-cols-1 gap-2 p-2.5 md:p-3 custom-scrollbar"></div>
+                <!-- Vùng chứa danh sách có thể cuộn (Scrollable) -->
+                <div id="shop-list" class="flex-1 overflow-y-auto grid grid-cols-1 gap-2.5 p-3 custom-scrollbar"></div>
             </div>
         </div>
 
@@ -139,17 +130,14 @@
                 <div class="h-48 liquid-glass-card rounded-2xl p-6 flex flex-col justify-end cursor-pointer">
                     <span class="text-3xl mb-2">🍵</span>
                     <h3 class="text-lg font-medium">Trà đá vỉa hè</h3>
-                    <p class="text-xs text-gray-400 mt-1">Không gian mở, ghế nhựa truyền thống.</p>
                 </div>
                 <div class="h-48 liquid-glass-card rounded-2xl p-6 flex flex-col justify-end cursor-pointer">
                     <span class="text-3xl mb-2">🍋</span>
                     <h3 class="text-lg font-medium">Trà chanh chém gió</h3>
-                    <p class="text-xs text-gray-400 mt-1">Tụ tập bạn bè về đêm nhộn nhịp.</p>
                 </div>
                 <div class="h-48 liquid-glass-card rounded-2xl p-6 flex flex-col justify-end cursor-pointer">
                     <span class="text-3xl mb-2">☕</span>
                     <h3 class="text-lg font-medium">Cafe vỉa hè</h3>
-                    <p class="text-xs text-gray-400 mt-1">Góc phố quen thuộc của giới trẻ thủ đô.</p>
                 </div>
             </div>
         </div>
@@ -157,7 +145,6 @@
         <!-- Màn hình mới -->
         <div id="screen-new" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20 animate-fade-in">
             <h2 class="text-2xl md:text-3xl font-light tracking-wide mb-6">Quán Mới Cập Nhật</h2>
-            <p class="text-gray-400 text-sm">Các địa điểm được cộng đồng đóng góp liên tục theo thời gian thực.</p>
         </div>
 
         <!-- Màn hình tiêu điểm -->
@@ -166,37 +153,36 @@
             <div class="h-64 liquid-glass-card rounded-3xl p-8 flex flex-col justify-center items-center text-center">
                 <span class="text-4xl mb-3">🔥</span>
                 <h3 class="text-xl font-medium text-yellow-300">Góc trà đá Phố Cổ huyền thoại</h3>
-                <p class="text-xs text-gray-400 mt-2 max-w-md">Được bình chọn là điểm đến có góc nhìn ngắm phố phường đẹp nhất tuần qua.</p>
             </div>
         </div>
     </div>
 
-    <!-- Modal Thêm Quán Động -->
+    <!-- Modal Thêm Quán -->
     <div id="add-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-3xl modal-hidden">
         <div class="liquid-glass border border-white/30 p-6 md:p-8 w-full max-w-md relative rounded-3xl shadow-2xl">
-            <button onclick="closeModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white bg-white/10 w-8 h-8 rounded-full flex items-center justify-center transition hover:bg-white/20">✕</button>
+            <button onclick="closeModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white bg-white/10 w-8 h-8 rounded-full flex items-center justify-center transition">✕</button>
 
-            <h2 class="text-xl font-light tracking-wider text-white mb-6 border-b border-white/15 pb-3 flex items-center gap-2">
-                <span class="text-yellow-400">✦</span> Thêm Quán Trà Đá Mới
+            <h2 class="text-xl font-light tracking-wider text-white mb-6 border-b border-white/15 pb-3">
+                Thêm Quán Trà Đá Mới
             </h2>
 
             <form id="add-shop-form" class="space-y-4 text-sm font-light">
-                <div class="border-2 border-dashed border-white/25 hover:border-yellow-400/60 p-4 text-center cursor-pointer transition relative rounded-2xl bg-black/40 group">
+                <div class="border-2 border-dashed border-white/25 hover:border-yellow-400/60 p-4 text-center cursor-pointer transition relative rounded-2xl bg-black/40">
                     <input type="file" id="shop-image" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     <div id="image-preview-container" class="flex flex-col items-center justify-center pointer-events-none">
-                        <span class="text-2xl mb-1 group-hover:scale-110 transition">📸</span>
+                        <span class="text-2xl mb-1">📸</span>
                         <span class="text-gray-300 text-xs">Chạm để tải ảnh mặt tiền quán</span>
                     </div>
                 </div>
 
                 <div>
-                    <input id="shop-name" required type="text" class="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 focus:border-yellow-400 focus:outline-none transition text-white text-sm" placeholder="Tên quán (VD: Trà đá cô Mai)">
+                    <input id="shop-name" required type="text" class="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 focus:border-yellow-400 focus:outline-none transition text-white text-sm" placeholder="Tên quán">
                 </div>
                 <div>
-                    <input id="shop-address" required type="text" class="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 focus:border-yellow-400 focus:outline-none transition text-white text-sm" placeholder="Địa chỉ (VD: Ngõ 5 Tự Do)">
+                    <input id="shop-address" required type="text" class="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 focus:border-yellow-400 focus:outline-none transition text-white text-sm" placeholder="Địa chỉ">
                 </div>
                 <div>
-                    <input id="shop-price" required type="text" class="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 focus:border-yellow-400 focus:outline-none transition text-white text-sm" placeholder="Mức giá (VD: 5K - 10K)">
+                    <input id="shop-price" required type="text" class="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 focus:border-yellow-400 focus:outline-none transition text-white text-sm" placeholder="Mức giá (VD: 10K)">
                 </div>
 
                 <div class="pt-3">
@@ -208,7 +194,6 @@
         </div>
     </div>
 
-    <!-- Script Xử Lý Logic, LocalStorage & Hiệu ứng động -->
     <script>
         let currentLatLng = { lat: 21.0285, lng: 105.8541 };
         let mapMarkersLayer = null;
@@ -216,13 +201,14 @@
 
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
 
-        let shops = JSON.parse(localStorage.getItem('trada_hanoi_shops_v8'));
+        let shops = JSON.parse(localStorage.getItem('trada_hanoi_shops_v9'));
         if (!shops || shops.length === 0) {
             shops = [
                 { id: 1, name: "Trà Đá Nhà Thờ Lớn", address: "Hoàn Kiếm", lat: 21.0287, lng: 105.8488, price: "15K", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600" },
-                { id: 2, name: "Trà Đá Hồ Tây", address: "Thanh Niên, Tây Hồ", lat: 21.0487, lng: 105.8388, price: "10K", image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600" }
+                { id: 2, name: "Trà Đá Hồ Tây", address: "Thanh Niên, Tây Hồ", lat: 21.0487, lng: 105.8388, price: "10K", image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600" },
+                { id: 3, name: "Trà Đá Cầu Giấy", address: "Xuân Thủy, Cầu Giấy", lat: 21.0350, lng: 105.7950, price: "5K", image: "https://images.unsplash.com/photo-1525648199074-cee30ba79a4a?w=600" }
             ];
-            localStorage.setItem('trada_hanoi_shops_v8', JSON.stringify(shops));
+            localStorage.setItem('trada_hanoi_shops_v9', JSON.stringify(shops));
         }
 
         const map = L.map('map', { zoomControl: false }).setView([21.0285, 105.8541], 13);
@@ -231,7 +217,7 @@
         mapMarkersLayer = L.layerGroup().addTo(map);
 
         const teaIcon = L.divIcon({
-            html: `<div style="font-size: 26px; filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.9)); transition: transform 0.3s;" class="hover:scale-125">📍</div>`,
+            html: `<div style="font-size: 26px; filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.9));">📍</div>`,
             className: 'bg-transparent border-none',
             iconSize: [26, 26],
             iconAnchor: [13, 13]
@@ -244,9 +230,9 @@
 
             shops.forEach(shop => {
                 const shopCard = document.createElement('div');
-                shopCard.className = "liquid-glass-card rounded-xl overflow-hidden cursor-pointer flex gap-2.5 p-2.5 items-center group relative animate-fade-in";
+                shopCard.className = "liquid-glass-card rounded-xl overflow-hidden cursor-pointer flex gap-3 p-2.5 items-center group relative animate-fade-in";
                 shopCard.innerHTML = `
-                    <img src="${shop.image || defaultImage}" class="w-12 h-12 rounded-lg object-cover flex-none group-hover:scale-110 transition duration-500" alt="Shop">
+                    <img src="${shop.image || defaultImage}" class="w-14 h-14 rounded-lg object-cover flex-none group-hover:scale-105 transition duration-300" alt="Shop">
                     <div class="flex-1 min-w-0">
                         <h3 class="text-xs font-medium text-white truncate group-hover:text-yellow-300 transition">${shop.name}</h3>
                         <p class="text-[11px] text-gray-400 truncate">${shop.address}</p>
@@ -366,7 +352,7 @@
 
             shops.unshift(newShop);
             try {
-                localStorage.setItem('trada_hanoi_shops_v8', JSON.stringify(shops));
+                localStorage.setItem('trada_hanoi_shops_v9', JSON.stringify(shops));
             } catch (err) {
                 alert("Dung lượng ảnh quá lớn!");
                 shops.shift(); 
@@ -383,7 +369,7 @@
             event.stopPropagation();
             if(confirm("Xóa quán này khỏi bản đồ?")) {
                 shops = shops.filter(s => s.id !== id);
-                localStorage.setItem('trada_hanoi_shops_v8', JSON.stringify(shops));
+                localStorage.setItem('trada_hanoi_shops_v9', JSON.stringify(shops));
                 renderApp();
             }
         }
