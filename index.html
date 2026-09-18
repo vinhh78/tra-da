@@ -10,30 +10,32 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
+        /* Hiệu ứng Liquid Glass chuẩn kính lỏng trong suốt */
         .liquid-glass {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.03));
-            backdrop-filter: blur(30px) saturate(200%);
-            -webkit-backdrop-filter: blur(30px) saturate(200%);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5), 0 20px 40px rgba(0, 0, 0, 0.4);
+            background: rgba(20, 20, 20, 0.45);
+            backdrop-filter: blur(35px) saturate(200%);
+            -webkit-backdrop-filter: blur(35px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.3);
         }
 
         .liquid-glass-pill {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
-            backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6), 0 8px 25px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4), 0 10px 30px rgba(0, 0, 0, 0.4);
         }
 
         .liquid-glass-card {
-            background: linear-gradient(135deg, rgba(40, 40, 40, 0.6), rgba(20, 20, 20, 0.4));
+            background: rgba(30, 30, 30, 0.35);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.12);
             transition: all 0.3s ease;
         }
         .liquid-glass-card:hover {
+            background: rgba(50, 50, 50, 0.5);
             border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
         }
@@ -46,36 +48,38 @@
         }
 
         .leaflet-popup-content-wrapper {
-            background: rgba(20, 20, 20, 0.85) !important;
-            backdrop-filter: blur(20px);
+            background: rgba(20, 20, 20, 0.8) !important;
+            backdrop-filter: blur(25px);
             color: white !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.25) !important;
             border-radius: 20px !important;
         }
-        .leaflet-popup-tip { background: rgba(20, 20, 20, 0.85) !important; }
+        .leaflet-popup-tip { background: rgba(20, 20, 20, 0.8) !important; }
 
         .modal-hidden { opacity: 0; pointer-events: none; transform: scale(0.95); visibility: hidden; }
         .modal-visible { opacity: 1; pointer-events: auto; transform: scale(1); visibility: visible; }
     </style>
 </head>
-<body class="bg-[#08080a] text-white font-sans h-screen flex flex-col overflow-hidden">
+<body class="bg-[#050507] text-white font-sans h-screen flex flex-col overflow-hidden">
     
+    <!-- Header kính lỏng -->
     <header class="w-full liquid-glass flex-none z-50 px-4 md:px-6 h-16 flex items-center justify-between border-b border-white/10">
         <div class="flex items-center gap-4">
             <div class="font-bold text-lg tracking-widest uppercase flex flex-col items-center leading-none">
                 <span class="text-red-500 text-xs">Trà Đá</span>
                 <span class="text-white text-base">Hà Nội</span>
             </div>
-            <nav id="main-nav" class="hidden md:flex items-center gap-2 liquid-glass-pill px-3 py-1 rounded-full text-sm font-light text-gray-300">
-                <a href="#" data-target="screen-category" class="nav-item px-3 py-1 rounded-full hover:text-white transition">Các dòng quán</a>
-                <a href="#" data-target="screen-new" class="nav-item px-3 py-1 rounded-full hover:text-white transition">Quán mới</a>
-                <a href="#" data-target="screen-map" class="nav-item px-3 py-1 rounded-full text-white bg-white/20 font-medium">Bản đồ</a>
-                <a href="#" data-target="screen-highlight" class="nav-item px-3 py-1 rounded-full hover:text-white transition">Tiêu điểm</a>
+            <!-- Menu dạng viên thuốc Liquid Glass -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1 liquid-glass-pill px-2 py-1 rounded-full text-sm font-light text-gray-300">
+                <a href="#" data-target="screen-category" class="nav-item px-4 py-1.5 rounded-full hover:text-white transition">Các dòng quán</a>
+                <a href="#" data-target="screen-new" class="nav-item px-4 py-1.5 rounded-full hover:text-white transition">Quán mới</a>
+                <a href="#" data-target="screen-map" class="nav-item px-4 py-1.5 rounded-full text-white bg-white/20 font-medium shadow-inner">Bản đồ</a>
+                <a href="#" data-target="screen-highlight" class="nav-item px-4 py-1.5 rounded-full hover:text-white transition">Tiêu điểm</a>
             </nav>
         </div>
         
         <div class="flex items-center gap-3">
-            <button onclick="openModalQuick()" class="liquid-glass-pill hover:bg-white/30 text-white text-xs px-4 py-2 rounded-full font-medium transition flex items-center gap-1.5 text-yellow-300">
+            <button onclick="openModalQuick()" class="liquid-glass-pill hover:bg-white/25 text-white text-xs px-4 py-2 rounded-full font-medium transition flex items-center gap-1.5 text-yellow-300 shadow-lg">
                 <span>+</span> Thêm quán
             </button>
         </div>
@@ -83,19 +87,22 @@
 
     <div id="app-screens" class="flex-1 w-full overflow-hidden relative flex flex-col lg:flex-row">
         
-        <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0 z-10 bg-[#08080a]">
-            <div class="w-full lg:w-[420px] flex flex-col h-[45%] lg:h-full liquid-glass border-r border-white/10 z-20 order-2 lg:order-1">
-                <div class="p-4 md:p-6 flex-none border-b border-white/5">
+        <!-- Màn hình bản đồ: Sidebar dạng kính mờ nổi đè lên bản đồ -->
+        <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0 z-10">
+            <!-- Bản đồ nằm tràn toàn màn hình ở dưới -->
+            <div id="map" class="absolute inset-0 w-full h-full z-0 filter-dark-map"></div>
+
+            <!-- Sidebar danh sách quán làm bằng kính lỏng (Liquid Glass) nổi lên trên bản đồ -->
+            <div class="w-full lg:w-[420px] flex flex-col h-[45%] lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-3xl border border-white/20 z-20 order-2 lg:order-1 shadow-2xl overflow-hidden">
+                <div class="p-4 md:p-5 flex-none border-b border-white/10 bg-white/5 backdrop-blur-md">
                     <h2 class="text-lg md:text-xl font-medium tracking-wide">Danh sách quán</h2>
                 </div>
                 <div id="shop-list" class="flex-1 overflow-y-auto grid grid-cols-1 gap-3 p-3 md:p-4 custom-scrollbar"></div>
             </div>
-            <div class="w-full lg:flex-1 h-[55%] lg:h-full relative order-1 lg:order-2">
-                <div id="map" class="w-full h-full z-10 filter-dark-map"></div>
-            </div>
         </div>
 
-        <div id="screen-category" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#08080a]">
+        <!-- Các màn hình phụ -->
+        <div id="screen-category" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#050507] z-20">
             <h2 class="text-2xl md:text-3xl font-light tracking-wide mb-6">Các Dòng Quán</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 <div class="h-48 liquid-glass-card rounded-2xl p-6 flex flex-col justify-end cursor-pointer">
@@ -113,16 +120,17 @@
             </div>
         </div>
 
-        <div id="screen-new" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#08080a]">
+        <div id="screen-new" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#050507] z-20">
             <h2 class="text-2xl md:text-3xl font-light tracking-wide mb-6">Quán Mới Cập Nhật</h2>
         </div>
 
-        <div id="screen-highlight" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#08080a]">
+        <div id="screen-highlight" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#050507] z-20">
             <h2 class="text-2xl md:text-3xl font-light tracking-wide mb-6">Tiêu Điểm</h2>
         </div>
     </div>
 
-    <div class="md:hidden flex-none liquid-glass border-t border-white/10 px-4 py-3 flex justify-around items-center z-50">
+    <!-- Thanh điều hướng di động dưới cùng -->
+    <div class="md:hidden flex-none liquid-glass border-t border-white/15 px-4 py-3 flex justify-around items-center z-50">
         <button onclick="switchScreen('screen-map')" class="text-xs flex flex-col items-center text-yellow-300 mobile-nav-btn" data-target="screen-map">
             <span class="text-lg">🗺️</span> Bản đồ
         </button>
@@ -137,16 +145,17 @@
         </button>
     </div>
 
-    <div id="add-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-2xl transition-all duration-300 modal-hidden">
-        <div class="liquid-glass border border-white/25 p-6 md:p-8 w-full max-w-md relative transition-transform duration-300 rounded-3xl shadow-2xl">
+    <!-- Modal Thêm Quán -->
+    <div id="add-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-2xl transition-all duration-300 modal-hidden">
+        <div class="liquid-glass border border-white/30 p-6 md:p-8 w-full max-w-md relative transition-transform duration-300 rounded-3xl shadow-2xl">
             <button onclick="closeModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white bg-white/10 w-8 h-8 rounded-full flex items-center justify-center">✕</button>
 
-            <h2 class="text-xl font-light tracking-wider text-white mb-6 border-b border-white/10 pb-3">
+            <h2 class="text-xl font-light tracking-wider text-white mb-6 border-b border-white/15 pb-3">
                 Thêm Quán Trà Đá
             </h2>
 
             <form id="add-shop-form" class="space-y-4 text-sm font-light">
-                <div class="border-2 border-dashed border-white/20 hover:border-white/40 p-4 text-center cursor-pointer transition relative rounded-2xl bg-black/30">
+                <div class="border-2 border-dashed border-white/25 hover:border-white/50 p-4 text-center cursor-pointer transition relative rounded-2xl bg-black/40">
                     <input type="file" id="shop-image" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     <div id="image-preview-container" class="flex flex-col items-center justify-center pointer-events-none">
                         <span class="text-2xl mb-1">📸</span>
@@ -155,13 +164,13 @@
                 </div>
 
                 <div>
-                    <input id="shop-name" required type="text" class="w-full px-4 py-2.5 rounded-xl bg-black/50 border border-white/15 focus:border-yellow-400 focus:outline-none transition text-white text-sm" placeholder="Tên quán">
+                    <input id="shop-name" required type="text" class="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 focus:border-yellow-400 focus:outline-none transition text-white text-sm" placeholder="Tên quán">
                 </div>
                 <div>
-                    <input id="shop-address" required type="text" class="w-full px-4 py-2.5 rounded-xl bg-black/50 border border-white/15 focus:border-yellow-400 focus:outline-none transition text-white text-sm" placeholder="Địa chỉ">
+                    <input id="shop-address" required type="text" class="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 focus:border-yellow-400 focus:outline-none transition text-white text-sm" placeholder="Địa chỉ">
                 </div>
                 <div>
-                    <input id="shop-price" required type="text" class="w-full px-4 py-2.5 rounded-xl bg-black/50 border border-white/15 focus:border-yellow-400 focus:outline-none transition text-white text-sm" placeholder="Mức giá (VD: 10K)">
+                    <input id="shop-price" required type="text" class="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 focus:border-yellow-400 focus:outline-none transition text-white text-sm" placeholder="Mức giá (VD: 10K)">
                 </div>
 
                 <div class="pt-3">
