@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs (App, Auth, Firestore) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -97,9 +97,8 @@
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden">
     
-    <!-- Header Thiết kế 2 Tầng Thoáng Đãng Chuyên Nghiệp -->
+    <!-- Header 2 Tầng Thoáng Đãng -->
     <header class="w-full liquid-glass flex-none z-50 px-3 md:px-6 py-2.5 flex flex-col border-b border-white/10 gap-2">
-        <!-- Tầng 1: Logo & Tài khoản đăng nhập -->
         <div class="flex items-center justify-between">
             <div class="font-bold tracking-widest uppercase flex items-center gap-2 cursor-pointer" onclick="filterByCategory('Tất cả')">
                 <span class="text-yellow-400 text-xs animate-ping">●</span>
@@ -113,7 +112,6 @@
             </div>
         </div>
 
-        <!-- Tầng 2: Thanh Menu cuộn ngang (Pill Navigation) -->
         <nav id="main-nav" class="flex items-center gap-1.5 liquid-glass-pill px-1.5 py-1 rounded-full text-xs font-light text-gray-300 overflow-x-auto custom-scrollbar w-full">
             <a href="#" data-target="screen-map" class="nav-item px-3.5 py-1.5 rounded-full active whitespace-nowrap text-center flex-none">🗺️ Bản đồ</a>
             <a href="#" data-target="screen-category" class="nav-item px-3.5 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center flex-none">🍵 Phân loại</a>
@@ -321,7 +319,7 @@
         </div>
     </div>
 
-    <!-- Script Xử Lý Logic, Firebase Auth (Hỗ trợ Redirect Mobile tránh bị chặn Popup) & GPS Distance -->
+    <!-- Script Xử Lý Logic & Firebase Auth -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCMayrZCPTTBiN43Aj9qu5doGRMPhliOvs",
@@ -364,7 +362,7 @@
             iconAnchor: [13, 13]
         });
 
-        // 🌟 Đăng nhập Google tối ưu cho Mobile (Dùng signInWithRedirect để không bị trình duyệt chặn popup)
+        // 🌟 Đăng nhập Google tối ưu cho Mobile (Dùng signInWithRedirect)
         function loginWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
             auth.signInWithRedirect(provider).catch((error) => {
@@ -372,7 +370,6 @@
             });
         }
 
-        // Kiểm tra kết quả đăng nhập sau khi redirect trên mobile
         auth.getRedirectResult().catch((error) => {
             console.log("Lỗi redirect auth:", error);
         });
@@ -388,7 +385,7 @@
                 authContainer.innerHTML = `
                     <div class="flex items-center gap-2 liquid-glass-pill px-3 py-1 rounded-full text-xs">
                         <img src="${user.photoURL || defaultImage}" class="w-6 h-6 rounded-full object-cover">
-                        <span class="font-medium text-yellow-300 truncate max-w-[100px]">${user.displayName.split(' ').pop()}</span>
+                        <span class="font-medium text-yellow-300 truncate max-w-[90px]">${user.displayName.split(' ').pop()}</span>
                         <button onclick="logoutGoogle()" class="text-red-400 hover:text-white ml-1 font-bold">Thoát</button>
                     </div>
                 `;
