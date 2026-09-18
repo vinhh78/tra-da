@@ -2,8 +2,8 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trà Đá Hà Nội - Bản Đồ Cộng Đồng</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Trà Đá Hà Nội - Bản Đồ Danh sách quán trà đá tủ</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -72,29 +72,24 @@
 </head>
 <body class="bg-[#050507] text-white font-sans h-screen flex flex-col overflow-hidden">
     
-    <!-- Header chuẩn Mobile & Desktop -->
-    <header class="w-full liquid-glass flex-none z-50 px-3 md:px-6 py-2.5 flex flex-col md:flex-row items-center justify-between gap-2 border-b border-white/10">
-        <div class="w-full md:w-auto flex items-center justify-between">
-            <div class="font-bold text-base md:text-lg tracking-widest uppercase flex flex-col items-center leading-none">
-                <span class="text-red-500 text-[10px]">Trà Đá</span>
-                <span class="text-white text-sm md:text-base">Hà Nội</span>
-            </div>
-            <button onclick="openModalQuick()" class="liquid-glass-pill hover:bg-white/30 text-white text-xs px-3.5 py-1.5 rounded-full font-medium transition flex items-center gap-1 text-yellow-300 shadow-lg md:hidden">
-                <span>+</span> Thêm quán
-            </button>
+    <!-- Header gọn gàng trên mobile & desktop -->
+    <header class="w-full liquid-glass flex-none z-50 px-3.5 md:px-6 py-2.5 flex items-center justify-between border-b border-white/10 gap-2">
+        <div class="font-bold tracking-widest uppercase flex items-center gap-2 flex-none">
+            <span class="text-red-500 text-xs">Trà Đá</span>
+            <span class="text-white text-sm md:text-base">Hà Nội</span>
         </div>
 
-        <!-- Menu điều hướng giọt nước (Hiển thị hoàn hảo trên cả điện thoại) -->
-        <nav id="main-nav" class="flex items-center gap-1 liquid-glass-pill px-2 py-1 rounded-full text-xs font-light text-gray-300 overflow-x-auto custom-scrollbar w-full md:w-auto justify-start md:justify-center">
+        <!-- Menu giọt nước cuộn mượt -->
+        <nav id="main-nav" class="flex items-center gap-1 liquid-glass-pill px-1.5 py-1 rounded-full text-xs font-light text-gray-300 overflow-x-auto custom-scrollbar max-w-[50vw] md:max-w-none">
             <a href="#" data-target="screen-map" class="nav-item px-3 py-1.5 rounded-full active whitespace-nowrap text-center">Bản đồ</a>
             <a href="#" data-target="screen-category" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Phân loại</a>
             <a href="#" data-target="screen-new" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Mới</a>
             <a href="#" data-target="screen-highlight" class="nav-item px-3 py-1.5 rounded-full hover:text-white transition whitespace-nowrap text-center">Tiêu điểm</a>
         </nav>
         
-        <div class="hidden md:flex items-center gap-3">
-            <button onclick="openModalQuick()" class="liquid-glass-pill hover:bg-white/25 text-white text-xs px-4 py-2 rounded-full font-medium transition flex items-center gap-1.5 text-yellow-300 shadow-lg">
-                <span>+</span> Thêm quán
+        <div class="flex items-center flex-none">
+            <button onclick="openModalQuick()" class="liquid-glass-pill hover:bg-white/25 text-white text-xs px-3.5 py-2 rounded-full font-medium transition flex items-center gap-1 text-yellow-300 shadow-lg whitespace-nowrap">
+                <span>+</span> <span class="hidden sm:inline">Thêm quán</span>
             </button>
         </div>
     </header>
@@ -105,11 +100,11 @@
         <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0 z-10">
             <div id="map" class="absolute inset-0 w-full h-full z-0 filter-dark-map"></div>
 
-            <div class="w-full lg:w-[420px] flex flex-col h-[40%] lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-3xl border border-white/20 z-20 order-2 lg:order-1 shadow-2xl overflow-hidden">
+            <div class="w-full lg:w-[420px] flex flex-col h-[38%] lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-3xl border border-white/20 z-20 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0">
                 <div class="p-3 md:p-5 flex-none border-b border-white/10 bg-white/5 backdrop-blur-md">
-                    <h2 class="text-base md:text-xl font-medium tracking-wide">Danh sách quán</h2>
+                    <h2 class="text-sm md:text-xl font-medium tracking-wide">Danh sách quán</h2>
                 </div>
-                <div id="shop-list" class="flex-1 overflow-y-auto grid grid-cols-1 gap-2.5 p-2.5 md:p-4 custom-scrollbar"></div>
+                <div id="shop-list" class="flex-1 overflow-y-auto grid grid-cols-1 gap-2 p-2.5 md:p-4 custom-scrollbar"></div>
             </div>
         </div>
 
@@ -187,12 +182,12 @@
 
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
 
-        let shops = JSON.parse(localStorage.getItem('trada_hanoi_shops_v6'));
+        let shops = JSON.parse(localStorage.getItem('trada_hanoi_shops_v7'));
         if (!shops || shops.length === 0) {
             shops = [
                 { id: 1, name: "Trà Đá Nhà Thờ Lớn", address: "Hoàn Kiếm", lat: 21.0287, lng: 105.8488, price: "15K", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600" }
             ];
-            localStorage.setItem('trada_hanoi_shops_v6', JSON.stringify(shops));
+            localStorage.setItem('trada_hanoi_shops_v7', JSON.stringify(shops));
         }
 
         const map = L.map('map', { zoomControl: false }).setView([21.0285, 105.8541], 13);
@@ -214,15 +209,15 @@
 
             shops.forEach(shop => {
                 const shopCard = document.createElement('div');
-                shopCard.className = "liquid-glass-card rounded-2xl overflow-hidden cursor-pointer flex gap-3 p-3 items-center group relative";
+                shopCard.className = "liquid-glass-card rounded-xl overflow-hidden cursor-pointer flex gap-2.5 p-2.5 items-center group relative";
                 shopCard.innerHTML = `
-                    <img src="${shop.image || defaultImage}" class="w-14 h-14 rounded-xl object-cover flex-none group-hover:scale-105 transition duration-500" alt="Shop">
+                    <img src="${shop.image || defaultImage}" class="w-12 h-12 rounded-lg object-cover flex-none group-hover:scale-105 transition duration-500" alt="Shop">
                     <div class="flex-1 min-w-0">
-                        <h3 class="text-sm font-medium text-white truncate">${shop.name}</h3>
-                        <p class="text-xs text-gray-400 mt-0.5 truncate">${shop.address}</p>
-                        <span class="inline-block mt-1 text-[11px] font-medium text-yellow-300 bg-yellow-500/10 px-2 py-0.5 rounded-full border border-yellow-500/20">${shop.price}</span>
+                        <h3 class="text-xs font-medium text-white truncate">${shop.name}</h3>
+                        <p class="text-[11px] text-gray-400 truncate">${shop.address}</p>
+                        <span class="inline-block mt-1 text-[10px] font-medium text-yellow-300 bg-yellow-500/10 px-2 py-0.5 rounded-full border border-yellow-500/20">${shop.price}</span>
                     </div>
-                    <button onclick="deleteShop(${shop.id}, event)" class="absolute top-2 right-2 text-gray-500 hover:text-red-400 text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">✕</button>
+                    <button onclick="deleteShop(${shop.id}, event)" class="absolute top-1.5 right-1.5 text-gray-500 hover:text-red-400 text-xs px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity">✕</button>
                 `;
                 shopCard.onclick = () => {
                     map.flyTo([shop.lat, shop.lng], 16, { duration: 1 });
@@ -336,7 +331,7 @@
 
             shops.unshift(newShop);
             try {
-                localStorage.setItem('trada_hanoi_shops_v6', JSON.stringify(shops));
+                localStorage.setItem('trada_hanoi_shops_v7', JSON.stringify(shops));
             } catch (err) {
                 alert("Dung lượng ảnh quá lớn!");
                 shops.shift(); 
@@ -353,7 +348,7 @@
             event.stopPropagation();
             if(confirm("Xóa quán này?")) {
                 shops = shops.filter(s => s.id !== id);
-                localStorage.setItem('trada_hanoi_shops_v6', JSON.stringify(shops));
+                localStorage.setItem('trada_hanoi_shops_v7', JSON.stringify(shops));
                 renderApp();
             }
         }
