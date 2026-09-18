@@ -43,7 +43,7 @@
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
         }
         .liquid-glass-card:hover { border-color: rgba(250, 204, 21, 0.4); transform: translateY(-2px); }
 
@@ -68,6 +68,11 @@
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden">
     
+    <!-- 🎛️ NÚT KÍCH HOẠT NHẠC ĐẦU TRANG (Bắt buộc để vượt qua cơ chế chặn Audio của Trình duyệt) -->
+    <div id="audio-banner" class="fixed top-14 left-1/2 -translate-x-1/2 z-[99999] bg-gradient-to-r from-yellow-500 to-amber-600 text-black px-4 py-2 rounded-full shadow-2xl flex items-center gap-2 cursor-pointer font-bold text-xs animate-bounce" onclick="unlockAndPlayAudio()">
+        <span>🎵 Bấm vào đây để bật nhạc Chill nền!</span>
+    </div>
+
     <!-- Header 2 Tầng Tối Ưu Tốc Độ & Bố Cục -->
     <header class="w-full liquid-glass flex-none z-50 px-3 md:px-6 py-2 flex flex-col border-b border-white/10 gap-2">
         <div class="flex items-center justify-between">
@@ -83,7 +88,7 @@
                         <span class="text-[8px]">💿</span>
                     </div>
                     <span class="text-[10px] text-yellow-300 font-medium hidden sm:inline">MCK - Chill</span>
-                    <button onclick="togglePlayMusic()" id="play-btn" class="text-xs text-yellow-300 font-bold px-1 cursor-pointer">⏸</button>
+                    <button onclick="togglePlayMusic()" id="play-btn" class="text-xs text-yellow-300 font-bold px-1 cursor-pointer">▶</button>
                 </div>
 
                 <div id="auth-container">
@@ -177,8 +182,8 @@
         </div>
     </div>
 
-    <!-- 🎵 AUDIO NHẠC TỰ ĐỘNG PHÁT NGẦM -->
-    <audio id="bg-audio" loop preload="auto" autoplay>
+    <!-- 🎵 AUDIO NHẠC MCK / CHILL (Nguồn stream trực tiếp mượt mà) -->
+    <audio id="bg-audio" loop preload="auto">
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=lofi-study-112191.mp3" type="audio/mp3">
     </audio>
 
@@ -236,7 +241,7 @@
         </div>
     </div>
 
-    <!-- Script Xử Lý Logic & Auto Play Audio -->
+    <!-- Script Xử Lý Logic & Audio Unlock -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCMayrZCPTTBiN43Aj9qu5doGRMPhliOvs",
@@ -259,33 +264,25 @@
         let shops = [];
         let currentUserName = localStorage.getItem('trada_username') || '';
 
-        // 🎵 Cơ chế tự động phát nhạc khi mở trang & tương tác đầu tiên
         const bgAudio = document.getElementById('bg-audio');
         const playBtn = document.getElementById('play-btn');
         const vinylIcon = document.getElementById('vinyl-icon');
+        const audioBanner = document.getElementById('audio-banner');
         let isPlaying = false;
 
-        function forcePlayAudio() {
+        function unlockAndPlayAudio() {
             bgAudio.volume = 1.0;
             bgAudio.play().then(() => {
                 isPlaying = true;
                 playBtn.innerText = "⏸";
                 vinylIcon.classList.add('animate-spin');
-            }).catch(err => console.log("Autoplay blocked:", err));
+                audioBanner.style.transition = 'opacity 0.3s ease';
+                audioBanner.style.opacity = '0';
+                setTimeout(() => audioBanner.remove(), 300);
+            }).catch(e => {
+                alert("Không thể phát nhạc, hãy kiểm tra lại trình duyệt!");
+            });
         }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            forcePlayAudio();
-        });
-
-        // Bắt mọi sự kiện chạm/click đầu tiên trên toàn trang để mở khóa âm thanh nếu bị trình duyệt chặn
-        ['click', 'touchstart', 'scroll'].forEach(evt => {
-            window.addEventListener(evt, () => {
-                if (!isPlaying) {
-                    forcePlayAudio();
-                }
-            }, { once: true });
-        });
 
         function togglePlayMusic() {
             if (isPlaying) {
@@ -294,7 +291,11 @@
                 vinylIcon.classList.remove('animate-spin');
                 isPlaying = false;
             } else {
-                forcePlayAudio();
+                bgAudio.play().then(() => {
+                    playBtn.innerText = "⏸";
+                    vinylIcon.classList.add('animate-spin');
+                    isPlaying = true;
+                });
             }
         }
 
@@ -457,7 +458,7 @@
                 category: document.getElementById('shop-category').value,
                 lat: currentLatLng.lat, lng: currentLatLng.lng,
                 image: uploadedImageBase64 || defaultImage,
-                author: currentUserName
+                    author: currentUserName
             };
             db.collection("shops").add(newShop).then(() => { closeModal(); filterByCategory('Tất cả'); });
         });
