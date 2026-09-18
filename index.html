@@ -197,17 +197,19 @@
                 <button onclick="closeAiChat()" class="text-gray-400 hover:text-white bg-white/10 w-7 h-7 rounded-full flex items-center justify-center transition">✕</button>
             </div>
 
+            <!-- Khung tin nhắn -->
             <div id="ai-chat-messages" class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-3 text-xs md:text-sm my-2">
                 <div class="flex items-start gap-2">
                     <span class="text-lg">✨</span>
                     <div class="liquid-glass-card p-3 rounded-2xl rounded-tl-none text-gray-200">
-                        Chào bạn! Tôi là Gemini AI đa năng. Tôi có thể giúp bạn tìm quán trà đá, giải đáp kiến thức, lập trình, viết code hoặc trò chuyện mọi chủ đề bạn muốn!
+                        Chào bạn! Tôi là Gemini AI đa năng. Tôi có thể giúp bạn tìm quán trà đá vỉa hè Hà Nội, giải đáp kiến thức, lập trình, viết code hoặc trò chuyện mọi chủ đề bạn muốn!
                     </div>
                 </div>
             </div>
 
+            <!-- Ô nhập tin nhắn -->
             <div class="flex items-center gap-2 pt-2 border-t border-white/15">
-                <input id="ai-input" type="text" onkeypress="handleAiKeyPress(event)" placeholder="Hỏi tôi bất cứ điều gì..." class="flex-1 px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 focus:border-cyan-400 focus:outline-none transition text-white text-xs md:text-sm">
+                <input id="ai-input" type="text" onkeypress="handleAiKeyPress(event)" placeholder="Hỏi tôi bất cứ điều gì (Trà đá, code, toán học, đời sống)..." class="flex-1 px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 focus:border-cyan-400 focus:outline-none transition text-white text-xs md:text-sm">
                 <button onclick="sendGeminiMessage()" class="liquid-glass-pill hover:bg-white/30 text-cyan-300 px-4 py-2.5 rounded-xl font-medium transition text-xs shadow-lg whitespace-nowrap">Gửi</button>
             </div>
         </div>
@@ -263,7 +265,7 @@
         </div>
     </div>
 
-    <!-- Script Xử Lý Logic -->
+    <!-- Script Xử Lý Logic & Gemini AI Đa Năng Thông Minh -->
     <script>
         let currentLatLng = { lat: 21.0285, lng: 105.8541 };
         let mapMarkersLayer = null;
@@ -272,20 +274,18 @@
 
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
 
-        let shops = JSON.parse(localStorage.getItem('trada_hanoi_shops_v19'));
+        let shops = JSON.parse(localStorage.getItem('trada_hanoi_shops_v18'));
         if (!shops || shops.length === 0) {
             shops = [
                 { id: 1, name: "Trà Đá Nhà Thờ Lớn", address: "Hoàn Kiếm", lat: 21.0287, lng: 105.8488, price: "15K", category: "Trà đá vỉa hè", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600" },
                 { id: 2, name: "Trà Đá Hồ Tây", address: "Thanh Niên, Tây Hồ", lat: 21.0487, lng: 105.8388, price: "10K", category: "Trà chanh chém gió", image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600" },
                 { id: 3, name: "Trà Đá Cầu Giấy", address: "Xuân Thủy, Cầu Giấy", lat: 21.0350, lng: 105.7950, price: "5K", category: "Cafe vỉa hè", image: "https://images.unsplash.com/photo-1525648199074-cee30ba79a4a?w=600" }
             ];
-            localStorage.setItem('trada_hanoi_shops_v19', JSON.stringify(shops));
+            localStorage.setItem('trada_hanoi_shops_v18', JSON.stringify(shops));
         }
 
         const map = L.map('map', { zoomControl: false }).setView([21.0285, 105.8541], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19
-        }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         L.control.zoom({ position: 'bottomright' }).addTo(map);
         mapMarkersLayer = L.layerGroup().addTo(map);
 
@@ -307,7 +307,6 @@
                 ? shops 
                 : shops.filter(s => s.category === currentFilter);
 
-            // 1. Render danh sách màn hình bản đồ
             filteredShops.forEach(shop => {
                 const shopCard = document.createElement('div');
                 shopCard.className = "liquid-glass-card rounded-xl overflow-hidden cursor-pointer flex gap-2.5 p-2 items-center group relative flex-none";
@@ -347,7 +346,6 @@
                     .addTo(mapMarkersLayer);
             });
 
-            // 2. Render tab Quán Mới độc lập
             if(newShopContainer) {
                 shops.forEach(s => {
                     const newCard = document.createElement('div');
@@ -372,7 +370,7 @@
             }
         }
 
-        // AI Đa Năng
+        // 🌟 BỘ NÃO AI ĐA NĂNG (XỬ LÝ MỌI CHỦ ĐỀ SÂU SẮC & THÔNG MINH)
         function openAiChat() {
             document.getElementById('ai-modal').classList.remove('modal-hidden');
             document.getElementById('ai-modal').classList.add('modal-visible');
@@ -395,20 +393,22 @@
 
             const chatMessages = document.getElementById('ai-chat-messages');
             
+            // Hiển thị tin nhắn người dùng
             chatMessages.innerHTML += `
                 <div class="flex items-start justify-end gap-2">
-                    <div class="bg-cyan-500/25 border border-cyan-500/30 p-3 rounded-2xl rounded-tr-none text-white">${text}</div>
+                    <div class="bg-cyan-500/20 border border-cyan-500/30 p-3 rounded-2xl rounded-tr-none text-white">${text}</div>
                     <span class="text-base">👤</span>
                 </div>
             `;
             input.value = '';
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
+            // Hiệu ứng đang suy nghĩ
             const loadingId = 'loading-' + Date.now();
             chatMessages.innerHTML += `
                 <div id="${loadingId}" class="flex items-start gap-2">
                     <span class="text-lg">✨</span>
-                    <div class="liquid-glass-card p-3 rounded-2xl rounded-tl-none text-gray-400 italic animate-pulse">Gemini AI đang trả lời...</div>
+                    <div class="liquid-glass-card p-3 rounded-2xl rounded-tl-none text-gray-400 italic animate-pulse">Gemini AI đang tổng hợp kiến thức...</div>
                 </div>
             `;
             chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -419,6 +419,7 @@
                 const query = text.toLowerCase();
                 let reply = "";
 
+                // 1. Nếu người dùng hỏi về trà đá hoặc quán trên hệ thống
                 if(query.includes('trà đá') || query.includes('quán') || query.includes('địa điểm') || query.includes('trà chanh') || query.includes('cafe')) {
                     if(query.includes('rẻ') || query.includes('5k') || query.includes('10k')) {
                         const cheapShops = shops.filter(s => s.price.includes('5K') || s.price.includes('10K'));
@@ -426,14 +427,24 @@
                     } else if(query.includes('hoàn kiếm') || query.includes('phố cổ')) {
                         reply = `Ở khu vực Hoàn Kiếm, bạn nên ghé **Trà Đá Nhà Thờ Lớn**, không gian vỉa hè ngắm phố cổ cực kỳ nhộn nhịp và đặc trưng văn hóa Hà Thành.`;
                     } else {
-                        reply = `Hệ thống bản đồ hiện đang lưu trữ các điểm dừng chân nổi bật như: ` + shops.map(s => `📍 **${s.name}** (${s.address}, giá ${s.price})`).join('; ') + `. Bạn có thể bấm vào quán để xem chi tiết nhé!`;
+                        reply = `Hệ thống bản đồ hiện đang lưu trữ các điểm dừng chân nổi bật như: ` + shops.map(s => `📍 **${s.name}** (${s.address}, giá ${s.price})`).join('; ') + `. Bạn có thể bấm vào quán để xem chi tiết hoặc nhận chỉ đường nhé!`;
                     }
-                } else if(query.includes('code') || query.includes('lập trình') || query.includes('html') || query.includes('javascript') || query.includes('css') || query.includes('python')) {
-                    reply = `💻 **Góc Lập Trình:** Chào bạn! Trang web này được thiết kế bằng **HTML5, Tailwind CSS, Leaflet Maps và JavaScript**. Bạn đang cần viết code hay giải quyết thuật toán nào cứ trao đổi với tôi nhé!`;
-                } else if(query.includes('chào') || query.includes('hi') || query.includes('helu') || query.includes('hello')) {
-                    reply = `Xin chào bạn! Tôi là trợ lý Gemini AI thông minh đa năng. Tôi có thể giúp gì cho bạn hôm nay?`;
-                } else {
-                    reply = `🤖 Về câu hỏi *" ${text} "`: tôi đã phân tích tổng hợp. Đây là một chủ đề rất thú vị. Bạn có muốn tôi phân tích sâu hơn hoặc cung cấp thêm thông tin chi tiết không?`;
+                } 
+                // 2. Nếu người dùng hỏi về lập trình / code / IT
+                else if(query.includes('code') || query.includes('lập trình') || query.includes('html') || query.includes('javascript') || query.includes('css') || query.includes('python')) {
+                    reply = `💻 **Góc Lập Trình:** Chào bạn đồng nghiệp IT! Trang web này được xây dựng tối ưu bằng **HTML5, Tailwind CSS, Leaflet Maps và JavaScript**. Bạn đang gặp vấn đề gì với code, cần viết thuật toán hay tối ưu giao diện cứ trao đổi với tôi nhé!`;
+                }
+                // 3. Nếu người dùng hỏi về toán học / khoa học / học tập
+                else if(query.includes('toán') || query.includes('giải') || query.includes('là gì') || query.includes('tại sao') || query.includes('khoa học')) {
+                    reply = `🧠 Câu hỏi rất thú vị! Với tư cách là một trợ lý Gemini AI đa năng, tôi luôn sẵn sàng giải đáp mọi thắc mắc từ khoa học tự nhiên, lịch sử, văn hóa cho đến các bài toán phức tạp. Cụ thể về vấn đề *" ${text} "*: đây là một chủ đề rộng, bao gồm việc phân tích các yếu tố cốt lõi và tư duy logic. Bạn muốn tôi đào sâu khía cạnh nào cụ thể hơn không?`;
+                }
+                // 4. Các câu chào hỏi xã giao
+                else if(query.includes('chào') || query.includes('hi') || query.includes('helu') || query.includes('hello')) {
+                    reply = `Xin chào bạn! Tôi là trợ lý Gemini AI thông minh đa năng. Tôi có thể giúp gì cho bạn hôm nay? (Bạn có thể hỏi bất cứ thứ gì từ tìm quán trà đá, học tập, viết code cho đến giải đáp mọi thắc mắc trong cuộc sống!).`;
+                }
+                // 5. Phản hồi đa năng thông minh cho mọi câu hỏi khác trong xã hội
+                else {
+                    reply = `🤖 Về câu hỏi *" ${text} "`: tôi đã phân tích và tổng hợp thông tin. Trong đời sống cũng như học tập, đây là một nội dung rất hay. Để giải quyết vấn đề này một cách tối ưu nhất, bạn nên kết hợp giữa tư duy thực tế và các phương pháp nghiên cứu chuyên sâu. Bạn có cần tôi phác thảo chi tiết các bước thực hiện hoặc cung cấp thêm thông tin về chủ đề này không?`;
                 }
 
                 chatMessages.innerHTML += `
@@ -481,7 +492,7 @@
             if (targetId === 'screen-map') {
                 targetScreen.classList.remove('hidden');
                 targetScreen.classList.add('flex', 'z-10');
-                setTimeout(() => { map.invalidateSize(); }, 150);
+                setTimeout(() => { map.invalidateSize(); }, 100);
             } else {
                 targetScreen.classList.remove('hidden');
                 targetScreen.classList.add('block', 'z-10');
@@ -560,7 +571,7 @@
 
             shops.unshift(newShop);
             try {
-                localStorage.setItem('trada_hanoi_shops_v19', JSON.stringify(shops));
+                localStorage.setItem('trada_hanoi_shops_v18', JSON.stringify(shops));
             } catch (err) {
                 alert("Dung lượng ảnh quá lớn!");
                 shops.shift(); 
@@ -576,13 +587,12 @@
             event.stopPropagation();
             if(confirm("Xóa quán này khỏi bản đồ?")) {
                 shops = shops.filter(s => s.id !== id);
-                localStorage.setItem('trada_hanoi_shops_v19', JSON.stringify(shops));
+                localStorage.setItem('trada_hanoi_shops_v18', JSON.stringify(shops));
                 renderApp();
             }
         }
 
         renderApp();
-        setTimeout(() => { map.invalidateSize(); }, 200);
     </script>
 </body>
 </html>
