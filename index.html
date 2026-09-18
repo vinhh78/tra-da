@@ -217,7 +217,7 @@
         </div>
     </div>
 
-    <!-- Modal Thêm Quán Mới (Đã bổ sung thanh cuộn max-h-[90vh] overflow-y-auto giúp bấm nút cực nhạy trên mọi điện thoại) -->
+    <!-- Modal Thêm Quán Mới -->
     <div id="add-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-3 bg-black/75 backdrop-blur-3xl modal-hidden">
         <div class="liquid-glass border border-white/30 p-5 md:p-8 w-full max-w-md relative rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
             <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-white/10 w-8 h-8 rounded-full flex items-center justify-center transition z-10">✕</button>
@@ -259,7 +259,7 @@
                 </div>
 
                 <div class="pt-3 pb-2">
-                    <button type="submit" class="w-full liquid-glass-pill text-white font-semibold tracking-wide py-3.5 rounded-xl hover:bg-white/30 transition-all uppercase text-xs shadow-xl cursor-pointer">
+                    <button type="submit" id="submit-btn" class="w-full liquid-glass-pill text-white font-semibold tracking-wide py-3.5 rounded-xl hover:bg-white/30 transition-all uppercase text-xs shadow-xl cursor-pointer">
                         Xác nhận ghim lên bản đồ chung
                     </button>
                 </div>
@@ -529,17 +529,22 @@
             });
         });
 
-        // 🌟 Tự động nén ảnh khi tải lên để chống tràn dung lượng Cloud
+        // 🌟 Xử lý nén ảnh thông minh cho điện thoại (Có trạng thái khóa/mở nút bấm trực quan)
         document.getElementById('shop-image').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if(file) {
+                const submitBtn = document.getElementById('submit-btn');
+                submitBtn.disabled = true;
+                submitBtn.innerText = "⏳ Đang nén ảnh trên điện thoại...";
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     const img = new Image();
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 600;
-                        const MAX_HEIGHT = 600;
+                        const MAX_WIDTH = 500;
+                        const MAX_HEIGHT = 500;
                         let width = img.width;
                         let height = img.height;
 
@@ -560,8 +565,13 @@
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
                         
-                        uploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                        uploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.65);
                         document.getElementById('image-preview-container').innerHTML = `<img src="${uploadedImageBase64}" class="w-full h-24 object-cover rounded-xl border border-white/20">`;
+                        
+                        // Mở khóa nút bấm khi nén xong
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = "✓ Xác nhận ghim lên bản đồ chung";
+                        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                     };
                     img.src = event.target.result;
                 };
@@ -587,6 +597,12 @@
             modal.classList.add('modal-visible');
             document.getElementById('shop-name').focus();
             uploadedImageBase64 = '';
+            
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Xác nhận ghim lên bản đồ chung";
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
             document.getElementById('image-preview-container').innerHTML = `
                 <span class="text-xl mb-1">📸</span>
                 <span class="text-gray-300 text-xs">Chạm để tải ảnh mặt tiền quán</span>
@@ -601,6 +617,10 @@
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "🚀 Đang gửi lên Cloud...";
+
             const newShop = {
                 name: document.getElementById('shop-name').value,
                 address: document.getElementById('shop-address').value,
@@ -619,6 +639,8 @@
                 })
                 .catch((err) => {
                     alert("Lỗi khi thêm lên Cloud: " + err.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Xác nhận ghim lên bản đồ chung";
                 });
         });
 
