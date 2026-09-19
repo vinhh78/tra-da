@@ -400,9 +400,8 @@
                 const card = document.createElement('div');
                 card.className = "liquid-glass-card rounded-xl p-2.5 cursor-pointer flex gap-2.5 items-center";
                 
-                // Quyền xóa (nếu là người tạo hoặc quán cũ chưa có author)
-                const canDelete = !shop.author || shop.author === currentUserName;
-                const deleteBtnHtml = canDelete ? `<button onclick="deleteShop('${shop.id}', event)" class="bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[10px] px-2 py-1 rounded-lg border border-red-500/30 transition">Xóa</button>` : '';
+                // Mở toàn quyền xóa cho tất cả các quán hiển thị trên danh sách của bạn
+                const deleteBtnHtml = `<button onclick="deleteShop('${shop.id}', event)" class="bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[10px] px-2 py-1 rounded-lg border border-red-500/30 transition">Xóa</button>`;
 
                 card.innerHTML = `
                     <img src="${shop.image || defaultImage}" class="w-12 h-12 rounded-lg object-cover flex-none" alt="Shop">
