@@ -77,10 +77,10 @@
         <div class="flex items-center justify-between">
             <div class="font-bold tracking-widest uppercase flex items-center gap-2 cursor-pointer" onclick="filterByCategory('Tất cả')">
                 <span class="text-yellow-400 text-xs animate-pulse">●</span>
-                <span class="text-white text-xs md:text-sm font-light tracking-wider">TRÀ ĐÁ <b class="font-bold text-yellow-400">HÀ NỘI</b> <span class="text-[10px] text-gray-400 font-normal">© dembevinh</span></span>
+                <span class="text-white text-xs md:text-sm font-light tracking-wider">TRÀ ĐÁ <b class="font-bold text-yellow-400">HÀ NỘI</b></span>
             </div>
             
-            <!-- Khu vực phải Header: Phát nhạc & Tài khoản -->
+            <!-- Khu vực phải Header: Phát nhạc YouTube ẩn & Tài khoản -->
             <div class="flex items-center gap-2">
                 <div class="liquid-glass-pill px-3 py-1 rounded-full flex items-center gap-2 border border-yellow-500/30 cursor-pointer" onclick="togglePlayMusic()">
                     <div id="vinyl-icon" class="w-5 h-5 rounded-full bg-gradient-to-tr from-yellow-500 to-black flex items-center justify-center transition-all duration-300 shadow-md">
@@ -116,7 +116,7 @@
         <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0 z-10">
             <div id="map" class="absolute inset-0 w-full h-full z-0 custom-dark-map"></div>
 
-            <div class="w-full lg:w-[400px] flex flex-col h-[42%] lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-2xl border border-white/15 z-25 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0">
+            <div class="w-full lg:w-[400px] flex flex-col h-[42%] lg:h-[calc(100%-2.5rem)] lg:m-4 liquid-glass lg:rounded-2xl border border-white/15 z-25 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0">
                 <div class="p-3 flex-none border-b border-white/10 bg-white/5 flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <h2 class="text-xs uppercase tracking-wider text-gray-300 font-medium" id="list-title">Danh sách quán</h2>
@@ -181,6 +181,11 @@
             </div>
         </div>
     </div>
+
+    <!-- 🏷️ FOOTER BẢN QUYỀN ĐẶT Ở CUỐI TRANG -->
+    <footer class="w-full liquid-glass flex-none z-40 py-2 text-center text-[10px] text-gray-400 border-t border-white/10">
+        Trà Đá Hà Nội Community • Designed & Developed by <b class="text-yellow-400">dembevinh</b>
+    </footer>
 
     <!-- 🎶 TRÌNH PHÁT YOUTUBE ẨN (MCK - Liệm) -->
     <div id="youtube-player-container" style="display:none;"></div>
@@ -393,22 +398,22 @@
             filtered.forEach(shop => {
                 const distTxt = shop.distance !== undefined ? `${shop.distance < 1 ? (shop.distance*1000).toFixed(0)+'m' : shop.distance.toFixed(1)+'km'}` : shop.address;
                 const card = document.createElement('div');
-                card.className = "liquid-glass-card rounded-xl p-2 cursor-pointer flex gap-2.5 items-center";
+                card.className = "liquid-glass-card rounded-xl p-2.5 cursor-pointer flex gap-2.5 items-center";
                 
-                // Kiểm tra quyền xóa (nếu là người tạo hoặc chưa có author thì hiện nút xóa)
+                // Quyền xóa (nếu là người tạo hoặc quán cũ chưa có author)
                 const canDelete = !shop.author || shop.author === currentUserName;
-                const deleteBtnHtml = canDelete ? `<button onclick="deleteShop('${shop.id}', event)" class="bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[10px] px-2 py-1 rounded-lg flex-none border border-red-500/30">Xóa</button>` : '';
+                const deleteBtnHtml = canDelete ? `<button onclick="deleteShop('${shop.id}', event)" class="bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[10px] px-2 py-1 rounded-lg border border-red-500/30 transition">Xóa</button>` : '';
 
                 card.innerHTML = `
-                    <img src="${shop.image || defaultImage}" class="w-11 h-11 rounded-lg object-cover flex-none" alt="Shop">
+                    <img src="${shop.image || defaultImage}" class="w-12 h-12 rounded-lg object-cover flex-none" alt="Shop">
                     <div class="flex-1 min-w-0">
                         <h3 class="text-xs font-medium text-white truncate">${shop.name}</h3>
                         <p class="text-[10px] text-cyan-300 truncate">📍 ${distTxt}</p>
                         <span class="text-[9px] text-yellow-300 bg-yellow-500/10 px-1.5 py-0.2 rounded border border-yellow-500/20">${shop.price}</span>
                     </div>
-                    <div class="flex items-center gap-1.5 flex-none">
+                    <div class="flex flex-col items-end gap-1.5 flex-none">
+                        <button onclick="openNav(${shop.lat}, ${shop.lng}, event)" class="bg-yellow-500 text-black font-semibold text-[10px] px-3 py-1 rounded-lg shadow-sm">Đường</button>
                         ${deleteBtnHtml}
-                        <button onclick="openNav(${shop.lat}, ${shop.lng}, event)" class="bg-yellow-500 text-black font-semibold text-[10px] px-2.5 py-1 rounded-lg">Đường</button>
                     </div>
                 `;
                 card.onclick = (e) => { if(e.target.tagName !== 'BUTTON') map.flyTo([shop.lat, shop.lng], 15, { duration: 1 }); };
