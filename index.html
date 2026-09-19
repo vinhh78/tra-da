@@ -51,7 +51,6 @@
         }
         .liquid-glass-card:hover { border-color: rgba(250, 204, 21, 0.4); transform: translateY(-2px); }
 
-        /* Thanh trượt menu mượt mà như giọt nước chảy */
         .custom-scrollbar::-webkit-scrollbar { height: 0px; width: 3px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
         
@@ -78,7 +77,7 @@
         <div class="flex items-center justify-between">
             <div class="font-bold tracking-widest uppercase flex items-center gap-2 cursor-pointer" onclick="filterByCategory('Tất cả')">
                 <span class="text-yellow-400 text-xs animate-pulse">●</span>
-                <span class="text-white text-xs md:text-sm font-light tracking-wider">TRÀ ĐÁ <b class="font-bold text-yellow-400">HÀ NỘI</b></span>
+                <span class="text-white text-xs md:text-sm font-light tracking-wider">TRÀ ĐÁ <b class="font-bold text-yellow-400">HÀ NỘI</b> <span class="text-[10px] text-gray-400 font-normal">© dembevinh</span></span>
             </div>
             
             <!-- Khu vực phải Header: Phát nhạc & Tài khoản -->
@@ -395,6 +394,11 @@
                 const distTxt = shop.distance !== undefined ? `${shop.distance < 1 ? (shop.distance*1000).toFixed(0)+'m' : shop.distance.toFixed(1)+'km'}` : shop.address;
                 const card = document.createElement('div');
                 card.className = "liquid-glass-card rounded-xl p-2 cursor-pointer flex gap-2.5 items-center";
+                
+                // Kiểm tra quyền xóa (nếu là người tạo hoặc chưa có author thì hiện nút xóa)
+                const canDelete = !shop.author || shop.author === currentUserName;
+                const deleteBtnHtml = canDelete ? `<button onclick="deleteShop('${shop.id}', event)" class="bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[10px] px-2 py-1 rounded-lg flex-none border border-red-500/30">Xóa</button>` : '';
+
                 card.innerHTML = `
                     <img src="${shop.image || defaultImage}" class="w-11 h-11 rounded-lg object-cover flex-none" alt="Shop">
                     <div class="flex-1 min-w-0">
@@ -402,7 +406,10 @@
                         <p class="text-[10px] text-cyan-300 truncate">📍 ${distTxt}</p>
                         <span class="text-[9px] text-yellow-300 bg-yellow-500/10 px-1.5 py-0.2 rounded border border-yellow-500/20">${shop.price}</span>
                     </div>
-                    <button onclick="openNav(${shop.lat}, ${shop.lng}, event)" class="bg-yellow-500 text-black font-semibold text-[10px] px-2.5 py-1 rounded-lg flex-none">Đường</button>
+                    <div class="flex items-center gap-1.5 flex-none">
+                        ${deleteBtnHtml}
+                        <button onclick="openNav(${shop.lat}, ${shop.lng}, event)" class="bg-yellow-500 text-black font-semibold text-[10px] px-2.5 py-1 rounded-lg">Đường</button>
+                    </div>
                 `;
                 card.onclick = (e) => { if(e.target.tagName !== 'BUTTON') map.flyTo([shop.lat, shop.lng], 15, { duration: 1 }); };
                 listContainer.appendChild(card);
@@ -416,6 +423,17 @@
         window.openNav = function(lat, lng, e) {
             e.stopPropagation();
             window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
+        }
+
+        window.deleteShop = function(id, e) {
+            e.stopPropagation();
+            if(confirm("Bạn có chắc chắn muốn xóa quán này không?")) {
+                db.collection("shops").doc(id).delete().then(() => {
+                    renderApp();
+                }).catch((error) => {
+                    alert("Lỗi khi xóa: " + error.message);
+                });
+            }
         }
 
         window.filterByCategory = function(cat) {
