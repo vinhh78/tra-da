@@ -9,12 +9,10 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- Firebase SDK (Firestore Cloud) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <style>
-        /* 💧 Hiệu ứng Liquid Glass (Giọt nước pha lê siêu thực) */
         .liquid-glass {
             background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.12), rgba(20, 20, 25, 0.65));
             backdrop-filter: blur(25px) saturate(180%);
@@ -72,7 +70,6 @@
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden">
     
-    <!-- Header Hiệu Ứng Giọt Nước Pha Lê (Liquid Glass) -->
     <header class="w-full liquid-glass flex-none z-50 px-3 md:px-6 py-2.5 flex flex-col border-b border-white/15 gap-2.5 shadow-2xl">
         <div class="flex items-center justify-between">
             <div class="font-bold tracking-widest uppercase flex items-center gap-2 cursor-pointer" onclick="filterByCategory('Tất cả')">
@@ -80,7 +77,6 @@
                 <span class="text-white text-xs md:text-sm font-light tracking-wider">TRÀ ĐÁ <b class="font-bold text-yellow-400">HÀ NỘI</b></span>
             </div>
             
-            <!-- Khu vực phải Header: Phát nhạc YouTube ẩn & Tài khoản -->
             <div class="flex items-center gap-2">
                 <div class="liquid-glass-pill px-3 py-1 rounded-full flex items-center gap-2 border border-yellow-500/30 cursor-pointer" onclick="togglePlayMusic()">
                     <div id="vinyl-icon" class="w-5 h-5 rounded-full bg-gradient-to-tr from-yellow-500 to-black flex items-center justify-center transition-all duration-300 shadow-md">
@@ -98,7 +94,6 @@
             </div>
         </div>
 
-        <!-- Menu Trượt Mượt Như Giọt Nước -->
         <nav id="main-nav" class="flex items-center gap-1.5 liquid-glass-pill px-2 py-1.5 rounded-full text-xs font-light text-gray-200 overflow-x-auto custom-scrollbar w-full shadow-inner">
             <a href="#" data-target="screen-map" class="nav-item px-4 py-1.5 rounded-full active text-center flex-none">🗺️ Bản đồ</a>
             <a href="#" data-target="screen-category" class="nav-item px-4 py-1.5 rounded-full hover:text-white text-center flex-none">🍵 Phân loại</a>
@@ -109,10 +104,8 @@
         </nav>
     </header>
 
-    <!-- App Screens -->
     <div id="app-screens" class="flex-1 w-full overflow-hidden relative flex flex-col lg:flex-row">
         
-        <!-- 1. MÀN HÌNH BẢN ĐỒ -->
         <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0 z-10">
             <div id="map" class="absolute inset-0 w-full h-full z-0 custom-dark-map"></div>
 
@@ -130,7 +123,6 @@
             </div>
         </div>
 
-        <!-- 2. MÀN HÌNH PHÂN LOẠI -->
         <div id="screen-category" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20">
             <div class="max-w-4xl mx-auto pb-16">
                 <h2 class="text-2xl font-light mb-2">Phân Loại Cửa Hàng</h2>
@@ -152,7 +144,6 @@
             </div>
         </div>
 
-        <!-- 3. MÀN HÌNH BẢNG VÀNG -->
         <div id="screen-leaderboard" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20">
             <div class="max-w-3xl mx-auto pb-16">
                 <h2 class="text-2xl font-light mb-6 flex items-center gap-2"><span>🏆</span> Bảng Vàng Thánh Trà Đá</h2>
@@ -162,35 +153,31 @@
                         <span class="text-xs text-yellow-300">12 Tọa độ</span>
                     </div>
                     <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10">
-                        <span class="font-bold text-gray-300">🥈 2. Hà Anh Chill</span>
+                        <span class="font-bold text-gray-300">🥈 2. PHÙNG THANH ĐỘ</span>
                         <span class="text-xs text-gray-300">8 Tọa độ</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 4. MÀN HÌNH TIÊU ĐIỂM -->
         <div id="screen-highlight" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20">
             <div class="max-w-4xl mx-auto pb-16">
                 <h2 class="text-2xl font-light mb-4">Tiêu Điểm Tuần</h2>
                 <div class="liquid-glass-card rounded-2xl p-6 text-center">
                     <span class="text-4xl mb-2 inline-block">🔥</span>
-                    <h3 class="text-lg font-medium text-yellow-300">Góc trà đá Phố Cổ huyền thoại</h3>
-                    <p class="text-xs text-gray-400 mt-1">Điểm dừng chân chill nhất tuần qua.</p>
+                    <h3 class="text-lg font-medium text-yellow-300">Góc trà đá </h3>
+                    <p class="text-xs text-gray-400 mt-1"> QUÁN NỔI BẬT </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 🏷️ FOOTER BẢN QUYỀN ĐẶT Ở CUỐI TRANG -->
     <footer class="w-full liquid-glass flex-none z-40 py-2 text-center text-[10px] text-gray-400 border-t border-white/10">
         Trà Đá Hà Nội Community • Designed & Developed by <b class="text-yellow-400">dembevinh</b>
     </footer>
 
-    <!-- 🎶 TRÌNH PHÁT YOUTUBE ẨN (MCK - Liệm) -->
     <div id="youtube-player-container" style="display:none;"></div>
 
-    <!-- MODAL GEMINI AI -->
     <div id="ai-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md modal-hidden">
         <div class="liquid-glass border border-cyan-500/30 p-5 w-full max-w-lg relative rounded-2xl flex flex-col h-[480px]">
             <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
@@ -207,7 +194,6 @@
         </div>
     </div>
 
-    <!-- Modal Thêm Quán -->
     <div id="add-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-3 bg-black/75 backdrop-blur-md modal-hidden">
         <div class="liquid-glass border border-white/20 p-5 w-full max-w-md relative rounded-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
             <button onclick="closeModal()" class="absolute top-3 right-3 text-gray-400 hover:text-white">✕</button>
@@ -244,10 +230,8 @@
         </div>
     </div>
 
-    <!-- YouTube IFrame API Script -->
     <script src="https://www.youtube.com/iframe_api"></script>
 
-    <!-- Script Xử Lý Logic & YouTube Audio -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCMayrZCPTTBiN43Aj9qu5doGRMPhliOvs",
@@ -270,7 +254,6 @@
         let shops = [];
         let currentUserName = localStorage.getItem('trada_username') || '';
 
-        // 🎵 YouTube Player API Tự Động Phát & Max Volume
         let player;
         let isPlaying = false;
 
@@ -278,7 +261,7 @@
             player = new YT.Player('youtube-player-container', {
                 height: '0',
                 width: '0',
-                videoId: 'hEUlsNMNiXQ', // MCK - Liệm
+                videoId: 'hEUlsNMNiXQ',
                 playerVars: {
                     'autoplay': 1,
                     'loop': 1,
@@ -400,7 +383,6 @@
                 const card = document.createElement('div');
                 card.className = "liquid-glass-card rounded-xl p-2.5 cursor-pointer flex gap-2.5 items-center";
                 
-                // Mở toàn quyền xóa cho tất cả các quán hiển thị trên danh sách của bạn
                 const deleteBtnHtml = `<button onclick="deleteShop('${shop.id}', event)" class="bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[10px] px-2 py-1 rounded-lg border border-red-500/30 transition">Xóa</button>`;
 
                 card.innerHTML = `
