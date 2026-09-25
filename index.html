@@ -90,13 +90,13 @@
         .modal-visible { opacity: 1; pointer-events: auto; transform: scale(1); visibility: visible; transition: all 0.2s ease; }
 
         #shop-sheet {
-            transition: height 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: height;
+            transition: height 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
     </style>
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden">
     
-    <!-- HEADER -->
     <header class="w-full liquid-glass flex-none z-50 px-4 py-2.5 flex items-center justify-between border-b border-white/10">
         <div class="font-bold tracking-widest uppercase flex items-center gap-2 cursor-pointer" onclick="filterByCategory('Tất cả')">
             <span class="text-yellow-400 text-xs animate-pulse">●</span>
@@ -104,12 +104,11 @@
         </div>
         
         <div class="flex items-center gap-2">
-            <!-- Nút Donate -->
-            <button onclick="openDonateModal()" class="liquid-glass-pill bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-sm cursor-pointer">
-                <span>💳</span> <span>Donate</span>
+            <button onclick="openDonateModal()" class="liquid-glass-pill bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 shadow-sm cursor-pointer">
+                <img src="https://api.iconify.design/lucide:qr-code.svg?color=%23fde047" class="w-3.5 h-3.5 object-contain" alt="QR Icon">
+                <span>Donate</span>
             </button>
 
-            <!-- Trình phát nhạc -->
             <div class="liquid-glass-pill px-3 py-1 rounded-full flex items-center gap-2 border border-yellow-500/30 cursor-pointer" onclick="togglePlayMusic()">
                 <div id="vinyl-icon" class="w-5 h-5 rounded-full bg-gradient-to-tr from-yellow-500 to-black flex items-center justify-center transition-all duration-300 shadow-md">
                     <span class="text-[8px]">💿</span>
@@ -118,7 +117,6 @@
                 <button id="play-btn" class="text-xs text-yellow-300 font-bold px-1 cursor-pointer pointer-events-none">▶</button>
             </div>
 
-            <!-- Tài khoản -->
             <div id="auth-container">
                 <button onclick="promptLogin()" class="liquid-glass-pill bg-white/10 text-white text-xs px-3 py-1 rounded-full font-medium flex items-center gap-1 shadow-sm cursor-pointer">
                     <span>👤</span> <span id="auth-btn-text">Tên</span>
@@ -127,16 +125,14 @@
         </div>
     </header>
 
-    <!-- APP SCREENS -->
     <div id="app-screens" class="flex-1 w-full overflow-hidden relative flex flex-col lg:flex-row pb-20">
         
-        <!-- 1. BẢN ĐỒ -->
         <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0 z-10">
             <div id="map" class="absolute inset-0 w-full h-full z-0 custom-dark-map"></div>
 
             <div id="shop-sheet" class="w-full lg:w-[400px] flex flex-col h-[38vh] lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-2xl rounded-t-3xl border-t lg:border border-white/15 z-25 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0">
-                <div id="sheet-header-drag" class="w-full pt-2.5 pb-1 bg-white/5 cursor-grab active:cursor-grabbing flex flex-col items-center select-none">
-                    <div class="w-10 h-1 bg-white/40 rounded-full mb-1.5"></div>
+                <div id="sheet-header-drag" class="w-full pt-3 pb-2 bg-white/5 cursor-grab active:cursor-grabbing flex flex-col items-center select-none touch-none">
+                    <div class="w-10 h-1 bg-white/40 rounded-full mb-2"></div>
                     <div class="w-full px-3 flex items-center justify-between pointer-events-none">
                         <div class="flex items-center gap-2">
                             <h2 class="text-xs uppercase tracking-wider text-gray-300 font-medium" id="list-title">Danh sách quán</h2>
@@ -151,7 +147,6 @@
             </div>
         </div>
 
-        <!-- 2. PHÂN LOẠI -->
         <div id="screen-category" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20">
             <div class="max-w-4xl mx-auto pb-16">
                 <h2 class="text-2xl font-light mb-2">Phân Loại Cửa Hàng</h2>
@@ -167,16 +162,15 @@
                         <h3 class="font-medium text-yellow-300">Trà chanh chém gió</h3>
                         <span id="count-trachanh" class="absolute top-4 right-4 text-xs bg-yellow-500/20 text-yellow-300 px-2.5 py-1 rounded-full border border-yellow-500/30">0 quán</span>
                     </div>
-                    <div onclick="filterByCategory('Cafe vỉa hè')" class="liquid-glass-card rounded-xl p-5 cursor-pointer h-40 flex flex-col justify-end relative">
+                    <div onclick="filterByCategory('Cafe vỉа hè')" class="liquid-glass-card rounded-xl p-5 cursor-pointer h-40 flex flex-col justify-end relative">
                         <span class="text-2xl mb-1">☕</span>
-                        <h3 class="font-medium text-yellow-300">Cafe vỉa hè</h3>
+                        <h3 class="font-medium text-yellow-300">Cafe vỉа hè</h3>
                         <span id="count-cafe" class="absolute top-4 right-4 text-xs bg-yellow-500/20 text-yellow-300 px-2.5 py-1 rounded-full border border-yellow-500/30">0 quán</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 3. BẢNG VÀNG -->
         <div id="screen-leaderboard" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20">
             <div class="max-w-3xl mx-auto pb-16">
                 <h2 class="text-2xl font-light mb-2 flex items-center gap-2"><span>🏆</span> Bảng Vàng Đóng Góp</h2>
@@ -185,10 +179,9 @@
             </div>
         </div>
 
-        <!-- 4. GÓP Ý & BÁO CÁO SỰ CỐ WEBSITE -->
         <div id="screen-highlight" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20">
             <div class="max-w-2xl mx-auto pb-16">
-                <h2 class="text-2xl font-light mb-2 flex items-center gap-2"><span>🛡️</span> Góp Ý & Báo cáo Lỗi Website</h2>
+                <h2 class="text-2xl font-light mb-2 flex items-center gap-2"><span>🛡️</span> Góp Ý & Báo Cáo Lỗi Website</h2>
                 <p class="text-gray-400 text-sm mb-6">Gửi ý kiến đóng góp hoặc báo cáo lỗi trực tiếp về máy chủ quản trị của bạn.</p>
                 
                 <div class="liquid-glass rounded-2xl p-6 border border-white/10 space-y-4">
@@ -217,7 +210,6 @@
         </div>
     </div>
 
-    <!-- MODAL DONATE -->
     <div id="donate-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md modal-hidden">
         <div class="liquid-glass border border-yellow-500/40 p-6 w-full max-w-sm relative rounded-3xl text-center shadow-2xl">
             <button onclick="closeDonateModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-base cursor-pointer">✕</button>
@@ -245,7 +237,6 @@
         </div>
     </div>
 
-    <!-- IOS DOCK NAVIGATION -->
     <div class="ios-dock-container fixed bottom-0 left-0 right-0 z-50 px-3 py-2 flex flex-col items-center">
         <nav id="main-nav" class="ios-pill-slider flex items-center gap-1 px-2 py-1.5 rounded-full text-xs font-medium overflow-x-auto custom-scrollbar max-w-lg w-full justify-around">
             <a href="#" data-target="screen-map" class="nav-item px-3.5 py-2 active text-center flex-none">🗺️ Bản đồ</a>
@@ -263,10 +254,8 @@
         </div>
     </div>
 
-    <!-- YOUTUBE PLAYER CONTAINER -->
     <div id="youtube-player-container" style="display:none;"></div>
 
-    <!-- MODAL GEMINI AI -->
     <div id="ai-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md modal-hidden">
         <div class="liquid-glass border border-cyan-500/30 p-5 w-full max-w-lg relative rounded-2xl flex flex-col h-[480px]">
             <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
@@ -283,7 +272,6 @@
         </div>
     </div>
 
-    <!-- MODAL THÊM QUÁN -->
     <div id="add-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-3 bg-black/75 backdrop-blur-md modal-hidden">
         <div class="liquid-glass border border-white/20 p-5 w-full max-w-md relative rounded-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
             <button onclick="closeModal()" class="absolute top-3 right-3 text-gray-400 hover:text-white cursor-pointer">✕</button>
@@ -320,7 +308,6 @@
         </div>
     </div>
 
-    <!-- FIREBASE & SCRIPT LOGIC -->
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
@@ -345,7 +332,6 @@
         let shops = [];
         let currentUserName = localStorage.getItem('trada_username') || '';
 
-        // Kéo trượt BottomSheet danh sách quán trên Mobile
         const sheet = document.getElementById('shop-sheet');
         const dragHeader = document.getElementById('sheet-header-drag');
         let startY = 0;
@@ -357,8 +343,9 @@
                 isDragging = true;
                 startY = e.touches[0].clientY;
                 startHeight = sheet.offsetHeight;
+                sheet.style.transition = 'none';
             }
-        });
+        }, { passive: true });
 
         window.addEventListener('touchmove', (e) => {
             if (!isDragging || window.innerWidth >= 1024) return;
@@ -371,23 +358,24 @@
             if (newHeight < minHeight) newHeight = minHeight;
             
             sheet.style.height = newHeight + 'px';
-        });
+        }, { passive: true });
 
         window.addEventListener('touchend', () => {
             if (!isDragging || window.innerWidth >= 1024) return;
             isDragging = false;
+            sheet.style.transition = 'height 0.35s cubic-bezier(0.1, 0.9, 0.2, 1)';
+            
             const currentH = sheet.offsetHeight;
             const screenH = window.innerHeight;
             
             if (currentH > screenH * 0.45) {
                 sheet.style.height = '72vh';
             } else {
-                sheet.style.height = '35vh';
+                sheet.style.height = '38vh';
             }
-            setTimeout(() => map.invalidateSize(), 300);
+            setTimeout(() => map.invalidateSize(), 350);
         });
 
-        // Trình phát nhạc YouTube
         let player;
         let isPlaying = false;
 
@@ -531,7 +519,6 @@
             document.getElementById('leaderboard-list').innerHTML = lbHtml || '<p class="text-xs text-gray-400">Chưa có dữ liệu đóng góp.</p>';
         }
 
-        // Gửi Góp ý / Báo cáo sự cố Website về máy chủ Firebase của bạn
         function submitFeedback() {
             const name = document.getElementById('feedback-name').value.trim() || currentUserName || "Khách ẩn danh";
             const type = document.getElementById('feedback-type').value;
@@ -556,7 +543,6 @@
             });
         }
 
-        // Modal Donate & Copy STK
         function openDonateModal() {
             document.getElementById('donate-modal').classList.remove('modal-hidden');
             document.getElementById('donate-modal').classList.add('modal-visible');
