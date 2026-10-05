@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Trà Đá Hà Nội - Bản Đồ Cộng Đồng</title>
     
-    <!-- Cấu hình PWA cho di động -->
-    <link rel="manifest" href="manifest.json">
+    <!-- PWA Meta tags -->
     <meta name="theme-color" content="#030305">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -106,7 +105,6 @@
             box-shadow: 0 0 25px rgba(52, 211, 153, 0.7), inset 0 0 15px rgba(52, 211, 153, 0.3);
         }
 
-        /* Chữ tối phát sáng neon vàng đồng */
         .dark-neon-glow-text {
             color: #111115;
             text-shadow: 
@@ -281,10 +279,8 @@
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden relative">
     
-    <!-- HẠT BAY NỀN -->
     <canvas id="antigravity-canvas"></canvas>
 
-    <!-- MÀN HÌNH CHÀO -->
     <div id="intro-screen">
         <canvas id="web3d-canvas"></canvas>
 
@@ -298,7 +294,6 @@
                 Impossible is Nothing.
             </div>
 
-            <!-- CÁC NÚT OPTION -->
             <div class="grid grid-cols-2 gap-3.5 pt-3 w-full max-w-[340px] mx-auto">
                 <button onclick="enterApp('screen-map')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-yellow-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
                     <span class="text-base"></span> Bản đồ
@@ -323,7 +318,6 @@
         </div>
     </div>
 
-    <!-- GIAO DIỆN CHÍNH -->
     <header class="w-full liquid-glass flex-none px-3 py-2.5 flex items-center justify-between border-b border-white/10 relative z-[999]">
         <div class="font-bold tracking-widest uppercase flex items-center gap-2 cursor-pointer" onclick="filterByCategory('Tất cả')">
             <span class="text-yellow-400 text-xs animate-pulse pointer-events-none">●</span>
@@ -338,7 +332,6 @@
                 <span class="pointer-events-none">Donate</span>
             </button>
 
-            <!-- ICON MINI 3D TRÊN HEADER -->
             <div class="led-glow-pill p-1 rounded-full flex items-center justify-center cursor-pointer relative z-50" title="Vỉa Hè Chill">
                 <div id="header-mini-3d"></div>
             </div>
@@ -442,7 +435,6 @@
         </div>
     </div>
 
-    <!-- CÁC MODAL ẨN -->
     <div id="donate-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md modal-hidden">
         <div class="liquid-glass border border-yellow-500/40 p-6 w-full max-w-sm relative rounded-3xl text-center shadow-2xl">
             <button type="button" onclick="closeDonateModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-base cursor-pointer">✕</button>
@@ -465,14 +457,13 @@
         </div>
     </div>
 
-    <!-- THANH MENU DOCK DƯỚI -->
     <div class="ios-dock-container fixed bottom-0 left-0 right-0 z-[999] px-2 py-2 flex flex-col items-center">
         <nav id="main-nav" class="ios-pill-slider flex items-center gap-0.5 px-1.5 py-1.5 rounded-full text-[11px] font-medium overflow-x-auto custom-scrollbar max-w-xl w-full justify-around relative">
-            <a href="#" data-target="screen-map" class="nav-item px-2.5 py-2 active text-center flex-none touch-manipulation">Bản đồ</a>
-            <a href="#" data-target="screen-category" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">Phân loại</a>
+            <a href="#" data-target="screen-map" class="nav-item px-2.5 py-2 active text-center flex-none touch-manipulation"> Bản đồ</a>
+            <a href="#" data-target="screen-category" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">🍵Phân loại</a>
             <a href="#" onclick="filterByCategory('Local Eatery'); return false;" class="nav-item px-2.5 py-2 text-center text-purple-300 flex-none touch-manipulation">Eatery</a>
             <a href="#" data-target="screen-leaderboard" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">🏆 Bảng vàng</a>
-            <a href="#" data-target="screen-highlight" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">Góp ý</a>
+            <a href="#" data-target="screen-highlight" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation"> Góp ý</a>
             <a href="#" onclick="openAiChat(); return false;" class="nav-item px-2.5 py-2 text-center text-cyan-300 flex-none touch-manipulation">✨ AI</a>
             <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-2.5 py-2 text-center text-yellow-300 flex-none touch-manipulation">➕ Thêm</a>
         </nav>
@@ -524,7 +515,7 @@
                             <option value="Trà đá vỉa hè">Trà đá vỉa hè</option>
                             <option value="Trà chanh chém gió">Trà chanh chém gió</option>
                             <option value="Cafe vỉа hè">Cafe vỉа hè</option>
-                            <option value="Local Eatery">Local Eatery (Quán ăn)</option>
+                            <option value="Local Eatery"> Local Eatery (Quán ăn)</option>
                         </select>
                     </div>
                 </div>
@@ -534,13 +525,6 @@
     </div>
 
     <script>
-        // Đăng ký Service Worker cho PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed: ', err));
-            });
-        }
-
         const isMobileDevice = window.innerWidth < 768;
 
         async function loadAppConfig() {
@@ -551,9 +535,6 @@
         }
         loadAppConfig();
 
-        // -----------------------------------------
-        // THREE.JS - MÔ HÌNH 3D HÌNH NỀN ĐỘNG
-        // -----------------------------------------
         let isIntroActive = true;
         const scene3D = new THREE.Scene();
         const camera3D = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -943,4 +924,3 @@
     </script>
 </body>
 </html>
-
