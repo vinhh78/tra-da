@@ -232,6 +232,11 @@
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden relative">
     
+    <!-- CONTAINER YOUTUBE ẨN CHUẨN ĐỂ KHÔNG BỊ TRÌNH DUYỆT MOBILE CHẶN -->
+    <div style="position: absolute; z-index: -9999; top: -1000px; left: -1000px; width: 10px; height: 10px; overflow: hidden; opacity: 0.01;">
+        <div id="youtube-player-container"></div>
+    </div>
+
     <canvas id="antigravity-canvas"></canvas>
 
     <!-- MÀN HÌNH MỞ ĐẦU -->
@@ -263,7 +268,6 @@
             </div>
 
             <div class="pt-2">
-                <!-- NÚT NÀY SẼ KÍCH HOẠT NHẠC KHI VÀO APP -->
                 <button onclick="enterApp('screen-map')" class="w-full max-w-xs py-3.5 rounded-2xl font-bold text-black bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 shadow-[0_0_30px_rgba(250,204,21,0.6)] transition-all hover:scale-105 cursor-pointer uppercase tracking-wider text-xs">
                     Vào Ngay Trải Nghiệm 🚀
                 </button>
@@ -272,29 +276,48 @@
     </div>
 
     <!-- GIAO DIỆN CHÍNH -->
-    <header class="w-full liquid-glass flex-none z-50 px-4 py-2.5 flex items-center justify-between border-b border-white/10 relative z-30">
+    <header class="w-full liquid-glass flex-none z-50 px-3 py-2.5 flex items-center justify-between border-b border-white/10 relative z-30">
         <div class="font-bold tracking-widest uppercase flex items-center gap-2 cursor-pointer" onclick="filterByCategory('Tất cả')">
             <span class="text-yellow-400 text-xs animate-pulse">●</span>
             <span class="text-white text-xs md:text-sm font-light tracking-wider">TRÀ ĐÁ <b class="font-bold text-yellow-400">HÀ NỘI</b></span>
         </div>
         
-        <div class="flex items-center gap-2">
-            <button onclick="openDonateModal()" class="led-glow-pill bg-yellow-500/20 text-yellow-300 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 shadow-sm cursor-pointer">
-                <span>☕</span>
+        <div class="flex items-center gap-1.5 md:gap-2">
+            <!-- NÚT DONATE - Sử dụng SVG Vector chống lỗi hiển thị Emoji -->
+            <button onclick="openDonateModal()" class="led-glow-pill bg-yellow-500/20 text-yellow-300 px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 shadow-sm cursor-pointer">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M4 19h16v2H4zM20 8h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 2.2 1.8 4 4 4h8c2.2 0 4-1.8 4-4v-3h2c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-2 5h-2V5h2v8zM4 15V5h10v10H4z"/>
+                </svg>
                 <span>Donate</span>
             </button>
 
-            <div class="led-glow-pill px-3 py-1 rounded-full flex items-center gap-2 cursor-pointer" onclick="togglePlayMusic()">
+            <!-- NÚT MUSIC - Đổi tất cả sang SVG Vector -->
+            <div class="led-glow-pill px-3 py-1.5 rounded-full flex items-center gap-2 cursor-pointer" onclick="togglePlayMusic()">
                 <div id="vinyl-icon" class="w-5 h-5 rounded-full bg-gradient-to-tr from-yellow-500 to-black flex items-center justify-center transition-all duration-300 shadow-md">
-                    <span class="text-[8px]">💿</span>
+                    <svg class="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="12" r="3.5" fill="#facc15" />
+                        <circle cx="12" cy="12" r="1.5" fill="black" />
+                    </svg>
                 </div>
-                <span class="text-[10px] text-yellow-300 font-medium hidden sm:inline">MCK - Liệm</span>
-                <button id="play-btn" class="text-xs text-yellow-300 font-bold px-1 cursor-pointer pointer-events-none">▶</button>
+                <span class="text-[10px] text-yellow-300 font-medium whitespace-nowrap">MCK - Liệm</span>
+                <div class="flex items-center justify-center pointer-events-none pl-1">
+                    <!-- Icon Play SVG -->
+                    <svg id="icon-play" class="w-2.5 h-2.5 text-yellow-300 fill-current" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                    <!-- Icon Pause SVG (Ẩn lúc đầu) -->
+                    <svg id="icon-pause" class="w-2.5 h-2.5 text-yellow-300 fill-current hidden" viewBox="0 0 24 24">
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                    </svg>
+                </div>
             </div>
 
+            <!-- NÚT TÀI KHOẢN -->
             <div id="auth-container">
-                <button onclick="promptLogin()" class="led-glow-pill led-glow-cyan bg-white/10 text-white text-xs px-3 py-1 rounded-full font-medium flex items-center gap-1 shadow-sm cursor-pointer">
-                    <span>👤</span> <span id="auth-btn-text">Tên</span>
+                <button onclick="promptLogin()" class="led-glow-pill led-glow-cyan bg-white/10 text-white text-xs px-3 py-1.5 rounded-full font-medium flex items-center gap-1 shadow-sm cursor-pointer">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg> 
+                    <span id="auth-btn-text">Tên</span>
                 </button>
             </div>
         </div>
@@ -356,7 +379,7 @@
 
         <div id="screen-highlight" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20">
             <div class="max-w-2xl mx-auto pb-16">
-                <h2 class="text-2xl font-light mb-2 flex items-center gap-2"><span>🛡️️</span> Góp Ý & Báo Cáo Lỗi Website</h2>
+                <h2 class="text-2xl font-light mb-2 flex items-center gap-2"><span>🛡️</span> Góp Ý & Báo Cáo Lỗi Website</h2>
                 <p class="text-gray-400 text-sm mb-6">Gửi ý kiến đóng góp hoặc báo cáo lỗi trực tiếp về máy chủ quản trị của bạn.</p>
                 
                 <div class="liquid-glass rounded-2xl p-6 border border-white/10 space-y-4">
@@ -421,9 +444,6 @@
         <div class="text-[9px] text-gray-400 mt-1">Trà Đá Hà Nội • Developed by <b class="text-yellow-400">dembevinh</b></div>
     </div>
 
-    <!-- BỎ ẨN DISPLAY NONE Ở ĐÂY ĐỂ TRÁNH LỖI API -->
-    <div id="youtube-player-container" class="absolute w-0 h-0 opacity-0 pointer-events-none"></div>
-
     <div id="ai-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md modal-hidden">
         <div class="liquid-glass border border-cyan-500/30 p-5 w-full max-w-lg relative rounded-2xl flex flex-col h-[480px]">
             <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
@@ -479,8 +499,9 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-        // CỜ KIỂM SOÁT ĐỒ HỌA NẶNG TRÊN MOBILE
+        // CỜ KIỂM SOÁT ĐỒ HỌA TRÊN MOBILE
         let isIntroActive = true;
+        let userInteracted = false;
 
         async function loadAppConfig() {
             try {
@@ -495,7 +516,6 @@
         const camera3D = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer3D = new THREE.WebGLRenderer({ canvas: document.getElementById('web3d-canvas'), alpha: true, antialias: true });
         renderer3D.setSize(window.innerWidth, window.innerHeight);
-        // Tối ưu hóa pixel ratio trên mobile để giảm giật lag
         renderer3D.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 1.8);
@@ -565,7 +585,7 @@
         }, { passive: true });
 
         function animate3D() {
-            if (!isIntroActive) return; // CHỐNG LAG: Tắt ngay render 3D khi đã vào app
+            if (!isIntroActive) return; 
             requestAnimationFrame(animate3D);
             group3D.rotation.y += 0.006;
             group3D.rotation.x += (mouseY3D - group3D.rotation.x) * 0.05;
@@ -592,7 +612,6 @@
         const canvas = document.getElementById('antigravity-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        // Giảm số lượng hạt trên mobile để chống giật
         const numParticles = window.innerWidth < 768 ? 30 : 75; 
         let mouse = { x: null, y: null, radius: 140 };
 
@@ -616,7 +635,7 @@
         }
 
         function animateAntigravity() {
-            if (!isIntroActive) return; // CHỐNG LAG: Dừng vẽ hạt khi vào trong
+            if (!isIntroActive) return; 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach((p, index) => {
                 p.x += p.vx; p.y += p.vy;
@@ -646,19 +665,18 @@
         }
         animateAntigravity();
 
-        // FIX NHẠC BỊ LỖI VÀ TỐI ƯU HIỆU NĂNG KHI VÀO APP
+        // KHI ẤN VÀO APP
         function enterApp(targetScreen) {
+            userInteracted = true;
             const intro = document.getElementById('intro-screen');
             intro.style.opacity = '0';
             intro.style.visibility = 'hidden';
             
-            // Tắt vòng lặp nặng để điện thoại chạy cực kì mượt
             isIntroActive = false; 
             document.getElementById('antigravity-canvas').style.display = 'none';
 
             setTimeout(() => { intro.style.display = 'none'; }, 600);
             
-            // Bypass chính sách chặn nhạc của điện thoại qua tương tác nút này
             if (player && typeof player.playVideo === 'function' && !isPlaying) {
                 player.playVideo();
             }
@@ -704,23 +722,33 @@
             setTimeout(() => map.invalidateSize(), 350);
         });
 
-        // HỆ THỐNG PHÁT NHẠC ĐÃ ĐƯỢC CẤU HÌNH LẠI
+        // HỆ THỐNG PHÁT NHẠC XỬ LÝ GIAO DIỆN MỚI
         let player;
         let isPlaying = false;
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player-container', {
-                height: '1', width: '1', // Tránh lỗi API khi để 0x0 trên Safari
+                height: '10', width: '10', 
                 videoId: 'hEUlsNMNiXQ',
-                playerVars: { 'playsinline': 1, 'loop': 1, 'playlist': 'hEUlsNMNiXQ', 'controls': 0 }, // Loại bỏ thẻ Autoplay
+                playerVars: { 'playsinline': 1, 'loop': 1, 'playlist': 'hEUlsNMNiXQ', 'controls': 0 },
                 events: {
-                    'onReady': (event) => { event.target.setVolume(100); },
+                    'onReady': (event) => { 
+                        event.target.setVolume(100); 
+                        if (userInteracted) event.target.playVideo();
+                    },
                     'onStateChange': (event) => {
-                        const playBtn = document.getElementById('play-btn');
+                        const iconPlay = document.getElementById('icon-play');
+                        const iconPause = document.getElementById('icon-pause');
                         const vinylIcon = document.getElementById('vinyl-icon');
                         if (event.data === YT.PlayerState.PLAYING) {
-                            isPlaying = true; playBtn.innerText = "⏸"; vinylIcon.classList.add('animate-spin');
+                            isPlaying = true;
+                            iconPlay.classList.add('hidden');
+                            iconPause.classList.remove('hidden');
+                            vinylIcon.classList.add('animate-spin');
                         } else {
-                            isPlaying = false; playBtn.innerText = "▶"; vinylIcon.classList.remove('animate-spin');
+                            isPlaying = false;
+                            iconPlay.classList.remove('hidden');
+                            iconPause.classList.add('hidden');
+                            vinylIcon.classList.remove('animate-spin');
                         }
                     }
                 }
