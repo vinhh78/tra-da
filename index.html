@@ -62,7 +62,6 @@
             border: 1.5px solid rgba(250, 204, 21, 0.6);
             box-shadow: 0 0 15px rgba(250, 204, 21, 0.35), inset 0 0 10px rgba(250, 204, 21, 0.15);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            /* Bắt buộc cho mobile để phản hồi chạm nhanh */
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
         }
@@ -130,28 +129,33 @@
             transition: height 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
 
-        #antigravity-canvas, #web3d-canvas {
+        /* 3D VÀ HẠT BAY ĐƯỢC CHUYỂN XUỐNG DƯỚI CÙNG LÀM NỀN (BACKGROUND) */
+        #web3d-canvas, #antigravity-canvas {
             position: fixed;
             inset: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
         }
-        #antigravity-canvas { z-index: 99998; }
         #web3d-canvas { z-index: 1; }
-
+        #antigravity-canvas { z-index: 2; }
+        
+        #app-screens { z-index: 10; position: relative; }
+        
         #intro-screen {
             position: fixed;
             inset: 0;
             width: 100vw;
             height: 100vh;
             z-index: 999999;
-            background: #030305;
+            background: transparent;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             transition: opacity 0.6s ease, visibility 0.6s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .typing-cursor::after {
@@ -180,7 +184,7 @@
             transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
             box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
             outline: none;
-            touch-action: manipulation; /* Fix chạm mobile */
+            touch-action: manipulation; 
         }
         .btn-animated-delete:hover {
             background: #e11d48;
@@ -238,17 +242,17 @@
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden relative">
     
-    <!-- KHUNG CHỨA YOUTUBE AN TOÀN TRÁNH BỊ CHẶN -->
-    <div style="position: fixed; z-index: -9999; top: -500px; left: -500px; width: 200px; height: 200px; opacity: 0.01; pointer-events: none;">
+    <!-- YOUTUBE - Nằm trong vùng màn hình hiển thị ẩn để bypass chặn âm thanh -->
+    <div style="position: fixed; z-index: -9999; top: 0; left: 0; width: 10px; height: 10px; opacity: 0; pointer-events: none;">
         <div id="youtube-player-container"></div>
     </div>
 
+    <!-- 2 CANVAS BACKGROUND SẼ CHẠY LIÊN TỤC -->
+    <canvas id="web3d-canvas"></canvas>
     <canvas id="antigravity-canvas"></canvas>
 
     <!-- MÀN HÌNH MỞ ĐẦU -->
     <div id="intro-screen">
-        <canvas id="web3d-canvas"></canvas>
-
         <div class="relative z-10 max-w-md mx-auto space-y-4 w-full p-4 text-center">
             <h1 class="text-2xl sm:text-4xl font-black tracking-tight uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.9)] min-h-[3.5rem] flex items-center justify-center">
                 <span id="typed-title" class="typing-cursor"></span>
@@ -259,16 +263,16 @@
             </div>
 
             <div class="grid grid-cols-2 gap-3.5 pt-2 max-w-xs mx-auto">
-                <button onclick="enterApp('screen-map')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs font-semibold text-yellow-300 cursor-pointer flex flex-col items-center gap-1">
+                <button onclick="enterApp('screen-map')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs font-semibold text-yellow-300 cursor-pointer flex flex-col items-center gap-1 bg-black/40">
                     <span class="text-base">🗺️</span> Bản đồ
                 </button>
-                <button onclick="enterApp('screen-category')" class="led-glow-pill led-glow-cyan py-3 px-4 rounded-2xl text-xs font-semibold text-cyan-300 cursor-pointer flex flex-col items-center gap-1">
+                <button onclick="enterApp('screen-category')" class="led-glow-pill led-glow-cyan py-3 px-4 rounded-2xl text-xs font-semibold text-cyan-300 cursor-pointer flex flex-col items-center gap-1 bg-black/40">
                     <span class="text-base">🍵</span> Phân loại
                 </button>
-                <button onclick="enterApp('screen-leaderboard')" class="led-glow-pill led-glow-purple py-3 px-4 rounded-2xl text-xs font-semibold text-purple-300 cursor-pointer flex flex-col items-center gap-1">
+                <button onclick="enterApp('screen-leaderboard')" class="led-glow-pill led-glow-purple py-3 px-4 rounded-2xl text-xs font-semibold text-purple-300 cursor-pointer flex flex-col items-center gap-1 bg-black/40">
                     <span class="text-base">🏆</span> Bảng vàng
                 </button>
-                <button onclick="enterApp('screen-highlight')" class="led-glow-pill led-glow-emerald py-3 px-4 rounded-2xl text-xs font-semibold text-emerald-300 cursor-pointer flex flex-col items-center gap-1">
+                <button onclick="enterApp('screen-highlight')" class="led-glow-pill led-glow-emerald py-3 px-4 rounded-2xl text-xs font-semibold text-emerald-300 cursor-pointer flex flex-col items-center gap-1 bg-black/40">
                     <span class="text-base">🛡️</span> Góp ý
                 </button>
             </div>
@@ -289,7 +293,7 @@
         </div>
         
         <div class="flex items-center gap-1.5 md:gap-2">
-            <!-- NÚT DONATE - Đã fix độ nhạy chạm và khóa icon -->
+            <!-- NÚT DONATE -->
             <button type="button" onclick="openDonateModal()" class="led-glow-pill bg-yellow-500/20 text-yellow-300 px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 cursor-pointer relative z-50">
                 <svg class="w-3.5 h-3.5 pointer-events-none" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M4 19h16v2H4zM20 8h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 2.2 1.8 4 4 4h8c2.2 0 4-1.8 4-4v-3h2c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-2 5h-2V5h2v8zM4 15V5h10v10H4z"/>
@@ -297,7 +301,7 @@
                 <span class="pointer-events-none">Donate</span>
             </button>
 
-            <!-- NÚT MUSIC - Đã fix độ nhạy chạm và khóa icon -->
+            <!-- NÚT MUSIC -->
             <button type="button" onclick="togglePlayMusic()" class="led-glow-pill px-3 py-1.5 rounded-full flex items-center gap-2 cursor-pointer relative z-50">
                 <div id="vinyl-icon" class="pointer-events-none w-5 h-5 rounded-full bg-gradient-to-tr from-yellow-500 to-black flex items-center justify-center transition-all duration-300 shadow-md">
                     <svg class="w-2.5 h-2.5 text-white pointer-events-none" viewBox="0 0 24 24" fill="currentColor">
@@ -323,9 +327,9 @@
         </div>
     </header>
 
-    <div id="app-screens" class="flex-1 w-full overflow-hidden relative flex flex-col lg:flex-row pb-20 z-20">
+    <div id="app-screens" class="flex-1 w-full overflow-hidden relative flex flex-col lg:flex-row pb-20">
         
-        <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0 z-10">
+        <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0">
             <div id="map" class="absolute inset-0 w-full h-full z-0 custom-dark-map"></div>
 
             <div id="shop-sheet" class="w-full lg:w-[400px] flex flex-col h-[38vh] lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-2xl rounded-t-3xl border-t lg:border border-white/15 z-25 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0">
@@ -341,11 +345,11 @@
                         </div>
                     </div>
                 </div>
-                <div id="shop-list" class="flex-1 overflow-y-auto overscroll-contain grid grid-cols-1 gap-2 p-2.5 custom-scrollbar"></div>
+                <div id="shop-list" class="flex-1 overflow-y-auto overscroll-contain grid grid-cols-1 gap-2 p-2.5 custom-scrollbar relative z-20"></div>
             </div>
         </div>
 
-        <div id="screen-category" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20">
+        <div id="screen-category" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 z-20 bg-transparent">
             <div class="max-w-4xl mx-auto pb-16">
                 <h2 class="text-2xl font-light mb-2">Phân Loại Cửa Hàng</h2>
                 <p class="text-gray-400 text-sm mb-6">Thống kê số lượng quán thực tế theo danh mục trên Firebase.</p>
@@ -369,7 +373,7 @@
             </div>
         </div>
 
-        <div id="screen-leaderboard" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20">
+        <div id="screen-leaderboard" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 z-20 bg-transparent">
             <div class="max-w-3xl mx-auto pb-16">
                 <h2 class="text-2xl font-light mb-2 flex items-center gap-2"><span>🏆</span> Bảng Vàng Đóng Góp</h2>
                 <p class="text-gray-400 text-sm mb-6">Xếp hạng những thành viên tích cực ghim tọa độ lên bản đồ.</p>
@@ -377,7 +381,7 @@
             </div>
         </div>
 
-        <div id="screen-highlight" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20">
+        <div id="screen-highlight" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 z-20 bg-transparent">
             <div class="max-w-2xl mx-auto pb-16">
                 <h2 class="text-2xl font-light mb-2 flex items-center gap-2"><span>🛡️</span> Góp Ý & Báo Cáo Lỗi Website</h2>
                 <p class="text-gray-400 text-sm mb-6">Gửi ý kiến đóng góp hoặc báo cáo lỗi trực tiếp về máy chủ quản trị của bạn.</p>
@@ -431,17 +435,17 @@
         </div>
     </div>
 
-    <div class="ios-dock-container fixed bottom-0 left-0 right-0 z-50 px-3 py-2 flex flex-col items-center">
-        <nav id="main-nav" class="ios-pill-slider flex items-center gap-1 px-2 py-1.5 rounded-full text-xs font-medium overflow-x-auto custom-scrollbar max-w-lg w-full justify-around">
-            <a href="#" data-target="screen-map" class="nav-item px-3.5 py-2 active text-center flex-none">🗺️ Bản đồ</a>
-            <a href="#" data-target="screen-category" class="nav-item px-3.5 py-2 text-center flex-none">🍵 Phân loại</a>
-            <a href="#" data-target="screen-leaderboard" class="nav-item px-3.5 py-2 text-center flex-none">🏆 Bảng vàng</a>
-            <a href="#" data-target="screen-highlight" class="nav-item px-3.5 py-2 text-center flex-none">🛡️ Góp ý</a>
-            <a href="#" onclick="openAiChat(); return false;" class="nav-item px-3.5 py-2 text-center text-cyan-300 flex-none">✨ AI</a>
-            <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-3.5 py-2 text-center text-yellow-300 flex-none">➕ Thêm</a>
+    <div class="ios-dock-container fixed bottom-0 left-0 right-0 z-[999] px-3 py-2 flex flex-col items-center">
+        <nav id="main-nav" class="ios-pill-slider flex items-center gap-1 px-2 py-1.5 rounded-full text-xs font-medium overflow-x-auto custom-scrollbar max-w-lg w-full justify-around relative">
+            <a href="#" data-target="screen-map" class="nav-item px-3.5 py-2 active text-center flex-none touch-manipulation">🗺️ Bản đồ</a>
+            <a href="#" data-target="screen-category" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🍵 Phân loại</a>
+            <a href="#" data-target="screen-leaderboard" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🏆 Bảng vàng</a>
+            <a href="#" data-target="screen-highlight" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🛡️ Góp ý</a>
+            <a href="#" onclick="openAiChat(); return false;" class="nav-item px-3.5 py-2 text-center text-cyan-300 flex-none touch-manipulation">✨ AI</a>
+            <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-3.5 py-2 text-center text-yellow-300 flex-none touch-manipulation">➕ Thêm</a>
         </nav>
-        <div class="w-28 h-1 bg-white/30 rounded-full mt-2 mb-0.5"></div>
-        <div class="text-[9px] text-gray-400 mt-1">Trà Đá Hà Nội • Developed by <b class="text-yellow-400">dembevinh</b></div>
+        <div class="w-28 h-1 bg-white/30 rounded-full mt-2 mb-0.5 pointer-events-none"></div>
+        <div class="text-[9px] text-gray-400 mt-1 pointer-events-none">Trà Đá Hà Nội • Developed by <b class="text-yellow-400">dembevinh</b></div>
     </div>
 
     <div id="ai-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md modal-hidden">
@@ -499,9 +503,8 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-        // CỜ KIỂM SOÁT ĐỒ HỌA TRÊN MOBILE
-        let isIntroActive = true;
-        let userInteracted = false;
+        // Check Device
+        const isMobileDevice = window.innerWidth < 768;
 
         async function loadAppConfig() {
             try {
@@ -511,12 +514,18 @@
         }
         loadAppConfig();
 
-        // THREE.JS
+        // -----------------------------------------
+        // THREE.JS - ĐÃ ĐƯỢC TỐI ƯU CỰC MẠNH CHO MOBILE
+        // -----------------------------------------
         const scene3D = new THREE.Scene();
         const camera3D = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer3D = new THREE.WebGLRenderer({ canvas: document.getElementById('web3d-canvas'), alpha: true, antialias: true });
+        
+        // TẮT ANTIALIAS trên mobile để tăng gấp đôi FPS
+        const renderer3D = new THREE.WebGLRenderer({ canvas: document.getElementById('web3d-canvas'), alpha: true, antialias: !isMobileDevice });
         renderer3D.setSize(window.innerWidth, window.innerHeight);
-        renderer3D.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        
+        // LIMIT PIXEL RATIO = 1.0 trên điện thoại để GPU không bị quá tải
+        renderer3D.setPixelRatio(isMobileDevice ? 1.0 : Math.min(window.devicePixelRatio, 1.5));
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 1.8);
         scene3D.add(ambientLight);
@@ -533,12 +542,16 @@
         const group3D = new THREE.Group();
         scene3D.add(group3D);
 
+        // GIẢM POLYGONS (Segments) trên mobile từ 32 xuống 16
+        const segments = isMobileDevice ? 16 : 32;
+
         const whiteGlassMaterial = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.35, roughness: 0.05, metalness: 0.1, transmission: 0.9, ior: 1.5 });
         const cupGroup = new THREE.Group();
-        const cupGeo = new THREE.CylinderGeometry(0.9, 0.65, 2.2, 32);
+        const cupGeo = new THREE.CylinderGeometry(0.9, 0.65, 2.2, segments);
         const cupMesh = new THREE.Mesh(cupGeo, whiteGlassMaterial);
         cupGroup.add(cupMesh);
-        const teaGeo = new THREE.CylinderGeometry(0.85, 0.62, 1.5, 32);
+        
+        const teaGeo = new THREE.CylinderGeometry(0.85, 0.62, 1.5, segments);
         const teaMat = new THREE.MeshPhysicalMaterial({ color: 0xd97706, transparent: true, opacity: 0.85, roughness: 0.2 });
         const teaMesh = new THREE.Mesh(teaGeo, teaMat);
         teaMesh.position.y = -0.2;
@@ -556,10 +569,10 @@
         group3D.add(cupGroup);
 
         const dieuGroup = new THREE.Group();
-        const thanGeo = new THREE.CylinderGeometry(0.32, 0.32, 4.5, 24);
+        const thanGeo = new THREE.CylinderGeometry(0.32, 0.32, 4.5, isMobileDevice ? 12 : 24);
         const thanMesh = new THREE.Mesh(thanGeo, whiteGlassMaterial);
         dieuGroup.add(thanMesh);
-        const ringTopGeo = new THREE.CylinderGeometry(0.33, 0.33, 0.5, 24);
+        const ringTopGeo = new THREE.CylinderGeometry(0.33, 0.33, 0.5, isMobileDevice ? 12 : 24);
         const ringMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, metalness: 0.9, roughness: 0.15 });
         const ringTop = new THREE.Mesh(ringTopGeo, ringMat);
         ringTop.position.y = 2.0;
@@ -579,13 +592,13 @@
         camera3D.position.z = 7;
 
         let mouseX3D = 0, mouseY3D = 0;
-        window.addEventListener('mousemove', (e) => { mouseX3D = (e.clientX / window.innerWidth - 0.5) * 0.8; mouseY3D = (e.clientY / window.innerHeight - 0.5) * 0.8; });
+        window.addEventListener('mousemove', (e) => { mouseX3D = (e.clientX / window.innerWidth - 0.5) * 0.8; mouseY3D = (e.clientY / window.innerHeight - 0.5) * 0.8; }, { passive: true });
         window.addEventListener('touchmove', (e) => {
             if (e.touches.length > 0) { mouseX3D = (e.touches[0].clientX / window.innerWidth - 0.5) * 0.8; mouseY3D = (e.touches[0].clientY / window.innerHeight - 0.5) * 0.8; }
         }, { passive: true });
 
+        // LUÔN CHO 3D CHẠY LIÊN TỤC 
         function animate3D() {
-            if (!isIntroActive) return; 
             requestAnimationFrame(animate3D);
             group3D.rotation.y += 0.006;
             group3D.rotation.x += (mouseY3D - group3D.rotation.x) * 0.05;
@@ -608,20 +621,25 @@
         }
         window.addEventListener('DOMContentLoaded', () => { setTimeout(typeTitleWriter, 300); });
 
-        // ANTIGRAVITY CANVAS
+
+        // -----------------------------------------
+        // ANTIGRAVITY 2D - TỐI ƯU TOÁN HỌC CPU
+        // -----------------------------------------
         const canvas = document.getElementById('antigravity-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        const numParticles = window.innerWidth < 768 ? 30 : 75; 
+        
+        // CHỈ VẼ 25 HẠT TRÊN ĐIỆN THOẠI ĐỂ ĐẢM BẢO MƯỢT 60FPS
+        const numParticles = isMobileDevice ? 25 : 75; 
         let mouse = { x: null, y: null, radius: 140 };
 
-        window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
-        window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+        window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+        window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; }, { passive: true });
         window.addEventListener('touchmove', (e) => { if (e.touches.length > 0) { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; } }, { passive: true });
         window.addEventListener('touchend', () => { mouse.x = null; mouse.y = null; }, { passive: true });
 
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas, { passive: true });
         resizeCanvas();
 
         for (let i = 0; i < numParticles; i++) {
@@ -635,7 +653,7 @@
         }
 
         function animateAntigravity() {
-            if (!isIntroActive) return; 
+            // LUÔN CHO HẠT BAY LIÊN TỤC
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach((p, index) => {
                 p.x += p.vx; p.y += p.vy;
@@ -644,8 +662,10 @@
 
                 if (mouse.x !== null && mouse.y !== null) {
                     let dx = mouse.x - p.x; let dy = mouse.y - p.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < mouse.radius) {
+                    // Dùng bình phương khoảng cách thay vì Math.sqrt để giảm tải CPU
+                    let distanceSq = dx * dx + dy * dy;
+                    if (distanceSq < mouse.radius * mouse.radius) {
+                        let distance = Math.sqrt(distanceSq);
                         let force = (mouse.radius - distance) / mouse.radius;
                         p.x -= (dx / distance) * force * 3.5; p.y -= (dy / distance) * force * 3.5;
                     }
@@ -654,8 +674,11 @@
                 ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); ctx.restore();
 
                 for (let j = index + 1; j < particles.length; j++) {
-                    let p2 = particles[j]; let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-                    if (dist < 100) {
+                    let p2 = particles[j]; 
+                    // THUẬT TOÁN TỐI ƯU: Không dùng Math.hypot() gây lag, dùng bình phương khoảng cách 100*100 = 10000
+                    let distSq = (p.x - p2.x)*(p.x - p2.x) + (p.y - p2.y)*(p.y - p2.y);
+                    if (distSq < 10000) {
+                        let dist = Math.sqrt(distSq); // Chỉ tính căn lúc thật sự vẽ dây nối
                         ctx.save(); ctx.globalAlpha = (1 - (dist / 100)) * 0.18; ctx.strokeStyle = p.color; ctx.lineWidth = 0.5;
                         ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke(); ctx.restore();
                     }
@@ -665,20 +688,30 @@
         }
         animateAntigravity();
 
+        // ÉP MỞ KHÓA AUDIO BẰNG CÚ CHẠM ĐẦU TIÊN CỦA NGƯỜI DÙNG (SAFARI BYPASS)
+        let audioUnlocked = false;
+        function forceUnlockAudio() {
+            if (!audioUnlocked && player && typeof player.playVideo === 'function') {
+                player.playVideo();
+                audioUnlocked = true;
+                document.removeEventListener('touchstart', forceUnlockAudio);
+                document.removeEventListener('click', forceUnlockAudio);
+            }
+        }
+        document.addEventListener('touchstart', forceUnlockAudio, { passive: true, once: true });
+        document.addEventListener('click', forceUnlockAudio, { once: true });
+
         // KHI ẤN VÀO APP
         function enterApp(targetScreen) {
-            userInteracted = true;
             const intro = document.getElementById('intro-screen');
             intro.style.opacity = '0';
             intro.style.visibility = 'hidden';
-            
-            isIntroActive = false; 
-            document.getElementById('antigravity-canvas').style.display = 'none';
-
             setTimeout(() => { intro.style.display = 'none'; }, 600);
             
-            if (player && typeof player.playVideo === 'function' && !isPlaying) {
+            // Đảm bảo audio chạy khi qua màn hình
+            if (player && typeof player.playVideo === 'function' && !audioUnlocked) {
                 player.playVideo();
+                audioUnlocked = true;
             }
 
             switchScreen(targetScreen);
@@ -722,7 +755,7 @@
             setTimeout(() => map.invalidateSize(), 350);
         });
 
-        // HỆ THỐNG PHÁT NHẠC XỬ LÝ GIAO DIỆN MỚI
+        // HỆ THỐNG YOUTUBE API
         let player;
         let isPlaying = false;
         function onYouTubeIframeAPIReady() {
@@ -733,7 +766,6 @@
                 events: {
                     'onReady': (event) => { 
                         event.target.setVolume(100); 
-                        if (userInteracted) event.target.playVideo();
                     },
                     'onStateChange': (event) => {
                         const iconPlay = document.getElementById('icon-play');
@@ -763,7 +795,6 @@
             isPlaying ? player.pauseVideo() : player.playVideo(); 
         }
 
-        // CÁC HÀM XỬ LÝ MODAL TRỰC TIẾP TRÊN WINDOW
         window.openDonateModal = function() {
             document.getElementById('donate-modal').classList.remove('modal-hidden');
             document.getElementById('donate-modal').classList.add('modal-visible');
@@ -779,6 +810,7 @@
 
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
         const map = L.map('map', { zoomControl: false, fadeAnimation: false, markerZoomAnimation: false }).setView([21.0285, 105.8541], 13);
+        
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
         L.control.zoom({ position: 'bottomright' }).addTo(map);
         mapMarkersLayer = L.layerGroup().addTo(map);
