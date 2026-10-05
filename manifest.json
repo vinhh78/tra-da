@@ -1,0 +1,15 @@
+{
+  "name": "Trà Đá Hà Nội",
+  "short_name": "TràĐáHN",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030305",
+  "theme_color": "#030305",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/920/920550.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
