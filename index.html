@@ -106,7 +106,6 @@
             border: 1px solid rgba(250, 204, 21, 0.15);
         }
 
-        /* CUỘN MƯỢT TỐI ĐA CHO DANH SÁCH QUÁN */
         .custom-scrollbar {
             -webkit-overflow-scrolling: touch;
             scroll-behavior: smooth;
@@ -135,7 +134,6 @@
             transition: height 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
 
-        /* HẠT BAY NỀN XUYÊN SUỐT */
         #antigravity-canvas {
             position: fixed;
             inset: 0;
@@ -145,7 +143,6 @@
             z-index: 1;
         }
 
-        /* MÀN HÌNH CHÀO */
         #intro-screen {
             position: fixed;
             inset: 0;
@@ -171,7 +168,16 @@
             z-index: 2;
         }
 
-        /* --- CSS NÚT XÓA ANIMATION --- */
+        /* KHUNG MINI 3D ICON TRÊN HEADER */
+        #header-mini-3d {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: rgba(0,0,0,0.5);
+            position: relative;
+        }
+
         .btn-animated-delete {
             position: relative;
             display: inline-flex;
@@ -247,7 +253,7 @@
     <!-- HẠT BAY NỀN -->
     <canvas id="antigravity-canvas"></canvas>
 
-    <!-- MÀN HÌNH CHÀO (CHỈ CÓ MÔ HÌNH 3D GIỐNG MẪU KHÔNG CHỮ, NÚT TRẢI NGHIỆM Ở DƯỚI) -->
+    <!-- MÀN HÌNH CHÀO (MÔ HÌNH 3D TĨNH/XOAY ĐÚNG MẪU KHÔNG CHỮ) -->
     <div id="intro-screen">
         <canvas id="web3d-canvas"></canvas>
 
@@ -273,9 +279,9 @@
                 <span class="pointer-events-none">Donate</span>
             </button>
 
-            <div class="led-glow-pill px-3 py-1.5 rounded-full flex items-center gap-1.5 cursor-default relative z-50 bg-black/40">
-                <span class="text-sm">🍵🌿</span>
-                <span class="text-[10px] text-yellow-300 font-bold tracking-wide">Vỉa Hè Chill</span>
+            <!-- THAY THẾ VỊ TRÍ NHẠC BẰNG ICON MINI 3D -->
+            <div class="led-glow-pill p-1 rounded-full flex items-center justify-center cursor-pointer relative z-50" title="Vỉa Hè Chill">
+                <div id="header-mini-3d"></div>
             </div>
 
             <div id="auth-container">
@@ -472,7 +478,7 @@
         loadAppConfig();
 
         // -----------------------------------------
-        // THREE.JS - MÔ HÌNH 3D GIỐNG MẪU (Ghế nhựa, điếu cày, cốc, gậy dài)
+        // THREE.JS - MÔ HÌNH 3D CHÍNH CHO MÀN HÌNH CHÀO
         // -----------------------------------------
         let isIntroActive = true;
         const scene3D = new THREE.Scene();
@@ -491,71 +497,66 @@
         const group3D = new THREE.Group();
         scene3D.add(group3D);
 
-        // 1. Ghế nhựa xanh ở giữa
-        const stoolGroup = new THREE.Group();
-        const stoolMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.4 });
-        const seatGeo = new THREE.BoxGeometry(1.6, 0.2, 1.6);
-        const seatMesh = new THREE.Mesh(seatGeo, stoolMat);
-        seatMesh.position.y = 0.5;
-        stoolGroup.add(seatMesh);
+        // Hàm tạo cấu trúc bộ 3D chung (Ghế, Cốc, Điếu cày, Gậy)
+        function build3DSet(parentGroup) {
+            const stoolGroup = new THREE.Group();
+            const stoolMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.4 });
+            const seatMesh = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.2, 1.6), stoolMat);
+            seatMesh.position.y = 0.5;
+            stoolGroup.add(seatMesh);
 
-        // Chân ghế
-        const legGeo = new THREE.CylinderGeometry(0.08, 0.08, 1.2);
-        for(let dx of [-0.6, 0.6]) {
-            for(let dz of [-0.6, 0.6]) {
-                const leg = new THREE.Mesh(legGeo, stoolMat);
-                leg.position.set(dx, -0.1, dz);
-                leg.rotation.z = dx * -0.15;
-                leg.rotation.x = dz * 0.15;
-                stoolGroup.add(leg);
+            const legGeo = new THREE.CylinderGeometry(0.08, 0.08, 1.2);
+            for(let dx of [-0.6, 0.6]) {
+                for(let dz of [-0.6, 0.6]) {
+                    const leg = new THREE.Mesh(legGeo, stoolMat);
+                    leg.position.set(dx, -0.1, dz);
+                    leg.rotation.z = dx * -0.15;
+                    leg.rotation.x = dz * 0.15;
+                    stoolGroup.add(leg);
+                }
             }
+            parentGroup.add(stoolGroup);
+
+            const glassMat = new THREE.MeshPhysicalMaterial({ color: 0x10b981, transparent: true, opacity: 0.6, roughness: 0.1, transmission: 0.8 });
+            const cupMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.2, 0.7, 16), glassMat);
+            cupMesh.position.set(0, 0.85, 0);
+            parentGroup.add(cupMesh);
+
+            const dieuGroup = new THREE.Group();
+            const bambooMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.6 });
+            const silverRingMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.9, roughness: 0.2 });
+            
+            const thanDieu = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 3.2, 16), bambooMat);
+            dieuGroup.add(thanDieu);
+            
+            const ring1 = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.4, 16), silverRingMat);
+            ring1.position.y = 0.8;
+            dieuGroup.add(ring1);
+
+            const ring2 = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.3, 16), silverRingMat);
+            ring2.position.y = -0.8;
+            dieuGroup.add(ring2);
+
+            dieuGroup.position.set(-1.4, 0.2, 0);
+            dieuGroup.rotation.z = 0.45;
+            parentGroup.add(dieuGroup);
+
+            const rodGroup = new THREE.Group();
+            const rodMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 3.8, 12), silverRingMat);
+            rodMesh.rotation.z = Math.PI / 2;
+            rodGroup.add(rodMesh);
+
+            const tipMat = new THREE.MeshStandardMaterial({ color: 0x18181b, metalness: 0.8 });
+            const tipMesh = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.6, 12), tipMat);
+            tipMesh.rotation.z = -Math.PI / 2;
+            tipMesh.position.set(-1.8, 0, 0);
+            rodGroup.add(tipMesh);
+
+            rodGroup.position.set(0.2, -1.3, 0.5);
+            parentGroup.add(rodGroup);
         }
-        group3D.add(stoolGroup);
 
-        // 2. Cốc trà đá trên mặt ghế
-        const cupGroup = new THREE.Group();
-        const glassMat = new THREE.MeshPhysicalMaterial({ color: 0x10b981, transparent: true, opacity: 0.6, roughness: 0.1, transmission: 0.8 });
-        const cupMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.2, 0.7, 16), glassMat);
-        cupMesh.position.set(0, 0.85, 0);
-        cupGroup.add(cupMesh);
-        group3D.add(cupGroup);
-
-        // 3. Điếu cày đặt nghiêng bên trái
-        const dieuGroup = new THREE.Group();
-        const bambooMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.6 });
-        const silverRingMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.9, roughness: 0.2 });
-        
-        const thanDieu = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 3.2, 16), bambooMat);
-        dieuGroup.add(thanDieu);
-        
-        const ring1 = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.4, 16), silverRingMat);
-        ring1.position.y = 0.8;
-        dieuGroup.add(ring1);
-
-        const ring2 = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.3, 16), silverRingMat);
-        ring2.position.y = -0.8;
-        dieuGroup.add(ring2);
-
-        dieuGroup.position.set(-1.4, 0.2, 0);
-        dieuGroup.rotation.z = 0.45;
-        group3D.add(dieuGroup);
-
-        // 4. Thanh gậy dài đặt nằm ngang ở dưới
-        const rodGroup = new THREE.Group();
-        const rodMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 3.8, 12), silverRingMat);
-        rodMesh.rotation.z = Math.PI / 2;
-        rodGroup.add(rodMesh);
-
-        // Đầu nhọn của gậy (màu đen)
-        const tipMat = new THREE.MeshStandardMaterial({ color: 0x18181b, metalness: 0.8 });
-        const tipMesh = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.6, 12), tipMat);
-        tipMesh.rotation.z = -Math.PI / 2;
-        tipMesh.position.set(-1.8, 0, 0);
-        rodGroup.add(tipMesh);
-
-        rodGroup.position.set(0.2, -1.3, 0.5);
-        group3D.add(rodGroup);
-
+        build3DSet(group3D);
         camera3D.position.z = 5.5;
 
         let mouseX3D = 0, mouseY3D = 0;
@@ -573,6 +574,37 @@
             renderer3D.render(scene3D, camera3D);
         }
         animate3D();
+
+
+        // -----------------------------------------
+        // THREE.JS - MINI ICON 3D TRÊN HEADER
+        // -----------------------------------------
+        const miniContainer = document.getElementById('header-mini-3d');
+        const sceneMini = new THREE.Scene();
+        const cameraMini = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+        cameraMini.position.z = 6.2;
+
+        const rendererMini = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        rendererMini.setSize(36, 36);
+        rendererMini.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        miniContainer.appendChild(rendererMini.domElement);
+
+        const lightMini = new THREE.AmbientLight(0xffffff, 2.0);
+        sceneMini.add(lightMini);
+        const dirMini = new THREE.DirectionalLight(0xffffff, 2.0);
+        dirMini.position.set(3, 5, 5);
+        sceneMini.add(dirMini);
+
+        const groupMini = new THREE.Group();
+        sceneMini.add(groupMini);
+        build3DSet(groupMini);
+
+        function animateMini3D() {
+            requestAnimationFrame(animateMini3D);
+            groupMini.rotation.y += 0.02; // Xoay vòng tròn mượt mà làm icon
+            rendererMini.render(sceneMini, cameraMini);
+        }
+        animateMini3D();
 
 
         // -----------------------------------------
