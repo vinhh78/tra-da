@@ -129,7 +129,7 @@
             transition: height 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
 
-        /* ĐƯA CANVAS LÊN LỚP NỀN NỔI BẬT XUYÊN SUỐT */
+        /* 3D CHỈ HIỂN THỊ Ở MÀN HÌNH INTRO */
         #web3d-canvas {
             position: fixed;
             inset: 0;
@@ -138,25 +138,26 @@
             pointer-events: none;
             z-index: 2;
         }
+        /* HẠT BAY ANTIGRAVITY LUÔN HIỂN THỊ XUYÊN SUỐT LÀM NỀN */
         #antigravity-canvas {
             position: fixed;
             inset: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 3;
+            z-index: 1;
         }
         
         #app-screens { z-index: 10; position: relative; }
         
-        /* MÀN HÌNH CHÀO TRONG SUỐT ĐỂ NHÌN THẤY 3D VÀ HẠT BAY */
+        /* MÀN HÌNH CHÀO TRONG SUỐT */
         #intro-screen {
             position: fixed;
             inset: 0;
             width: 100vw;
             height: 100vh;
             z-index: 999999;
-            background: rgba(3, 3, 5, 0.45);
+            background: rgba(3, 3, 5, 0.6);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             display: flex;
@@ -250,14 +251,15 @@
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden relative">
     
-    <!-- KHUNG NHẠC YOUTUBE CHUẨN XÁC, HIỆN DIỆN TRỰC TIẾP -->
+    <!-- NHÚNG NHẠC YOUTUBE TRỰC TIẾP -->
     <div style="position: fixed; z-index: 999; bottom: 0; right: 0; width: 50px; height: 50px; opacity: 0.05; pointer-events: none; overflow: hidden;">
         <div id="youtube-player-container"></div>
     </div>
 
-    <!-- CANVAS 3D VÀ HẠT BAY ANTIGRAVITY LÀM NỀN -->
-    <canvas id="web3d-canvas"></canvas>
+    <!-- CANVAS NỀN: HẠT BAY ANTIGRAVITY XUYÊN SUỐT -->
     <canvas id="antigravity-canvas"></canvas>
+    <!-- CANVAS 3D: CHỈ DÙNG Ở MÀN HÌNH CHÀO -->
+    <canvas id="web3d-canvas"></canvas>
 
     <!-- MÀN HÌNH MỞ ĐẦU -->
     <div id="intro-screen">
@@ -448,7 +450,7 @@
             <a href="#" data-target="screen-map" class="nav-item px-3.5 py-2 active text-center flex-none touch-manipulation">🗺️ Bản đồ</a>
             <a href="#" data-target="screen-category" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🍵 Phân loại</a>
             <a href="#" data-target="screen-leaderboard" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🏆 Bảng vàng</a>
-            <a href="#" data-target="screen-highlight" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🛡️ Góp ý</a>
+            <a href="#" data-target="screen-highlight" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🛡️️ Góp ý</a>
             <a href="#" onclick="openAiChat(); return false;" class="nav-item px-3.5 py-2 text-center text-cyan-300 flex-none touch-manipulation">✨ AI</a>
             <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-3.5 py-2 text-center text-yellow-300 flex-none touch-manipulation">➕ Thêm</a>
         </nav>
@@ -522,8 +524,9 @@
         loadAppConfig();
 
         // -----------------------------------------
-        // THREE.JS - 3D MÔ HÌNH (Ly trà đá, điếu cày)
+        // THREE.JS - MÔ HÌNH 3D (Chỉ chạy ở Intro)
         // -----------------------------------------
+        let isIntroActive = true;
         const scene3D = new THREE.Scene();
         const camera3D = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         
@@ -602,6 +605,7 @@
 
         function animate3D() {
             requestAnimationFrame(animate3D);
+            if (!isIntroActive) return; // Dừng render 3D khi vào giao diện chính để tiết kiệm tài nguyên và không che màn hình
             group3D.rotation.y += 0.006;
             group3D.rotation.x += (mouseY3D - group3D.rotation.x) * 0.05;
             group3D.rotation.y += (mouseX3D - group3D.rotation.y) * 0.05;
@@ -625,7 +629,7 @@
 
 
         // -----------------------------------------
-        // ANTIGRAVITY HẠT BAY 2D
+        // ANTIGRAVITY HẠT BAY 2D (Chạy xuyên suốt)
         // -----------------------------------------
         const canvas = document.getElementById('antigravity-canvas');
         const ctx = canvas.getContext('2d');
@@ -742,7 +746,11 @@
         // KHI BẤM VÀO APP
         function enterApp(targetScreen) {
             unlockAndPlayAudio();
+            isIntroActive = false; // Tắt vòng lặp render 3D
             const intro = document.getElementById('intro-screen');
+            const canvas3d = document.getElementById('web3d-canvas');
+            if (canvas3d) canvas3d.style.display = 'none'; // Ẩn canvas 3D hoàn toàn khỏi giao diện chính
+
             intro.style.opacity = '0';
             intro.style.visibility = 'hidden';
             setTimeout(() => { intro.style.display = 'none'; }, 600);
