@@ -129,16 +129,7 @@
             transition: height 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
 
-        /* 3D CHỈ HIỂN THỊ Ở MÀN HÌNH INTRO */
-        #web3d-canvas {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2;
-        }
-        /* HẠT BAY ANTIGRAVITY LUÔN HIỂN THỊ XUYÊN SUỐT LÀM NỀN */
+        /* HẠT BAY NỀN XUYÊN SUỐT */
         #antigravity-canvas {
             position: fixed;
             inset: 0;
@@ -147,24 +138,31 @@
             pointer-events: none;
             z-index: 1;
         }
-        
-        #app-screens { z-index: 10; position: relative; }
-        
-        /* MÀN HÌNH CHÀO TRONG SUỐT */
+
+        /* MÀN HÌNH CHÀO */
         #intro-screen {
             position: fixed;
             inset: 0;
             width: 100vw;
             height: 100vh;
             z-index: 999999;
-            background: rgba(3, 3, 5, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(3, 3, 5, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        #web3d-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
         }
 
         .typing-cursor::after {
@@ -251,18 +249,18 @@
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden relative">
     
-    <!-- NHÚNG NHẠC YOUTUBE TRỰC TIẾP -->
-    <div style="position: fixed; z-index: 999; bottom: 0; right: 0; width: 50px; height: 50px; opacity: 0.05; pointer-events: none; overflow: hidden;">
+    <!-- IFRAME YOUTUBE HIỂN THỊ RÕ RÀNG CHO MOBILE PHÁT NHẠC -->
+    <div style="position: fixed; z-index: 999; bottom: 10px; right: 10px; width: 60px; height: 60px; opacity: 0.1; pointer-events: none; overflow: hidden;">
         <div id="youtube-player-container"></div>
     </div>
 
-    <!-- CANVAS NỀN: HẠT BAY ANTIGRAVITY XUYÊN SUỐT -->
+    <!-- HẠT BAY NỀN -->
     <canvas id="antigravity-canvas"></canvas>
-    <!-- CANVAS 3D: CHỈ DÙNG Ở MÀN HÌNH CHÀO -->
-    <canvas id="web3d-canvas"></canvas>
 
-    <!-- MÀN HÌNH MỞ ĐẦU -->
+    <!-- MÀN HÌNH CHÀO -->
     <div id="intro-screen">
+        <canvas id="web3d-canvas"></canvas>
+
         <div class="relative z-10 max-w-md mx-auto space-y-4 w-full p-4 text-center">
             <h1 class="text-2xl sm:text-4xl font-black tracking-tight uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.9)] min-h-[3.5rem] flex items-center justify-center">
                 <span id="typed-title" class="typing-cursor"></span>
@@ -273,23 +271,23 @@
             </div>
 
             <div class="grid grid-cols-2 gap-3.5 pt-2 max-w-xs mx-auto">
-                <button onclick="enterApp('screen-map')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs font-semibold text-yellow-300 cursor-pointer flex flex-col items-center gap-1 bg-black/70">
+                <button onclick="enterApp('screen-map')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs font-semibold text-yellow-300 cursor-pointer flex flex-col items-center gap-1 bg-black/80">
                     <span class="text-base">🗺️</span> Bản đồ
                 </button>
-                <button onclick="enterApp('screen-category')" class="led-glow-pill led-glow-cyan py-3 px-4 rounded-2xl text-xs font-semibold text-cyan-300 cursor-pointer flex flex-col items-center gap-1 bg-black/70">
+                <button onclick="enterApp('screen-category')" class="led-glow-pill led-glow-cyan py-3 px-4 rounded-2xl text-xs font-semibold text-cyan-300 cursor-pointer flex flex-col items-center gap-1 bg-black/80">
                     <span class="text-base">🍵</span> Phân loại
                 </button>
-                <button onclick="enterApp('screen-leaderboard')" class="led-glow-pill led-glow-purple py-3 px-4 rounded-2xl text-xs font-semibold text-purple-300 cursor-pointer flex flex-col items-center gap-1 bg-black/70">
+                <button onclick="enterApp('screen-leaderboard')" class="led-glow-pill led-glow-purple py-3 px-4 rounded-2xl text-xs font-semibold text-purple-300 cursor-pointer flex flex-col items-center gap-1 bg-black/80">
                     <span class="text-base">🏆</span> Bảng vàng
                 </button>
-                <button onclick="enterApp('screen-highlight')" class="led-glow-pill led-glow-emerald py-3 px-4 rounded-2xl text-xs font-semibold text-emerald-300 cursor-pointer flex flex-col items-center gap-1 bg-black/70">
+                <button onclick="enterApp('screen-highlight')" class="led-glow-pill led-glow-emerald py-3 px-4 rounded-2xl text-xs font-semibold text-emerald-300 cursor-pointer flex flex-col items-center gap-1 bg-black/80">
                     <span class="text-base">🛡️</span> Góp ý
                 </button>
             </div>
 
             <div class="pt-2">
                 <button onclick="enterApp('screen-map')" class="w-full max-w-xs py-3.5 rounded-2xl font-bold text-black bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 shadow-[0_0_30px_rgba(250,204,21,0.6)] transition-all hover:scale-105 cursor-pointer uppercase tracking-wider text-xs">
-                    Vào Ngay Trải Nghiệm 🚀
+                    🎵 Vào Ngay & Phát Nhạc 🚀
                 </button>
             </div>
         </div>
@@ -303,7 +301,6 @@
         </div>
         
         <div class="flex items-center gap-1.5 md:gap-2">
-            <!-- NÚT DONATE -->
             <button type="button" onclick="openDonateModal()" class="led-glow-pill bg-yellow-500/20 text-yellow-300 px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 cursor-pointer relative z-50">
                 <svg class="w-3.5 h-3.5 pointer-events-none" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M4 19h16v2H4zM20 8h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 2.2 1.8 4 4 4h8c2.2 0 4-1.8 4-4v-3h2c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-2 5h-2V5h2v8zM4 15V5h10v10H4z"/>
@@ -311,7 +308,6 @@
                 <span class="pointer-events-none">Donate</span>
             </button>
 
-            <!-- NÚT MUSIC -->
             <button type="button" onclick="togglePlayMusic()" class="led-glow-pill px-3 py-1.5 rounded-full flex items-center gap-2 cursor-pointer relative z-50">
                 <div id="vinyl-icon" class="pointer-events-none w-5 h-5 rounded-full bg-gradient-to-tr from-yellow-500 to-black flex items-center justify-center transition-all duration-300 shadow-md">
                     <svg class="w-2.5 h-2.5 text-white pointer-events-none" viewBox="0 0 24 24" fill="currentColor">
@@ -327,7 +323,6 @@
                 </div>
             </button>
 
-            <!-- NÚT TÀI KHOẢN -->
             <div id="auth-container">
                 <button type="button" onclick="promptLogin()" class="led-glow-pill led-glow-cyan bg-white/10 text-white text-xs px-3 py-1.5 rounded-full font-medium flex items-center gap-1 cursor-pointer relative z-50">
                     <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg> 
@@ -447,10 +442,10 @@
 
     <div class="ios-dock-container fixed bottom-0 left-0 right-0 z-[999] px-3 py-2 flex flex-col items-center">
         <nav id="main-nav" class="ios-pill-slider flex items-center gap-1 px-2 py-1.5 rounded-full text-xs font-medium overflow-x-auto custom-scrollbar max-w-lg w-full justify-around relative">
-            <a href="#" data-target="screen-map" class="nav-item px-3.5 py-2 active text-center flex-none touch-manipulation">🗺️ Bản đồ</a>
+            <a href="#" data-target="screen-map" class="nav-item px-3.5 py-2 active text-center flex-none touch-manipulation">🗺️️ Bản đồ</a>
             <a href="#" data-target="screen-category" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🍵 Phân loại</a>
             <a href="#" data-target="screen-leaderboard" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🏆 Bảng vàng</a>
-            <a href="#" data-target="screen-highlight" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🛡️️ Góp ý</a>
+            <a href="#" data-target="screen-highlight" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🛡️ Góp ý</a>
             <a href="#" onclick="openAiChat(); return false;" class="nav-item px-3.5 py-2 text-center text-cyan-300 flex-none touch-manipulation">✨ AI</a>
             <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-3.5 py-2 text-center text-yellow-300 flex-none touch-manipulation">➕ Thêm</a>
         </nav>
@@ -524,7 +519,7 @@
         loadAppConfig();
 
         // -----------------------------------------
-        // THREE.JS - MÔ HÌNH 3D (Chỉ chạy ở Intro)
+        // THREE.JS - 3D MÔ HÌNH (Độc quyền chỉ chạy ở Intro)
         // -----------------------------------------
         let isIntroActive = true;
         const scene3D = new THREE.Scene();
@@ -570,7 +565,7 @@
             ice.position.set((Math.random()-0.5)*0.4, 0.2 + i*0.25, (Math.random()-0.5)*0.4);
             cupGroup.add(ice);
         }
-        cupGroup.position.set(-4.0, -0.5, 0);
+        cupGroup.position.set(-2.2, -0.5, 0);
         cupGroup.rotation.z = -0.1;
         group3D.add(cupGroup);
 
@@ -592,7 +587,7 @@
         noMesh.position.set(0.7, -0.3, 0);
         noMesh.rotation.z = -Math.PI / 4;
         dieuGroup.add(noMesh);
-        dieuGroup.position.set(4.0, -0.2, 0);
+        dieuGroup.position.set(2.2, -0.2, 0);
         dieuGroup.rotation.z = 0.1;
         group3D.add(dieuGroup);
         camera3D.position.z = 7;
@@ -605,7 +600,7 @@
 
         function animate3D() {
             requestAnimationFrame(animate3D);
-            if (!isIntroActive) return; // Dừng render 3D khi vào giao diện chính để tiết kiệm tài nguyên và không che màn hình
+            if (!isIntroActive) return;
             group3D.rotation.y += 0.006;
             group3D.rotation.x += (mouseY3D - group3D.rotation.x) * 0.05;
             group3D.rotation.y += (mouseX3D - group3D.rotation.y) * 0.05;
@@ -629,7 +624,7 @@
 
 
         // -----------------------------------------
-        // ANTIGRAVITY HẠT BAY 2D (Chạy xuyên suốt)
+        // ANTIGRAVITY HẠT BAY 2D (Xuyên suốt)
         // -----------------------------------------
         const canvas = document.getElementById('antigravity-canvas');
         const ctx = canvas.getContext('2d');
@@ -698,9 +693,9 @@
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player-container', {
-                height: '50', width: '50', 
+                height: '60', width: '60', 
                 videoId: 'hEUlsNMNiXQ',
-                playerVars: { 'playsinline': 1, 'loop': 1, 'playlist': 'hEUlsNMNiXQ', 'controls': 0 },
+                playerVars: { 'playsinline': 1, 'loop': 1, 'playlist': 'hEUlsNMNiXQ', 'controls': 0, 'autoplay': 1 },
                 events: {
                     'onReady': (event) => { 
                         event.target.setVolume(100); 
@@ -746,11 +741,8 @@
         // KHI BẤM VÀO APP
         function enterApp(targetScreen) {
             unlockAndPlayAudio();
-            isIntroActive = false; // Tắt vòng lặp render 3D
+            isIntroActive = false; 
             const intro = document.getElementById('intro-screen');
-            const canvas3d = document.getElementById('web3d-canvas');
-            if (canvas3d) canvas3d.style.display = 'none'; // Ẩn canvas 3D hoàn toàn khỏi giao diện chính
-
             intro.style.opacity = '0';
             intro.style.visibility = 'hidden';
             setTimeout(() => { intro.style.display = 'none'; }, 600);
