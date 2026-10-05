@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Trà Đá Hà Nội - Bản Đồ Cộng Đồng</title>
     
+    <!-- Cấu hình PWA cho di động -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#030305">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Trà Đá HN">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -99,9 +106,9 @@
             box-shadow: 0 0 25px rgba(52, 211, 153, 0.7), inset 0 0 15px rgba(52, 211, 153, 0.3);
         }
 
-        /* HIỆU ỨNG CHỮ TỐI PHÁT SÁNG NEON VÀNG ĐỒNG */
+        /* Chữ tối phát sáng neon vàng đồng */
         .dark-neon-glow-text {
-            color: #111115; /* Màu chữ tối sâu thẳm bên trong */
+            color: #111115;
             text-shadow: 
                 -1px -1px 0 rgba(253, 224, 71, 0.8),  
                  1px -1px 0 rgba(253, 224, 71, 0.8),
@@ -287,7 +294,6 @@
                 <span id="typed-title" class="typing-cursor"></span>
             </h1>
 
-            <!-- ĐÃ CẬP NHẬT HIỆU ỨNG CHỮ TỐI PHÁT SÁNG NEON -->
             <div class="text-xs sm:text-sm font-black tracking-[0.2em] uppercase dark-neon-glow-text py-1">
                 Impossible is Nothing.
             </div>
@@ -295,22 +301,22 @@
             <!-- CÁC NÚT OPTION -->
             <div class="grid grid-cols-2 gap-3.5 pt-3 w-full max-w-[340px] mx-auto">
                 <button onclick="enterApp('screen-map')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-yellow-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
-                    <span class="text-base">🗺️</span> Bản đồ
+                    <span class="text-base"></span> Bản đồ
                 </button>
                 <button onclick="enterApp('screen-category')" class="led-glow-pill led-glow-cyan py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-cyan-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
-                    <span class="text-base">🍵</span> Phân loại
+                    <span class="text-base"></span> Phân loại
                 </button>
                 <button onclick="filterByCategory('Local Eatery')" class="led-glow-pill led-glow-purple py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-purple-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
-                    <span class="text-base">🍲</span> Local Eatery
+                    <span class="text-base"></span> Local Eatery
                 </button>
                 <button onclick="enterApp('screen-highlight')" class="led-glow-pill led-glow-emerald py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-emerald-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
-                    <span class="text-base">🛡️</span> Góp ý
+                    <span class="text-base"></span> Góp ý
                 </button>
             </div>
 
             <div class="pt-2 w-full max-w-[340px] mx-auto">
                 <button onclick="enterApp('screen-map')" class="w-full py-3.5 rounded-2xl font-bold text-black bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 shadow-[0_0_25px_rgba(250,204,21,0.7)] transition-all hover:scale-105 cursor-pointer uppercase tracking-wider text-xs sm:text-sm">
-                    Vào Ngay Trải Nghiệm 🚀
+                    Trải Nghiệm Ngay 🚀
                 </button>
             </div>
 
@@ -374,22 +380,22 @@
                 <p class="text-gray-400 text-sm mb-6">Thống kê số lượng quán thực tế theo danh mục trên Firebase.</p>
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                     <div onclick="filterByCategory('Trà đá vỉa hè')" class="liquid-glass-card rounded-xl p-4 cursor-pointer h-36 flex flex-col justify-end relative">
-                        <span class="text-2xl mb-1 pointer-events-none">🍵</span>
+                        <span class="text-2xl mb-1 pointer-events-none"></span>
                         <h3 class="font-medium text-yellow-300 text-xs pointer-events-none">Trà đá vỉa hè</h3>
                         <span id="count-trada" class="absolute top-3 right-3 text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30 pointer-events-none">0 quán</span>
                     </div>
                     <div onclick="filterByCategory('Trà chanh chém gió')" class="liquid-glass-card rounded-xl p-4 cursor-pointer h-36 flex flex-col justify-end relative">
-                        <span class="text-2xl mb-1 pointer-events-none">🍋</span>
+                        <span class="text-2xl mb-1 pointer-events-none"></span>
                         <h3 class="font-medium text-yellow-300 text-xs pointer-events-none">Trà chanh chém gió</h3>
                         <span id="count-trachanh" class="absolute top-3 right-3 text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30 pointer-events-none">0 quán</span>
                     </div>
                     <div onclick="filterByCategory('Cafe vỉа hè')" class="liquid-glass-card rounded-xl p-4 cursor-pointer h-36 flex flex-col justify-end relative">
-                        <span class="text-2xl mb-1 pointer-events-none">☕</span>
+                        <span class="text-2xl mb-1 pointer-events-none"></span>
                         <h3 class="font-medium text-yellow-300 text-xs pointer-events-none">Cafe vỉа hè</h3>
                         <span id="count-cafe" class="absolute top-3 right-3 text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30 pointer-events-none">0 quán</span>
                     </div>
                     <div onclick="filterByCategory('Local Eatery')" class="liquid-glass-card rounded-xl p-4 cursor-pointer h-36 flex flex-col justify-end relative border-purple-500/40">
-                        <span class="text-2xl mb-1 pointer-events-none">🍲</span>
+                        <span class="text-2xl mb-1 pointer-events-none"></span>
                         <h3 class="font-medium text-purple-300 text-xs pointer-events-none">Local Eatery</h3>
                         <span id="count-eatery" class="absolute top-3 right-3 text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full border border-purple-500/30 pointer-events-none">0 quán</span>
                     </div>
@@ -407,7 +413,7 @@
 
         <div id="screen-highlight" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 z-20 bg-transparent">
             <div class="max-w-2xl mx-auto pb-16">
-                <h2 class="text-2xl font-light mb-2 flex items-center gap-2"><span>🛡️</span> Góp Ý & Báo Cáo Lỗi Website</h2>
+                <h2 class="text-2xl font-light mb-2 flex items-center gap-2"><span></span> Góp Ý & Báo Cáo Lỗi Website</h2>
                 <p class="text-gray-400 text-sm mb-6">Gửi ý kiến đóng góp hoặc báo cáo lỗi trực tiếp về máy chủ quản trị của bạn.</p>
                 
                 <div class="liquid-glass rounded-2xl p-6 border border-white/10 space-y-4">
@@ -462,11 +468,11 @@
     <!-- THANH MENU DOCK DƯỚI -->
     <div class="ios-dock-container fixed bottom-0 left-0 right-0 z-[999] px-2 py-2 flex flex-col items-center">
         <nav id="main-nav" class="ios-pill-slider flex items-center gap-0.5 px-1.5 py-1.5 rounded-full text-[11px] font-medium overflow-x-auto custom-scrollbar max-w-xl w-full justify-around relative">
-            <a href="#" data-target="screen-map" class="nav-item px-2.5 py-2 active text-center flex-none touch-manipulation">🗺 Bản đồ</a>
-            <a href="#" data-target="screen-category" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">🍵 Phân loại</a>
+            <a href="#" data-target="screen-map" class="nav-item px-2.5 py-2 active text-center flex-none touch-manipulation">Bản đồ</a>
+            <a href="#" data-target="screen-category" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">Phân loại</a>
             <a href="#" onclick="filterByCategory('Local Eatery'); return false;" class="nav-item px-2.5 py-2 text-center text-purple-300 flex-none touch-manipulation">🍲 Eatery</a>
             <a href="#" data-target="screen-leaderboard" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">🏆 Bảng vàng</a>
-            <a href="#" data-target="screen-highlight" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">🛡 Góp ý</a>
+            <a href="#" data-target="screen-highlight" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">Góp ý</a>
             <a href="#" onclick="openAiChat(); return false;" class="nav-item px-2.5 py-2 text-center text-cyan-300 flex-none touch-manipulation">✨ AI</a>
             <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-2.5 py-2 text-center text-yellow-300 flex-none touch-manipulation">➕ Thêm</a>
         </nav>
@@ -518,7 +524,7 @@
                             <option value="Trà đá vỉa hè">Trà đá vỉa hè</option>
                             <option value="Trà chanh chém gió">Trà chanh chém gió</option>
                             <option value="Cafe vỉа hè">Cafe vỉа hè</option>
-                            <option value="Local Eatery">🍲 Local Eatery (Quán ăn)</option>
+                            <option value="Local Eatery">Local Eatery (Quán ăn)</option>
                         </select>
                     </div>
                 </div>
@@ -528,6 +534,13 @@
     </div>
 
     <script>
+        // Đăng ký Service Worker cho PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed: ', err));
+            });
+        }
+
         const isMobileDevice = window.innerWidth < 768;
 
         async function loadAppConfig() {
