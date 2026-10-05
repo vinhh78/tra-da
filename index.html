@@ -335,9 +335,10 @@
         <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0">
             <div id="map" class="absolute inset-0 w-full h-full z-0 custom-dark-map"></div>
 
-            <div id="shop-sheet" class="w-full lg:w-[400px] flex flex-col h-[38vh] lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-2xl rounded-t-3xl border-t lg:border border-white/15 z-25 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0">
-                <div id="sheet-header-drag" class="w-full pt-3 pb-2 bg-white/5 cursor-grab active:cursor-grabbing flex flex-col items-center select-none touch-none">
-                    <div class="w-10 h-1 bg-white/40 rounded-full mb-2 pointer-events-none"></div>
+            <!-- ĐÃ GIẢM CHIỀU CAO MẶC ĐỊNH XUỐNG 32vh ĐỂ KHÔNG BỊ CHE KHUẤT QUÁN TRÊN BẢN ĐỒ -->
+            <div id="shop-sheet" style="height: 32vh;" class="w-full lg:w-[400px] flex flex-col lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-2xl rounded-t-3xl border-t lg:border border-white/15 z-25 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0">
+                <div id="sheet-header-drag" class="w-full pt-2.5 pb-2 bg-white/5 cursor-grab active:cursor-grabbing flex flex-col items-center select-none touch-none">
+                    <div class="w-10 h-1 bg-white/40 rounded-full mb-1.5 pointer-events-none"></div>
                     <div class="w-full px-3 flex items-center justify-between pointer-events-none">
                         <div class="flex items-center gap-2">
                             <h2 class="text-xs uppercase tracking-wider text-gray-300 font-medium" id="list-title">Danh sách quán</h2>
@@ -532,10 +533,9 @@
         scene3D.add(dirLight);
 
         const group3D = new THREE.Group();
-        group3D.position.set(0, -0.5, -2.5); // Đẩy lùi hẳn ra phía sau sâu hơn để làm hình nền động hoàn hảo
+        group3D.position.set(0, -0.5, -2.5); 
         scene3D.add(group3D);
 
-        // Hàm tạo cấu trúc bộ 3D (Chỉ Ghế, Cốc, Điếu cày)
         function build3DSet(parentGroup) {
             const stoolGroup = new THREE.Group();
             const stoolMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.4 });
@@ -599,7 +599,6 @@
         }
         animate3D();
 
-        // Hiệu ứng chữ chạy Typewriter ở Intro
         const titleText = "HANOI TEA MAP";
         let titleIndex = 0;
         const typedTitleContainer = document.getElementById('typed-title');
@@ -614,10 +613,6 @@
         }
         window.addEventListener('DOMContentLoaded', () => { setTimeout(typeTitleWriter, 300); });
 
-
-        // -----------------------------------------
-        // THREE.JS - MINI ICON 3D TRÊN HEADER
-        // -----------------------------------------
         const miniContainer = document.getElementById('header-mini-3d');
         const sceneMini = new THREE.Scene();
         const cameraMini = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
@@ -645,10 +640,6 @@
         }
         animateMini3D();
 
-
-        // -----------------------------------------
-        // ANTIGRAVITY HẠT BAY 2D (Xuyên suốt)
-        // -----------------------------------------
         const canvas = document.getElementById('antigravity-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -707,7 +698,6 @@
         }
         animateAntigravity();
 
-        // KHI BẤM VÀO APP (Mở màn hình chính)
         function enterApp(targetScreen) {
             isIntroActive = false; 
             const intro = document.getElementById('intro-screen');
@@ -718,7 +708,6 @@
             switchScreen(targetScreen);
         }
 
-        // FIREBASE LOGIC
         const firebaseConfig = {
             apiKey: "AIzaSyCMayrZCPTTBiN43Aj9qu5doGRMPhliOvs", authDomain: "trada-be900.firebaseapp.com",
             projectId: "trada-be900", storageBucket: "trada-be900.firebasestorage.app",
@@ -745,14 +734,14 @@
         window.addEventListener('touchmove', (e) => {
             if (!isDragging || window.innerWidth >= 1024) return;
             const deltaY = startY - e.touches[0].clientY; let newHeight = startHeight + deltaY;
-            const maxHeight = window.innerHeight * 0.75; const minHeight = window.innerHeight * 0.22;
+            const maxHeight = window.innerHeight * 0.75; const minHeight = window.innerHeight * 0.20;
             if (newHeight > maxHeight) newHeight = maxHeight; if (newHeight < minHeight) newHeight = minHeight;
             sheet.style.height = newHeight + 'px';
         }, { passive: true });
         window.addEventListener('touchend', () => {
             if (!isDragging || window.innerWidth >= 1024) return;
             isDragging = false; sheet.style.transition = 'height 0.35s cubic-bezier(0.1, 0.9, 0.2, 1)';
-            sheet.style.height = (sheet.offsetHeight > window.innerHeight * 0.45) ? '72vh' : '38vh';
+            sheet.style.height = (sheet.offsetHeight > window.innerHeight * 0.45) ? '68vh' : '32vh';
             setTimeout(() => map.invalidateSize(), 350);
         });
 
