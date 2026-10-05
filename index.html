@@ -262,7 +262,7 @@
     <!-- HẠT BAY NỀN -->
     <canvas id="antigravity-canvas"></canvas>
 
-    <!-- MÀN HÌNH CHÀO (PHÓNG TO CÂN XỨNG, ĐÈ NHẸ Ở GIỮA) -->
+    <!-- MÀN HÌNH CHÀO (3D PHÓNG TO VÀ DỊCH LÊN TRÊN CÂN XỨNG) -->
     <div id="intro-screen">
         <canvas id="web3d-canvas"></canvas>
 
@@ -440,7 +440,7 @@
             <a href="#" data-target="screen-map" class="nav-item px-3.5 py-2 active text-center flex-none touch-manipulation">🗺 Bản đồ</a>
             <a href="#" data-target="screen-category" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🍵 Phân loại</a>
             <a href="#" data-target="screen-leaderboard" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🏆 Bảng vàng</a>
-            <a href="#" data-target="screen-highlight" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🛡 Góp ý</a>
+            <a href="#" data-target="screen-highlight" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🛡️ Góp ý</a>
             <a href="#" onclick="openAiChat(); return false;" class="nav-item px-3.5 py-2 text-center text-cyan-300 flex-none touch-manipulation">✨ AI</a>
             <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-3.5 py-2 text-center text-yellow-300 flex-none touch-manipulation">➕ Thêm</a>
         </nav>
@@ -512,7 +512,7 @@
         loadAppConfig();
 
         // -----------------------------------------
-        // THREE.JS - MÔ HÌNH 3D (PHÓNG TO VỪA ĐỦ, CÂN XỨNG TRÒN VẸN)
+        // THREE.JS - MÔ HÌNH 3D (DỊCH LÊN & PHÓNG TO VỪA ĐỦ)
         // -----------------------------------------
         let isIntroActive = true;
         const scene3D = new THREE.Scene();
@@ -529,7 +529,7 @@
         scene3D.add(dirLight);
 
         const group3D = new THREE.Group();
-        group3D.position.y = 0.25; 
+        group3D.position.y = 0.55; // Dịch lên cao hơn một chút cho thoáng và cân đối
         scene3D.add(group3D);
 
         // Hàm tạo cấu trúc bộ 3D (Chỉ Ghế, Cốc, Điếu cày)
@@ -578,7 +578,7 @@
         }
 
         build3DSet(group3D);
-        camera3D.position.z = 5.2; // Phóng to vừa đủ, cân đối toàn màn hình điện thoại
+        camera3D.position.z = 4.8; // Phóng to hơn một tẹo nhưng vẫn trọn vẹn khung hình
 
         let mouseX3D = 0, mouseY3D = 0;
         window.addEventListener('mousemove', (e) => { mouseX3D = (e.clientX / window.innerWidth - 0.5) * 0.8; mouseY3D = (e.clientY / window.innerHeight - 0.5) * 0.8; }, { passive: true });
