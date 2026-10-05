@@ -106,8 +106,14 @@
             border: 1px solid rgba(250, 204, 21, 0.15);
         }
 
-        .custom-scrollbar::-webkit-scrollbar { height: 0px; width: 3px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+        /* TỐI ƯU HÓA CUỘN MƯỢT TỐI ĐA CHO DANH SÁCH QUÁN */
+        .custom-scrollbar {
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            overscroll-behavior-y: contain;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(250, 204, 21, 0.3); border-radius: 10px; }
         
         .custom-dark-map {
             filter: brightness(0.9) invert(0.85) contrast(1.15) hue-rotate(190deg) saturate(0.4);
@@ -247,11 +253,9 @@
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden relative">
     
-    <!-- THẺ AUDIO HTML5 TRỰC TIẾP KHÔNG BỊ CHẶN TRÊN MOBILE -->
+    <!-- THẺ AUDIO HTML5 PHÁT NHẠC TRỰC TIẾP -->
     <audio id="bg-audio" loop preload="auto">
-        <!-- Link nhạc dự phòng ổn định qua file MP3 trực tiếp chuẩn chất lượng -->
-        <source src="https://raw.githubusercontent.com/vinhh78/vinhh78.github.io/main/music.mp3" type="audio/mpeg">
-        <source src="https://docs.google.com/uc?export=download&id=1_sample_audio_link" type="audio/mpeg">
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
     </audio>
 
     <!-- HẠT BAY NỀN -->
@@ -351,6 +355,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- VÙNG DANH SÁCH CUỘN MƯỢT TỐI ĐA -->
                 <div id="shop-list" class="flex-1 overflow-y-auto overscroll-contain grid grid-cols-1 gap-2 p-2.5 custom-scrollbar relative z-20"></div>
             </div>
         </div>
