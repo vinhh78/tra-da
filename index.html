@@ -132,7 +132,7 @@
         #shop-sheet {
             will-change: height;
             transition: height 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
-            margin-bottom: 72px; /* Đẩy khung cách biệt hẳn khỏi thanh dock menu phía dưới */
+            margin-bottom: 72px; 
         }
 
         #antigravity-canvas {
@@ -263,7 +263,7 @@
     <!-- HẠT BAY NỀN -->
     <canvas id="antigravity-canvas"></canvas>
 
-    <!-- MÀN HÌNH CHÀO (MỞ RỘNG RÃI, KHÔNG KHUNG, TRẢI DÀI CÂN ĐỐI) -->
+    <!-- MÀN HÌNH CHÀO -->
     <div id="intro-screen">
         <canvas id="web3d-canvas"></canvas>
 
@@ -277,7 +277,7 @@
                 Impossible is Nothing.
             </div>
 
-            <!-- CÁC NÚT OPTION TRẢI RỘNG THOÁNG ĐÃNG Ở GIỮA -->
+            <!-- CÁC NÚT OPTION -->
             <div class="grid grid-cols-2 gap-3.5 pt-3 w-full max-w-[340px] mx-auto">
                 <button onclick="enterApp('screen-map')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-yellow-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
                     <span class="text-base">🗺️</span> Bản đồ
@@ -285,8 +285,8 @@
                 <button onclick="enterApp('screen-category')" class="led-glow-pill led-glow-cyan py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-cyan-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
                     <span class="text-base">🍵</span> Phân loại
                 </button>
-                <button onclick="enterApp('screen-leaderboard')" class="led-glow-pill led-glow-purple py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-purple-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
-                    <span class="text-base">🏆</span> Bảng vàng
+                <button onclick="filterByCategory('Local Eatery')" class="led-glow-pill led-glow-purple py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-purple-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
+                    <span class="text-base">🍲</span> Local Eatery
                 </button>
                 <button onclick="enterApp('screen-highlight')" class="led-glow-pill led-glow-emerald py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-emerald-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
                     <span class="text-base">🛡️</span> Góp ý
@@ -336,7 +336,6 @@
         <div id="screen-map" class="screen-view flex flex-col lg:flex-row h-full w-full absolute inset-0">
             <div id="map" class="absolute inset-0 w-full h-full z-0 custom-dark-map"></div>
 
-            <!-- ĐÃ THU GỌN CHIỀU CAO MẶC ĐỊNH XUỐNG 25vh VÀ CÁCH KHỎI THANH MENU DOCK -->
             <div id="shop-sheet" style="height: 25vh;" class="w-full lg:w-[400px] flex flex-col lg:h-[calc(100%-2rem)] lg:m-4 liquid-glass lg:rounded-2xl rounded-t-3xl border-t lg:border border-white/15 z-25 order-2 lg:order-1 shadow-2xl overflow-hidden mt-auto lg:mt-0">
                 <div id="sheet-header-drag" class="w-full pt-2 pb-1.5 bg-white/5 cursor-grab active:cursor-grabbing flex flex-col items-center select-none touch-none">
                     <div class="w-8 h-1 bg-white/40 rounded-full mb-1 pointer-events-none"></div>
@@ -358,21 +357,26 @@
             <div class="max-w-4xl mx-auto pb-16">
                 <h2 class="text-2xl font-light mb-2">Phân Loại Cửa Hàng</h2>
                 <p class="text-gray-400 text-sm mb-6">Thống kê số lượng quán thực tế theo danh mục trên Firebase.</p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div onclick="filterByCategory('Trà đá vỉa hè')" class="liquid-glass-card rounded-xl p-5 cursor-pointer h-40 flex flex-col justify-end relative">
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div onclick="filterByCategory('Trà đá vỉa hè')" class="liquid-glass-card rounded-xl p-4 cursor-pointer h-36 flex flex-col justify-end relative">
                         <span class="text-2xl mb-1 pointer-events-none">🍵</span>
-                        <h3 class="font-medium text-yellow-300 pointer-events-none">Trà đá vỉa hè</h3>
-                        <span id="count-trada" class="absolute top-4 right-4 text-xs bg-yellow-500/20 text-yellow-300 px-2.5 py-1 rounded-full border border-yellow-500/30 pointer-events-none">0 quán</span>
+                        <h3 class="font-medium text-yellow-300 text-xs pointer-events-none">Trà đá vỉa hè</h3>
+                        <span id="count-trada" class="absolute top-3 right-3 text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30 pointer-events-none">0 quán</span>
                     </div>
-                    <div onclick="filterByCategory('Trà chanh chém gió')" class="liquid-glass-card rounded-xl p-5 cursor-pointer h-40 flex flex-col justify-end relative">
+                    <div onclick="filterByCategory('Trà chanh chém gió')" class="liquid-glass-card rounded-xl p-4 cursor-pointer h-36 flex flex-col justify-end relative">
                         <span class="text-2xl mb-1 pointer-events-none">🍋</span>
-                        <h3 class="font-medium text-yellow-300 pointer-events-none">Trà chanh chém gió</h3>
-                        <span id="count-trachanh" class="absolute top-4 right-4 text-xs bg-yellow-500/20 text-yellow-300 px-2.5 py-1 rounded-full border border-yellow-500/30 pointer-events-none">0 quán</span>
+                        <h3 class="font-medium text-yellow-300 text-xs pointer-events-none">Trà chanh chém gió</h3>
+                        <span id="count-trachanh" class="absolute top-3 right-3 text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30 pointer-events-none">0 quán</span>
                     </div>
-                    <div onclick="filterByCategory('Cafe vỉа hè')" class="liquid-glass-card rounded-xl p-5 cursor-pointer h-40 flex flex-col justify-end relative">
+                    <div onclick="filterByCategory('Cafe vỉа hè')" class="liquid-glass-card rounded-xl p-4 cursor-pointer h-36 flex flex-col justify-end relative">
                         <span class="text-2xl mb-1 pointer-events-none">☕</span>
-                        <h3 class="font-medium text-yellow-300 pointer-events-none">Cafe vỉа hè</h3>
-                        <span id="count-cafe" class="absolute top-4 right-4 text-xs bg-yellow-500/20 text-yellow-300 px-2.5 py-1 rounded-full border border-yellow-500/30 pointer-events-none">0 quán</span>
+                        <h3 class="font-medium text-yellow-300 text-xs pointer-events-none">Cafe vỉа hè</h3>
+                        <span id="count-cafe" class="absolute top-3 right-3 text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30 pointer-events-none">0 quán</span>
+                    </div>
+                    <div onclick="filterByCategory('Local Eatery')" class="liquid-glass-card rounded-xl p-4 cursor-pointer h-36 flex flex-col justify-end relative border-purple-500/40">
+                        <span class="text-2xl mb-1 pointer-events-none">🍲</span>
+                        <h3 class="font-medium text-purple-300 text-xs pointer-events-none">Local Eatery</h3>
+                        <span id="count-eatery" class="absolute top-3 right-3 text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full border border-purple-500/30 pointer-events-none">0 quán</span>
                     </div>
                 </div>
             </div>
@@ -440,14 +444,16 @@
         </div>
     </div>
 
-    <div class="ios-dock-container fixed bottom-0 left-0 right-0 z-[999] px-3 py-2 flex flex-col items-center">
-        <nav id="main-nav" class="ios-pill-slider flex items-center gap-1 px-2 py-1.5 rounded-full text-xs font-medium overflow-x-auto custom-scrollbar max-w-lg w-full justify-around relative">
-            <a href="#" data-target="screen-map" class="nav-item px-3.5 py-2 active text-center flex-none touch-manipulation">🗺 Bản đồ</a>
-            <a href="#" data-target="screen-category" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🍵 Phân loại</a>
-            <a href="#" data-target="screen-leaderboard" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🏆 Bảng vàng</a>
-            <a href="#" data-target="screen-highlight" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🛡 Góp ý</a>
-            <a href="#" onclick="openAiChat(); return false;" class="nav-item px-3.5 py-2 text-center text-cyan-300 flex-none touch-manipulation">✨ AI</a>
-            <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-3.5 py-2 text-center text-yellow-300 flex-none touch-manipulation">➕ Thêm</a>
+    <!-- THANH MENU DOCK DƯỚI -->
+    <div class="ios-dock-container fixed bottom-0 left-0 right-0 z-[999] px-2 py-2 flex flex-col items-center">
+        <nav id="main-nav" class="ios-pill-slider flex items-center gap-0.5 px-1.5 py-1.5 rounded-full text-[11px] font-medium overflow-x-auto custom-scrollbar max-w-xl w-full justify-around relative">
+            <a href="#" data-target="screen-map" class="nav-item px-2.5 py-2 active text-center flex-none touch-manipulation">🗺 Bản đồ</a>
+            <a href="#" data-target="screen-category" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">🍵 Phân loại</a>
+            <a href="#" onclick="filterByCategory('Local Eatery'); return false;" class="nav-item px-2.5 py-2 text-center text-purple-300 flex-none touch-manipulation">🍲 Eatery</a>
+            <a href="#" data-target="screen-leaderboard" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">🏆 Bảng vàng</a>
+            <a href="#" data-target="screen-highlight" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">🛡 Góp ý</a>
+            <a href="#" onclick="openAiChat(); return false;" class="nav-item px-2.5 py-2 text-center text-cyan-300 flex-none touch-manipulation">✨ AI</a>
+            <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-2.5 py-2 text-center text-yellow-300 flex-none touch-manipulation">➕ Thêm</a>
         </nav>
         <div class="w-28 h-1 bg-white/30 rounded-full mt-2 mb-0.5 pointer-events-none"></div>
         <div class="text-[9px] text-gray-400 mt-1 pointer-events-none">Trà Đá Hà Nội • Developed by <b class="text-yellow-400">dembevinh</b></div>
@@ -469,18 +475,19 @@
         </div>
     </div>
 
+    <!-- MODAL THÊM QUÁN MỚI (ĐÃ CÓ LOCAL EATERY) -->
     <div id="add-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-3 bg-black/75 backdrop-blur-md modal-hidden">
         <div class="liquid-glass border border-white/20 p-5 w-full max-w-md relative rounded-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
             <button type="button" onclick="closeModal()" class="absolute top-3 right-3 text-gray-400 hover:text-white cursor-pointer">✕</button>
-            <h2 class="text-base font-medium text-white mb-3 pb-2 border-b border-white/10">Thêm Quán Mới</h2>
+            <h2 class="text-base font-medium text-white mb-3 pb-2 border-b border-white/10">Ghim Địa Điểm Mới</h2>
             <form id="add-shop-form" class="space-y-3 text-xs">
                 <div class="border border-dashed border-white/20 p-2 text-center cursor-pointer rounded-xl bg-black/30 relative">
                     <input type="file" id="shop-image" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                    <div id="image-preview-container" class="pointer-events-none">📸 Chạm để tải ảnh mặt tiền</div>
+                    <div id="image-preview-container" class="pointer-events-none">📸 Chạm để tải ảnh mặt tiền/món ăn</div>
                 </div>
                 <div>
-                    <label class="block text-gray-400 mb-1">Tên quán *</label>
-                    <input id="shop-name" required type="text" class="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/20 text-white" placeholder="VD: Trà đá vỉa hè">
+                    <label class="block text-gray-400 mb-1">Tên quán / Địa điểm *</label>
+                    <input id="shop-name" required type="text" class="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/20 text-white" placeholder="VD: Bánh giò vỉa hè / Quán ăn vặt...">
                 </div>
                 <div>
                     <label class="block text-gray-400 mb-1">Địa chỉ *</label>
@@ -489,7 +496,7 @@
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block text-gray-400 mb-1">Mức giá *</label>
-                        <input id="shop-price" required type="text" class="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/20 text-white" placeholder="VD: 5k">
+                        <input id="shop-price" required type="text" class="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/20 text-white" placeholder="VD: 15k - 30k">
                     </div>
                     <div>
                         <label class="block text-gray-400 mb-1">Phân loại *</label>
@@ -497,6 +504,7 @@
                             <option value="Trà đá vỉa hè">Trà đá vỉa hè</option>
                             <option value="Trà chanh chém gió">Trà chanh chém gió</option>
                             <option value="Cafe vỉа hè">Cafe vỉа hè</option>
+                            <option value="Local Eatery">🍲 Local Eatery (Quán ăn)</option>
                         </select>
                     </div>
                 </div>
@@ -517,7 +525,7 @@
         loadAppConfig();
 
         // -----------------------------------------
-        // THREE.JS - MÔ HÌNH 3D HÌNH NỀN ĐỘNG (ĐẨY LÙI RA SAO ĐỂ KHÔNG BAO GIỜ ĐÈ LÊN GIAO DIỆN)
+        // THREE.JS - MÔ HÌNH 3D HÌNH NỀN ĐỘNG
         // -----------------------------------------
         let isIntroActive = true;
         const scene3D = new THREE.Scene();
@@ -802,6 +810,7 @@
             document.getElementById('count-trada').innerText = `${shops.filter(s => s.category === 'Trà đá vỉa hè').length} quán`;
             document.getElementById('count-trachanh').innerText = `${shops.filter(s => s.category === 'Trà chanh chém gió').length} quán`;
             document.getElementById('count-cafe').innerText = `${shops.filter(s => s.category === 'Cafe vỉа hè').length} quán`;
+            document.getElementById('count-eatery').innerText = `${shops.filter(s => s.category === 'Local Eatery').length} quán`;
 
             let authorCounts = {}; shops.forEach(s => { let author = s.author || "Khách ẩn danh"; authorCounts[author] = (authorCounts[author] || 0) + 1; });
             let lbHtml = '';
