@@ -129,7 +129,7 @@
             transition: height 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
 
-        /* KHU VỰC HIỆN THỊ NỀN: 3D và Hạt bay */
+        /* NỀN ĐỒ HỌA 3D VÀ ANTIGRAVITY LUÔN HIỂN THỊ XUYÊN SUỐT */
         #web3d-canvas {
             position: fixed;
             inset: 0;
@@ -149,13 +149,16 @@
         
         #app-screens { z-index: 10; position: relative; }
         
+        /* MÀN HÌNH CHÀO TRONG SUỐT (GLASSMORPHISM) ĐỂ NHÌN THẤY 3D VÀ HẠT BAY BÊN DƯỚI */
         #intro-screen {
             position: fixed;
             inset: 0;
             width: 100vw;
             height: 100vh;
             z-index: 999999;
-            background: #030305; /* Màu nền đen chuẩn giúp nổi bật 3D và hạt bay */
+            background: rgba(3, 3, 5, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -247,16 +250,16 @@
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden relative">
     
-    <!-- YOUTUBE PLAYER ẨN CHUẨN XÁC ĐỂ TRÁNH BỊ CHẶN AUDIO -->
-    <div style="position: fixed; z-index: -9999; top: 0; left: 0; width: 10px; height: 10px; opacity: 0; pointer-events: none;">
+    <!-- NHÙNG YOUTUBE TRỰC TIẾP (Ẩn tinh tế qua kích thước nhỏ và opacitiy 0.01 để bypass quy chế chặn autoplay của trình duyệt) -->
+    <div style="position: fixed; z-index: 999; bottom: 5px; right: 5px; width: 30px; height: 30px; opacity: 0.01; pointer-events: none; overflow: hidden;">
         <div id="youtube-player-container"></div>
     </div>
 
-    <!-- CANVAS 3D VÀ HẠT ANTIGRAVITY LÀM NỀN XUYÊN SUỐT -->
+    <!-- NỀN ĐỒ HỌA 3D VÀ HẠT BAY ANTIGRAVITY -->
     <canvas id="web3d-canvas"></canvas>
     <canvas id="antigravity-canvas"></canvas>
 
-    <!-- MÀN HÌNH MỞ ĐẦU -->
+    <!-- MÀN HÌNH MỞ ĐẦU TRONG SUỐT -->
     <div id="intro-screen">
         <div class="relative z-10 max-w-md mx-auto space-y-4 w-full p-4 text-center">
             <h1 class="text-2xl sm:text-4xl font-black tracking-tight uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.9)] min-h-[3.5rem] flex items-center justify-center">
@@ -269,7 +272,7 @@
 
             <div class="grid grid-cols-2 gap-3.5 pt-2 max-w-xs mx-auto">
                 <button onclick="enterApp('screen-map')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs font-semibold text-yellow-300 cursor-pointer flex flex-col items-center gap-1 bg-black/60">
-                    <span class="text-base">🗺️</span> Bản đồ
+                    <span class="text-base">🗺️️</span> Bản đồ
                 </button>
                 <button onclick="enterApp('screen-category')" class="led-glow-pill led-glow-cyan py-3 px-4 rounded-2xl text-xs font-semibold text-cyan-300 cursor-pointer flex flex-col items-center gap-1 bg-black/60">
                     <span class="text-base">🍵</span> Phân loại
@@ -519,7 +522,7 @@
         loadAppConfig();
 
         // -----------------------------------------
-        // THREE.JS - MÔ HÌNH 3D (Ly trà đá & điếu cày) MƯỢT MÀ TRÊN MOBILE
+        // THREE.JS - MÔ HÌNH 3D (Ly trà đá & điếu cày)
         // -----------------------------------------
         const scene3D = new THREE.Scene();
         const camera3D = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -683,7 +686,7 @@
         animateAntigravity();
 
         // -----------------------------------------
-        // XỬ LÝ ÂM THANH YOUTUBE (FIX TRIỆT ĐỂ CHẶN AUDIO)
+        // XỬ LÝ ÂM THANH YOUTUBE API
         // -----------------------------------------
         let player;
         let isPlaying = false;
@@ -691,7 +694,7 @@
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player-container', {
-                height: '10', width: '10', 
+                height: '30', width: '30', 
                 videoId: 'hEUlsNMNiXQ',
                 playerVars: { 'playsinline': 1, 'loop': 1, 'playlist': 'hEUlsNMNiXQ', 'controls': 0 },
                 events: {
@@ -725,7 +728,6 @@
             }
         }
 
-        // Tự động kích hoạt nhạc qua cú chạm màn hình đầu tiên của người dùng
         document.addEventListener('touchstart', unlockAndPlayAudio, { passive: true, once: true });
         document.addEventListener('click', unlockAndPlayAudio, { once: true });
 
