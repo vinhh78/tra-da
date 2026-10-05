@@ -129,16 +129,23 @@
             transition: height 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
 
-        /* 3D VÀ HẠT BAY ĐƯỢC CHUYỂN XUỐNG DƯỚI CÙNG LÀM NỀN (BACKGROUND) */
-        #web3d-canvas, #antigravity-canvas {
+        /* KHU VỰC HIỆN THỊ NỀN: 3D và Hạt bay */
+        #web3d-canvas {
             position: fixed;
             inset: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
+            z-index: 1;
         }
-        #web3d-canvas { z-index: 1; }
-        #antigravity-canvas { z-index: 2; }
+        #antigravity-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
         
         #app-screens { z-index: 10; position: relative; }
         
@@ -148,14 +155,12 @@
             width: 100vw;
             height: 100vh;
             z-index: 999999;
-            background: transparent;
+            background: #030305; /* Màu nền đen chuẩn giúp nổi bật 3D và hạt bay */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             transition: opacity 0.6s ease, visibility 0.6s ease;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
         }
 
         .typing-cursor::after {
@@ -242,12 +247,12 @@
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden relative">
     
-    <!-- YOUTUBE - Nằm trong vùng màn hình hiển thị ẩn để bypass chặn âm thanh -->
+    <!-- YOUTUBE PLAYER ẨN CHUẨN XÁC ĐỂ TRÁNH BỊ CHẶN AUDIO -->
     <div style="position: fixed; z-index: -9999; top: 0; left: 0; width: 10px; height: 10px; opacity: 0; pointer-events: none;">
         <div id="youtube-player-container"></div>
     </div>
 
-    <!-- 2 CANVAS BACKGROUND SẼ CHẠY LIÊN TỤC -->
+    <!-- CANVAS 3D VÀ HẠT ANTIGRAVITY LÀM NỀN XUYÊN SUỐT -->
     <canvas id="web3d-canvas"></canvas>
     <canvas id="antigravity-canvas"></canvas>
 
@@ -263,16 +268,16 @@
             </div>
 
             <div class="grid grid-cols-2 gap-3.5 pt-2 max-w-xs mx-auto">
-                <button onclick="enterApp('screen-map')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs font-semibold text-yellow-300 cursor-pointer flex flex-col items-center gap-1 bg-black/40">
+                <button onclick="enterApp('screen-map')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs font-semibold text-yellow-300 cursor-pointer flex flex-col items-center gap-1 bg-black/60">
                     <span class="text-base">🗺️</span> Bản đồ
                 </button>
-                <button onclick="enterApp('screen-category')" class="led-glow-pill led-glow-cyan py-3 px-4 rounded-2xl text-xs font-semibold text-cyan-300 cursor-pointer flex flex-col items-center gap-1 bg-black/40">
+                <button onclick="enterApp('screen-category')" class="led-glow-pill led-glow-cyan py-3 px-4 rounded-2xl text-xs font-semibold text-cyan-300 cursor-pointer flex flex-col items-center gap-1 bg-black/60">
                     <span class="text-base">🍵</span> Phân loại
                 </button>
-                <button onclick="enterApp('screen-leaderboard')" class="led-glow-pill led-glow-purple py-3 px-4 rounded-2xl text-xs font-semibold text-purple-300 cursor-pointer flex flex-col items-center gap-1 bg-black/40">
+                <button onclick="enterApp('screen-leaderboard')" class="led-glow-pill led-glow-purple py-3 px-4 rounded-2xl text-xs font-semibold text-purple-300 cursor-pointer flex flex-col items-center gap-1 bg-black/60">
                     <span class="text-base">🏆</span> Bảng vàng
                 </button>
-                <button onclick="enterApp('screen-highlight')" class="led-glow-pill led-glow-emerald py-3 px-4 rounded-2xl text-xs font-semibold text-emerald-300 cursor-pointer flex flex-col items-center gap-1 bg-black/40">
+                <button onclick="enterApp('screen-highlight')" class="led-glow-pill led-glow-emerald py-3 px-4 rounded-2xl text-xs font-semibold text-emerald-300 cursor-pointer flex flex-col items-center gap-1 bg-black/60">
                     <span class="text-base">🛡️</span> Góp ý
                 </button>
             </div>
@@ -503,7 +508,6 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-        // Check Device
         const isMobileDevice = window.innerWidth < 768;
 
         async function loadAppConfig() {
@@ -515,16 +519,13 @@
         loadAppConfig();
 
         // -----------------------------------------
-        // THREE.JS - ĐÃ ĐƯỢC TỐI ƯU CỰC MẠNH CHO MOBILE
+        // THREE.JS - MÔ HÌNH 3D (Ly trà đá & điếu cày) MƯỢT MÀ TRÊN MOBILE
         // -----------------------------------------
         const scene3D = new THREE.Scene();
         const camera3D = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         
-        // TẮT ANTIALIAS trên mobile để tăng gấp đôi FPS
         const renderer3D = new THREE.WebGLRenderer({ canvas: document.getElementById('web3d-canvas'), alpha: true, antialias: !isMobileDevice });
         renderer3D.setSize(window.innerWidth, window.innerHeight);
-        
-        // LIMIT PIXEL RATIO = 1.0 trên điện thoại để GPU không bị quá tải
         renderer3D.setPixelRatio(isMobileDevice ? 1.0 : Math.min(window.devicePixelRatio, 1.5));
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 1.8);
@@ -542,7 +543,6 @@
         const group3D = new THREE.Group();
         scene3D.add(group3D);
 
-        // GIẢM POLYGONS (Segments) trên mobile từ 32 xuống 16
         const segments = isMobileDevice ? 16 : 32;
 
         const whiteGlassMaterial = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.35, roughness: 0.05, metalness: 0.1, transmission: 0.9, ior: 1.5 });
@@ -597,7 +597,6 @@
             if (e.touches.length > 0) { mouseX3D = (e.touches[0].clientX / window.innerWidth - 0.5) * 0.8; mouseY3D = (e.touches[0].clientY / window.innerHeight - 0.5) * 0.8; }
         }, { passive: true });
 
-        // LUÔN CHO 3D CHẠY LIÊN TỤC 
         function animate3D() {
             requestAnimationFrame(animate3D);
             group3D.rotation.y += 0.006;
@@ -623,13 +622,11 @@
 
 
         // -----------------------------------------
-        // ANTIGRAVITY 2D - TỐI ƯU TOÁN HỌC CPU
+        // ANTIGRAVITY HẠT BAY 2D
         // -----------------------------------------
         const canvas = document.getElementById('antigravity-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        
-        // CHỈ VẼ 25 HẠT TRÊN ĐIỆN THOẠI ĐỂ ĐẢM BẢO MƯỢT 60FPS
         const numParticles = isMobileDevice ? 25 : 75; 
         let mouse = { x: null, y: null, radius: 140 };
 
@@ -653,7 +650,6 @@
         }
 
         function animateAntigravity() {
-            // LUÔN CHO HẠT BAY LIÊN TỤC
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach((p, index) => {
                 p.x += p.vx; p.y += p.vy;
@@ -662,7 +658,6 @@
 
                 if (mouse.x !== null && mouse.y !== null) {
                     let dx = mouse.x - p.x; let dy = mouse.y - p.y;
-                    // Dùng bình phương khoảng cách thay vì Math.sqrt để giảm tải CPU
                     let distanceSq = dx * dx + dy * dy;
                     if (distanceSq < mouse.radius * mouse.radius) {
                         let distance = Math.sqrt(distanceSq);
@@ -675,10 +670,9 @@
 
                 for (let j = index + 1; j < particles.length; j++) {
                     let p2 = particles[j]; 
-                    // THUẬT TOÁN TỐI ƯU: Không dùng Math.hypot() gây lag, dùng bình phương khoảng cách 100*100 = 10000
                     let distSq = (p.x - p2.x)*(p.x - p2.x) + (p.y - p2.y)*(p.y - p2.y);
                     if (distSq < 10000) {
-                        let dist = Math.sqrt(distSq); // Chỉ tính căn lúc thật sự vẽ dây nối
+                        let dist = Math.sqrt(distSq);
                         ctx.save(); ctx.globalAlpha = (1 - (dist / 100)) * 0.18; ctx.strokeStyle = p.color; ctx.lineWidth = 0.5;
                         ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke(); ctx.restore();
                     }
@@ -688,31 +682,68 @@
         }
         animateAntigravity();
 
-        // ÉP MỞ KHÓA AUDIO BẰNG CÚ CHẠM ĐẦU TIÊN CỦA NGƯỜI DÙNG (SAFARI BYPASS)
+        // -----------------------------------------
+        // XỬ LÝ ÂM THANH YOUTUBE (FIX TRIỆT ĐỂ CHẶN AUDIO)
+        // -----------------------------------------
+        let player;
+        let isPlaying = false;
         let audioUnlocked = false;
-        function forceUnlockAudio() {
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player-container', {
+                height: '10', width: '10', 
+                videoId: 'hEUlsNMNiXQ',
+                playerVars: { 'playsinline': 1, 'loop': 1, 'playlist': 'hEUlsNMNiXQ', 'controls': 0 },
+                events: {
+                    'onReady': (event) => { 
+                        event.target.setVolume(100); 
+                    },
+                    'onStateChange': (event) => {
+                        const iconPlay = document.getElementById('icon-play');
+                        const iconPause = document.getElementById('icon-pause');
+                        const vinylIcon = document.getElementById('vinyl-icon');
+                        if (event.data === YT.PlayerState.PLAYING) {
+                            isPlaying = true;
+                            iconPlay.classList.add('hidden');
+                            iconPause.classList.remove('hidden');
+                            vinylIcon.classList.add('animate-spin');
+                        } else {
+                            isPlaying = false;
+                            iconPlay.classList.remove('hidden');
+                            iconPause.classList.add('hidden');
+                            vinylIcon.classList.remove('animate-spin');
+                        }
+                    }
+                }
+            });
+        }
+
+        function unlockAndPlayAudio() {
             if (!audioUnlocked && player && typeof player.playVideo === 'function') {
                 player.playVideo();
                 audioUnlocked = true;
-                document.removeEventListener('touchstart', forceUnlockAudio);
-                document.removeEventListener('click', forceUnlockAudio);
             }
         }
-        document.addEventListener('touchstart', forceUnlockAudio, { passive: true, once: true });
-        document.addEventListener('click', forceUnlockAudio, { once: true });
 
-        // KHI ẤN VÀO APP
+        // Tự động kích hoạt nhạc qua cú chạm màn hình đầu tiên của người dùng
+        document.addEventListener('touchstart', unlockAndPlayAudio, { passive: true, once: true });
+        document.addEventListener('click', unlockAndPlayAudio, { once: true });
+
+        function togglePlayMusic() { 
+            if (!player || typeof player.playVideo !== 'function') {
+                alert("🎵 Đang kết nối máy chủ âm nhạc, bạn đợi 1 giây rồi bấm lại nhé!");
+                return;
+            }
+            isPlaying ? player.pauseVideo() : player.playVideo(); 
+        }
+
+        // KHI BẤM NÚT VÀO APP
         function enterApp(targetScreen) {
+            unlockAndPlayAudio();
             const intro = document.getElementById('intro-screen');
             intro.style.opacity = '0';
             intro.style.visibility = 'hidden';
             setTimeout(() => { intro.style.display = 'none'; }, 600);
-            
-            // Đảm bảo audio chạy khi qua màn hình
-            if (player && typeof player.playVideo === 'function' && !audioUnlocked) {
-                player.playVideo();
-                audioUnlocked = true;
-            }
 
             switchScreen(targetScreen);
         }
@@ -754,46 +785,6 @@
             sheet.style.height = (sheet.offsetHeight > window.innerHeight * 0.45) ? '72vh' : '38vh';
             setTimeout(() => map.invalidateSize(), 350);
         });
-
-        // HỆ THỐNG YOUTUBE API
-        let player;
-        let isPlaying = false;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player-container', {
-                height: '50', width: '50', 
-                videoId: 'hEUlsNMNiXQ',
-                playerVars: { 'playsinline': 1, 'loop': 1, 'playlist': 'hEUlsNMNiXQ', 'controls': 0 },
-                events: {
-                    'onReady': (event) => { 
-                        event.target.setVolume(100); 
-                    },
-                    'onStateChange': (event) => {
-                        const iconPlay = document.getElementById('icon-play');
-                        const iconPause = document.getElementById('icon-pause');
-                        const vinylIcon = document.getElementById('vinyl-icon');
-                        if (event.data === YT.PlayerState.PLAYING) {
-                            isPlaying = true;
-                            iconPlay.classList.add('hidden');
-                            iconPause.classList.remove('hidden');
-                            vinylIcon.classList.add('animate-spin');
-                        } else {
-                            isPlaying = false;
-                            iconPlay.classList.remove('hidden');
-                            iconPause.classList.add('hidden');
-                            vinylIcon.classList.remove('animate-spin');
-                        }
-                    }
-                }
-            });
-        }
-        
-        function togglePlayMusic() { 
-            if (!player || typeof player.playVideo !== 'function') {
-                alert("🎵 Đang kết nối máy chủ âm nhạc, bạn đợi 1 giây rồi bấm lại nhé!");
-                return;
-            }
-            isPlaying ? player.pauseVideo() : player.playVideo(); 
-        }
 
         window.openDonateModal = function() {
             document.getElementById('donate-modal').classList.remove('modal-hidden');
