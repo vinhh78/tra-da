@@ -152,7 +152,7 @@
             width: 100vw;
             height: 100vh;
             z-index: 999999;
-            background: rgba(3, 3, 5, 0.8);
+            background: rgba(3, 3, 5, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             display: flex;
@@ -169,15 +169,6 @@
             height: 100%;
             pointer-events: none;
             z-index: 2;
-        }
-
-        .typing-cursor::after {
-            content: '|';
-            animation: blinkCursor 0.8s infinite;
-        }
-        @keyframes blinkCursor {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
         }
 
         /* --- CSS NÚT XÓA ANIMATION --- */
@@ -256,39 +247,14 @@
     <!-- HẠT BAY NỀN -->
     <canvas id="antigravity-canvas"></canvas>
 
-    <!-- MÀN HÌNH CHÀO -->
+    <!-- MÀN HÌNH CHÀO (CHỈ CÓ MÔ HÌNH 3D GIỐNG MẪU KHÔNG CHỮ, NÚT TRẢI NGHIỆM Ở DƯỚI) -->
     <div id="intro-screen">
         <canvas id="web3d-canvas"></canvas>
 
-        <div class="relative z-10 max-w-md mx-auto space-y-4 w-full p-4 text-center">
-            <h1 class="text-2xl sm:text-4xl font-black tracking-tight uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.9)] min-h-[3.5rem] flex items-center justify-center">
-                <span id="typed-title" class="typing-cursor"></span>
-            </h1>
-
-            <div class="text-xs sm:text-sm font-light text-yellow-400 tracking-wider uppercase min-h-[1.2rem] drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-                Impossible is Nothing.
-            </div>
-
-            <div class="grid grid-cols-2 gap-3.5 pt-2 max-w-xs mx-auto">
-                <button onclick="enterApp('screen-map')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs font-semibold text-yellow-300 cursor-pointer flex flex-col items-center gap-1 bg-black/80">
-                    <span class="text-base">🗺️</span> Bản đồ
-                </button>
-                <button onclick="enterApp('screen-category')" class="led-glow-pill led-glow-cyan py-3 px-4 rounded-2xl text-xs font-semibold text-cyan-300 cursor-pointer flex flex-col items-center gap-1 bg-black/80">
-                    <span class="text-base">🍵</span> Phân loại
-                </button>
-                <button onclick="enterApp('screen-leaderboard')" class="led-glow-pill led-glow-purple py-3 px-4 rounded-2xl text-xs font-semibold text-purple-300 cursor-pointer flex flex-col items-center gap-1 bg-black/80">
-                    <span class="text-base">🏆</span> Bảng vàng
-                </button>
-                <button onclick="enterApp('screen-highlight')" class="led-glow-pill led-glow-emerald py-3 px-4 rounded-2xl text-xs font-semibold text-emerald-300 cursor-pointer flex flex-col items-center gap-1 bg-black/80">
-                    <span class="text-base">🛡️</span> Góp ý
-                </button>
-            </div>
-
-            <div class="pt-2">
-                <button onclick="enterApp('screen-map')" class="w-full max-w-xs py-3.5 rounded-2xl font-bold text-black bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 shadow-[0_0_30px_rgba(250,204,21,0.6)] transition-all hover:scale-105 cursor-pointer uppercase tracking-wider text-xs">
-                    Vào Ngay Trải Nghiệm 🚀
-                </button>
-            </div>
+        <div class="absolute bottom-10 z-20 max-w-xs mx-auto w-full px-4 text-center">
+            <button onclick="enterApp('screen-map')" class="w-full py-4 rounded-2xl font-bold text-black bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 shadow-[0_0_35px_rgba(250,204,21,0.7)] transition-all hover:scale-105 cursor-pointer uppercase tracking-wider text-xs">
+                Vào Ngay Trải Nghiệm 🚀
+            </button>
         </div>
     </div>
 
@@ -307,7 +273,6 @@
                 <span class="pointer-events-none">Donate</span>
             </button>
 
-            <!-- THAY THẾ PHẦN NHẠC BẰNG ICON ĐIẾU CÀY & TRÀ ĐÁ -->
             <div class="led-glow-pill px-3 py-1.5 rounded-full flex items-center gap-1.5 cursor-default relative z-50 bg-black/40">
                 <span class="text-sm">🍵🌿</span>
                 <span class="text-[10px] text-yellow-300 font-bold tracking-wide">Vỉa Hè Chill</span>
@@ -340,7 +305,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- VÙNG DANH SÁCH CUỘN MƯỢT TỐI ĐA -->
                 <div id="shop-list" class="flex-1 overflow-y-auto overscroll-contain grid grid-cols-1 gap-2 p-2.5 custom-scrollbar relative z-20"></div>
             </div>
         </div>
@@ -391,7 +355,7 @@
                         <label class="block text-gray-400 text-xs mb-1">Loại vấn đề / Góp ý</label>
                         <select id="feedback-type" class="w-full px-3 py-2.5 rounded-xl bg-black/80 border border-white/20 text-white text-xs">
                             <option value="Lỗi giao diện / Hiển thị trên điện thoại">Lỗi giao diện / Hiển thị trên điện thoại</option>
-                            <option value="Lỗi tính năng (Bản đồ, Nhạc, Thêm/Xóa)">Lỗi tính năng (Bản đồ, Bản đồ, Thêm/Xóa)</option>
+                            <option value="Lỗi tính năng (Bản đồ, Thêm/Xóa)">Lỗi tính năng (Bản đồ, Thêm/Xóa)</option>
                             <option value="Đề xuất tính năng mới cho Web">Đề xuất tính năng mới cho Web</option>
                             <option value="Góp ý cải thiện trải nghiệm">Góp ý cải thiện trải nghiệm</option>
                         </select>
@@ -508,7 +472,7 @@
         loadAppConfig();
 
         // -----------------------------------------
-        // THREE.JS - 3D MÔ HÌNH (Chỉ chạy ở Intro)
+        // THREE.JS - MÔ HÌNH 3D GIỐNG MẪU (Ghế nhựa, điếu cày, cốc, gậy dài)
         // -----------------------------------------
         let isIntroActive = true;
         const scene3D = new THREE.Scene();
@@ -523,63 +487,76 @@
         const dirLight = new THREE.DirectionalLight(0xffffff, 2.5);
         dirLight.position.set(5, 10, 10);
         scene3D.add(dirLight);
-        const pointLight1 = new THREE.PointLight(0xfde047, 4, 30);
-        pointLight1.position.set(-3, 2, 2);
-        scene3D.add(pointLight1);
-        const pointLight2 = new THREE.PointLight(0x38bdf8, 3, 30);
-        pointLight2.position.set(3, -2, 2);
-        scene3D.add(pointLight2);
 
         const group3D = new THREE.Group();
         scene3D.add(group3D);
 
-        const segments = isMobileDevice ? 16 : 32;
+        // 1. Ghế nhựa xanh ở giữa
+        const stoolGroup = new THREE.Group();
+        const stoolMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.4 });
+        const seatGeo = new THREE.BoxGeometry(1.6, 0.2, 1.6);
+        const seatMesh = new THREE.Mesh(seatGeo, stoolMat);
+        seatMesh.position.y = 0.5;
+        stoolGroup.add(seatMesh);
 
-        const whiteGlassMaterial = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.35, roughness: 0.05, metalness: 0.1, transmission: 0.9, ior: 1.5 });
-        const cupGroup = new THREE.Group();
-        const cupGeo = new THREE.CylinderGeometry(0.9, 0.65, 2.2, segments);
-        const cupMesh = new THREE.Mesh(cupGeo, whiteGlassMaterial);
-        cupGroup.add(cupMesh);
-        
-        const teaGeo = new THREE.CylinderGeometry(0.85, 0.62, 1.5, segments);
-        const teaMat = new THREE.MeshPhysicalMaterial({ color: 0xd97706, transparent: true, opacity: 0.85, roughness: 0.2 });
-        const teaMesh = new THREE.Mesh(teaGeo, teaMat);
-        teaMesh.position.y = -0.2;
-        cupGroup.add(teaMesh);
-
-        const iceGeo = new THREE.BoxGeometry(0.3, 0.3, 0.3);
-        const iceMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.1, transmission: 0.8, transparent: true, opacity: 0.9 });
-        for(let i=0; i<3; i++) {
-            const ice = new THREE.Mesh(iceGeo, iceMat);
-            ice.position.set((Math.random()-0.5)*0.4, 0.2 + i*0.25, (Math.random()-0.5)*0.4);
-            cupGroup.add(ice);
+        // Chân ghế
+        const legGeo = new THREE.CylinderGeometry(0.08, 0.08, 1.2);
+        for(let dx of [-0.6, 0.6]) {
+            for(let dz of [-0.6, 0.6]) {
+                const leg = new THREE.Mesh(legGeo, stoolMat);
+                leg.position.set(dx, -0.1, dz);
+                leg.rotation.z = dx * -0.15;
+                leg.rotation.x = dz * 0.15;
+                stoolGroup.add(leg);
+            }
         }
-        cupGroup.position.set(-2.2, -0.5, 0);
-        cupGroup.rotation.z = -0.1;
+        group3D.add(stoolGroup);
+
+        // 2. Cốc trà đá trên mặt ghế
+        const cupGroup = new THREE.Group();
+        const glassMat = new THREE.MeshPhysicalMaterial({ color: 0x10b981, transparent: true, opacity: 0.6, roughness: 0.1, transmission: 0.8 });
+        const cupMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.2, 0.7, 16), glassMat);
+        cupMesh.position.set(0, 0.85, 0);
+        cupGroup.add(cupMesh);
         group3D.add(cupGroup);
 
+        // 3. Điếu cày đặt nghiêng bên trái
         const dieuGroup = new THREE.Group();
-        const thanGeo = new THREE.CylinderGeometry(0.32, 0.32, 4.5, isMobileDevice ? 12 : 24);
-        const thanMesh = new THREE.Mesh(thanGeo, whiteGlassMaterial);
-        dieuGroup.add(thanMesh);
-        const ringTopGeo = new THREE.CylinderGeometry(0.33, 0.33, 0.5, isMobileDevice ? 12 : 24);
-        const ringMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, metalness: 0.9, roughness: 0.15 });
-        const ringTop = new THREE.Mesh(ringTopGeo, ringMat);
-        ringTop.position.y = 2.0;
-        dieuGroup.add(ringTop);
-        const ringBottom = new THREE.Mesh(ringTopGeo, ringMat);
-        ringBottom.position.y = -2.0;
-        dieuGroup.add(ringBottom);
-        const noGeo = new THREE.CylinderGeometry(0.18, 0.35, 1.0, 16);
-        const noMat = new THREE.MeshStandardMaterial({ color: 0x1c1917, roughness: 0.3, metalness: 0.4 });
-        const noMesh = new THREE.Mesh(noGeo, noMat);
-        noMesh.position.set(0.7, -0.3, 0);
-        noMesh.rotation.z = -Math.PI / 4;
-        dieuGroup.add(noMesh);
-        dieuGroup.position.set(2.2, -0.2, 0);
-        dieuGroup.rotation.z = 0.1;
+        const bambooMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.6 });
+        const silverRingMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.9, roughness: 0.2 });
+        
+        const thanDieu = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 3.2, 16), bambooMat);
+        dieuGroup.add(thanDieu);
+        
+        const ring1 = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.4, 16), silverRingMat);
+        ring1.position.y = 0.8;
+        dieuGroup.add(ring1);
+
+        const ring2 = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.3, 16), silverRingMat);
+        ring2.position.y = -0.8;
+        dieuGroup.add(ring2);
+
+        dieuGroup.position.set(-1.4, 0.2, 0);
+        dieuGroup.rotation.z = 0.45;
         group3D.add(dieuGroup);
-        camera3D.position.z = 7;
+
+        // 4. Thanh gậy dài đặt nằm ngang ở dưới
+        const rodGroup = new THREE.Group();
+        const rodMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 3.8, 12), silverRingMat);
+        rodMesh.rotation.z = Math.PI / 2;
+        rodGroup.add(rodMesh);
+
+        // Đầu nhọn của gậy (màu đen)
+        const tipMat = new THREE.MeshStandardMaterial({ color: 0x18181b, metalness: 0.8 });
+        const tipMesh = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.6, 12), tipMat);
+        tipMesh.rotation.z = -Math.PI / 2;
+        tipMesh.position.set(-1.8, 0, 0);
+        rodGroup.add(tipMesh);
+
+        rodGroup.position.set(0.2, -1.3, 0.5);
+        group3D.add(rodGroup);
+
+        camera3D.position.z = 5.5;
 
         let mouseX3D = 0, mouseY3D = 0;
         window.addEventListener('mousemove', (e) => { mouseX3D = (e.clientX / window.innerWidth - 0.5) * 0.8; mouseY3D = (e.clientY / window.innerHeight - 0.5) * 0.8; }, { passive: true });
@@ -590,26 +567,12 @@
         function animate3D() {
             requestAnimationFrame(animate3D);
             if (!isIntroActive) return;
-            group3D.rotation.y += 0.006;
+            group3D.rotation.y += 0.005;
             group3D.rotation.x += (mouseY3D - group3D.rotation.x) * 0.05;
             group3D.rotation.y += (mouseX3D - group3D.rotation.y) * 0.05;
             renderer3D.render(scene3D, camera3D);
         }
         animate3D();
-
-        const titleText = "HANOI TEA MAP";
-        let titleIndex = 0;
-        const typedTitleContainer = document.getElementById('typed-title');
-        function typeTitleWriter() {
-            if (titleIndex < titleText.length) {
-                let char = titleText.charAt(titleIndex);
-                if (titleIndex >= 6) { typedTitleContainer.innerHTML += `<span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500">${char}</span>`; } 
-                else { typedTitleContainer.innerHTML += `<span class="text-white">${char}</span>`; }
-                titleIndex++;
-                setTimeout(typeTitleWriter, 90);
-            }
-        }
-        window.addEventListener('DOMContentLoaded', () => { setTimeout(typeTitleWriter, 300); });
 
 
         // -----------------------------------------
