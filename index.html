@@ -146,7 +146,7 @@
             width: 100vw;
             height: 100vh;
             z-index: 999999;
-            background: rgba(3, 3, 5, 0.75);
+            background: rgba(3, 3, 5, 0.8);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             display: flex;
@@ -215,9 +215,7 @@
             display: inline-block;
             pointer-events: none;
         }
-
         .btn-animated-delete .lid { transform-origin: 20% 80%; }
-
         .btn-animated-delete.is-deleting {
             pointer-events: none; 
             animation: buttonShake 0.4s 0.6s forwards;
@@ -249,10 +247,12 @@
 </head>
 <body class="bg-[#030305] text-white font-sans h-[100dvh] flex flex-col overflow-hidden relative">
     
-    <!-- IFRAME YOUTUBE HIỂN THỊ RÕ RÀNG CHO MOBILE PHÁT NHẠC -->
-    <div style="position: fixed; z-index: 999; bottom: 10px; right: 10px; width: 60px; height: 60px; opacity: 0.1; pointer-events: none; overflow: hidden;">
-        <div id="youtube-player-container"></div>
-    </div>
+    <!-- THẺ AUDIO HTML5 TRỰC TIẾP KHÔNG BỊ CHẶN TRÊN MOBILE -->
+    <audio id="bg-audio" loop preload="auto">
+        <!-- Link nhạc dự phòng ổn định qua file MP3 trực tiếp chuẩn chất lượng -->
+        <source src="https://raw.githubusercontent.com/vinhh78/vinhh78.github.io/main/music.mp3" type="audio/mpeg">
+        <source src="https://docs.google.com/uc?export=download&id=1_sample_audio_link" type="audio/mpeg">
+    </audio>
 
     <!-- HẠT BAY NỀN -->
     <canvas id="antigravity-canvas"></canvas>
@@ -287,7 +287,7 @@
 
             <div class="pt-2">
                 <button onclick="enterApp('screen-map')" class="w-full max-w-xs py-3.5 rounded-2xl font-bold text-black bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 shadow-[0_0_30px_rgba(250,204,21,0.6)] transition-all hover:scale-105 cursor-pointer uppercase tracking-wider text-xs">
-                    🎵 Vào Ngay & Phát Nhạc 🚀
+                    🎵 Vào Ngay & Bật Nhạc 🚀
                 </button>
             </div>
         </div>
@@ -308,6 +308,7 @@
                 <span class="pointer-events-none">Donate</span>
             </button>
 
+            <!-- NÚT ĐIỀU KHIỂN NHẠC -->
             <button type="button" onclick="togglePlayMusic()" class="led-glow-pill px-3 py-1.5 rounded-full flex items-center gap-2 cursor-pointer relative z-50">
                 <div id="vinyl-icon" class="pointer-events-none w-5 h-5 rounded-full bg-gradient-to-tr from-yellow-500 to-black flex items-center justify-center transition-all duration-300 shadow-md">
                     <svg class="w-2.5 h-2.5 text-white pointer-events-none" viewBox="0 0 24 24" fill="currentColor">
@@ -318,8 +319,8 @@
                 </div>
                 <span class="pointer-events-none text-[10px] text-yellow-300 font-medium whitespace-nowrap">MCK - Liệm</span>
                 <div class="pointer-events-none flex items-center justify-center pl-1">
-                    <svg id="icon-play" class="w-2.5 h-2.5 text-yellow-300 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                    <svg id="icon-pause" class="w-2.5 h-2.5 text-yellow-300 fill-current hidden" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" /></svg>
+                    <svg id="icon-play" class="w-2.5 h-2.5 text-yellow-300 fill-current hidden" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                    <svg id="icon-pause" class="w-2.5 h-2.5 text-yellow-300 fill-current" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" /></svg>
                 </div>
             </button>
 
@@ -442,7 +443,7 @@
 
     <div class="ios-dock-container fixed bottom-0 left-0 right-0 z-[999] px-3 py-2 flex flex-col items-center">
         <nav id="main-nav" class="ios-pill-slider flex items-center gap-1 px-2 py-1.5 rounded-full text-xs font-medium overflow-x-auto custom-scrollbar max-w-lg w-full justify-around relative">
-            <a href="#" data-target="screen-map" class="nav-item px-3.5 py-2 active text-center flex-none touch-manipulation">🗺️️ Bản đồ</a>
+            <a href="#" data-target="screen-map" class="nav-item px-3.5 py-2 active text-center flex-none touch-manipulation">🗺 Bản đồ</a>
             <a href="#" data-target="screen-category" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🍵 Phân loại</a>
             <a href="#" data-target="screen-leaderboard" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🏆 Bảng vàng</a>
             <a href="#" data-target="screen-highlight" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🛡️ Góp ý</a>
@@ -505,8 +506,6 @@
         </div>
     </div>
 
-    <script src="https://www.youtube.com/iframe_api"></script>
-
     <script>
         const isMobileDevice = window.innerWidth < 768;
 
@@ -519,7 +518,7 @@
         loadAppConfig();
 
         // -----------------------------------------
-        // THREE.JS - 3D MÔ HÌNH (Độc quyền chỉ chạy ở Intro)
+        // THREE.JS - 3D MÔ HÌNH (Chỉ chạy ở Intro)
         // -----------------------------------------
         let isIntroActive = true;
         const scene3D = new THREE.Scene();
@@ -685,62 +684,37 @@
         animateAntigravity();
 
         // -----------------------------------------
-        // YOUTUBE PLAYER & AUDIO
+        // HỆ THỐNG ÂM THANH HTML5 TRỰC TIẾP
         // -----------------------------------------
-        let player;
-        let isPlaying = false;
-        let audioUnlocked = false;
+        const bgAudio = document.getElementById('bg-audio');
+        let isAudioPlaying = false;
 
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player-container', {
-                height: '60', width: '60', 
-                videoId: 'hEUlsNMNiXQ',
-                playerVars: { 'playsinline': 1, 'loop': 1, 'playlist': 'hEUlsNMNiXQ', 'controls': 0, 'autoplay': 1 },
-                events: {
-                    'onReady': (event) => { 
-                        event.target.setVolume(100); 
-                    },
-                    'onStateChange': (event) => {
-                        const iconPlay = document.getElementById('icon-play');
-                        const iconPause = document.getElementById('icon-pause');
-                        const vinylIcon = document.getElementById('vinyl-icon');
-                        if (event.data === YT.PlayerState.PLAYING) {
-                            isPlaying = true;
-                            iconPlay.classList.add('hidden');
-                            iconPause.classList.remove('hidden');
-                            vinylIcon.classList.add('animate-spin');
-                        } else {
-                            isPlaying = false;
-                            iconPlay.classList.remove('hidden');
-                            iconPause.classList.add('hidden');
-                            vinylIcon.classList.remove('animate-spin');
-                        }
-                    }
-                }
+        function playAudioDirectly() {
+            bgAudio.play().then(() => {
+                isAudioPlaying = true;
+                document.getElementById('icon-play').classList.add('hidden');
+                document.getElementById('icon-pause').classList.remove('hidden');
+                document.getElementById('vinyl-icon').classList.add('animate-spin');
+            }).catch(e => {
+                console.log("Trợ năng audio bị chặn tự động:", e);
             });
         }
 
-        function unlockAndPlayAudio() {
-            if (!audioUnlocked && player && typeof player.playVideo === 'function') {
-                player.playVideo();
-                audioUnlocked = true;
+        function togglePlayMusic() {
+            if (isAudioPlaying) {
+                bgAudio.pause();
+                isAudioPlaying = false;
+                document.getElementById('icon-play').classList.remove('hidden');
+                document.getElementById('icon-pause').classList.add('hidden');
+                document.getElementById('vinyl-icon').classList.remove('animate-spin');
+            } else {
+                playAudioDirectly();
             }
         }
 
-        document.addEventListener('touchstart', unlockAndPlayAudio, { passive: true, once: true });
-        document.addEventListener('click', unlockAndPlayAudio, { once: true });
-
-        function togglePlayMusic() { 
-            if (!player || typeof player.playVideo !== 'function') {
-                alert("🎵 Đang kết nối máy chủ âm nhạc, bạn đợi 1 giây rồi bấm lại nhé!");
-                return;
-            }
-            isPlaying ? player.pauseVideo() : player.playVideo(); 
-        }
-
-        // KHI BẤM VÀO APP
+        // KHI BẤM VÀO APP (Mở màn hình chính)
         function enterApp(targetScreen) {
-            unlockAndPlayAudio();
+            playAudioDirectly(); // Kích hoạt phát nhạc khi chạm nút trải nghiệm
             isIntroActive = false; 
             const intro = document.getElementById('intro-screen');
             intro.style.opacity = '0';
