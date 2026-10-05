@@ -56,7 +56,7 @@
         }
 
         .led-glow-pill {
-            background: rgba(20, 20, 25, 0.65);
+            background: rgba(15, 15, 20, 0.8);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border: 1.5px solid rgba(250, 204, 21, 0.6);
@@ -149,14 +149,14 @@
             width: 100vw;
             height: 100vh;
             z-index: 999999;
-            background: rgba(3, 3, 5, 0.82);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(3, 3, 5, 0.65);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
+            padding: 1.5rem;
             transition: opacity 0.6s ease, visibility 0.6s ease;
         }
 
@@ -166,7 +166,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 2;
+            z-index: 1;
         }
 
         .typing-cursor::after {
@@ -262,39 +262,42 @@
     <!-- HẠT BAY NỀN -->
     <canvas id="antigravity-canvas"></canvas>
 
-    <!-- MÀN HÌNH CHÀO (3D PHÓNG TO VÀ DỊCH LÊN TRÊN CÂN XỨNG) -->
+    <!-- MÀN HÌNH CHÀO (MỞ RỘNG RÃI, KHÔNG KHUNG, TRẢI DÀI CÂN ĐỐI) -->
     <div id="intro-screen">
         <canvas id="web3d-canvas"></canvas>
 
-        <div class="relative z-10 max-w-xs mx-auto space-y-2 w-full flex flex-col items-center justify-center text-center my-auto">
-            <h1 class="text-xl sm:text-2xl font-black tracking-tight uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.9)] flex items-center justify-center">
+        <div class="relative z-10 max-w-md mx-auto space-y-4 w-full flex flex-col items-center justify-center text-center my-auto px-4">
+            
+            <h1 class="text-3xl sm:text-4xl font-black tracking-tight uppercase drop-shadow-[0_5px_20px_rgba(0,0,0,0.9)] flex items-center justify-center">
                 <span id="typed-title" class="typing-cursor"></span>
             </h1>
 
-            <div class="text-[10px] sm:text-[11px] font-light text-yellow-400 tracking-wider uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+            <div class="text-xs sm:text-sm font-light text-yellow-400 tracking-[0.2em] uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
                 Impossible is Nothing.
             </div>
 
-            <div class="grid grid-cols-2 gap-2 pt-1 w-full max-w-[260px] mx-auto">
-                <button onclick="enterApp('screen-map')" class="led-glow-pill py-1.5 px-2.5 rounded-xl text-[11px] font-semibold text-yellow-300 cursor-pointer flex flex-col items-center justify-center gap-0.5 bg-black/80">
-                    <span class="text-xs">🗺️</span> Bản đồ
+            <!-- CÁC NÚT OPTION TRẢI RỘNG THOÁNG ĐÃNG Ở GIỮA -->
+            <div class="grid grid-cols-2 gap-3.5 pt-3 w-full max-w-[340px] mx-auto">
+                <button onclick="enterApp('screen-map')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-yellow-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
+                    <span class="text-base">🗺️</span> Bản đồ
                 </button>
-                <button onclick="enterApp('screen-category')" class="led-glow-pill led-glow-cyan py-1.5 px-2.5 rounded-xl text-[11px] font-semibold text-cyan-300 cursor-pointer flex flex-col items-center justify-center gap-0.5 bg-black/80">
-                    <span class="text-xs">🍵</span> Phân loại
+                <button onclick="enterApp('screen-category')" class="led-glow-pill led-glow-cyan py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-cyan-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
+                    <span class="text-base">🍵</span> Phân loại
                 </button>
-                <button onclick="enterApp('screen-leaderboard')" class="led-glow-pill led-glow-purple py-1.5 px-2.5 rounded-xl text-[11px] font-semibold text-purple-300 cursor-pointer flex flex-col items-center justify-center gap-0.5 bg-black/80">
-                    <span class="text-xs">🏆</span> Bảng vàng
+                <button onclick="enterApp('screen-leaderboard')" class="led-glow-pill led-glow-purple py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-purple-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
+                    <span class="text-base">🏆</span> Bảng vàng
                 </button>
-                <button onclick="enterApp('screen-highlight')" class="led-glow-pill led-glow-emerald py-1.5 px-2.5 rounded-xl text-[11px] font-semibold text-emerald-300 cursor-pointer flex flex-col items-center justify-center gap-0.5 bg-black/80">
-                    <span class="text-xs">🛡️</span> Góp ý
+                <button onclick="enterApp('screen-highlight')" class="led-glow-pill led-glow-emerald py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-emerald-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
+                    <span class="text-base">🛡️</span> Góp ý
                 </button>
             </div>
 
-            <div class="pt-1 w-full max-w-[260px] mx-auto">
-                <button onclick="enterApp('screen-map')" class="w-full py-2 rounded-xl font-bold text-black bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 shadow-[0_0_20px_rgba(250,204,21,0.6)] transition-all hover:scale-105 cursor-pointer uppercase tracking-wider text-[11px]">
+            <div class="pt-2 w-full max-w-[340px] mx-auto">
+                <button onclick="enterApp('screen-map')" class="w-full py-3.5 rounded-2xl font-bold text-black bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 shadow-[0_0_25px_rgba(250,204,21,0.7)] transition-all hover:scale-105 cursor-pointer uppercase tracking-wider text-xs sm:text-sm">
                     Vào Ngay Trải Nghiệm 🚀
                 </button>
             </div>
+
         </div>
     </div>
 
@@ -440,7 +443,7 @@
             <a href="#" data-target="screen-map" class="nav-item px-3.5 py-2 active text-center flex-none touch-manipulation">🗺 Bản đồ</a>
             <a href="#" data-target="screen-category" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🍵 Phân loại</a>
             <a href="#" data-target="screen-leaderboard" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🏆 Bảng vàng</a>
-            <a href="#" data-target="screen-highlight" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🛡️ Góp ý</a>
+            <a href="#" data-target="screen-highlight" class="nav-item px-3.5 py-2 text-center flex-none touch-manipulation">🛡 Góp ý</a>
             <a href="#" onclick="openAiChat(); return false;" class="nav-item px-3.5 py-2 text-center text-cyan-300 flex-none touch-manipulation">✨ AI</a>
             <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-3.5 py-2 text-center text-yellow-300 flex-none touch-manipulation">➕ Thêm</a>
         </nav>
@@ -512,7 +515,7 @@
         loadAppConfig();
 
         // -----------------------------------------
-        // THREE.JS - MÔ HÌNH 3D (DỊCH LÊN & PHÓNG TO VỪA ĐỦ)
+        // THREE.JS - MÔ HÌNH 3D HÌNH NỀN ĐỘNG (ĐẨY LÙI RA SAO ĐỂ KHÔNG BAO GIỜ ĐÈ LÊN GIAO DIỆN)
         // -----------------------------------------
         let isIntroActive = true;
         const scene3D = new THREE.Scene();
@@ -529,7 +532,7 @@
         scene3D.add(dirLight);
 
         const group3D = new THREE.Group();
-        group3D.position.y = 0.55; // Dịch lên cao hơn một chút cho thoáng và cân đối
+        group3D.position.set(0, -0.5, -2.5); // Đẩy lùi hẳn ra phía sau sâu hơn để làm hình nền động hoàn hảo
         scene3D.add(group3D);
 
         // Hàm tạo cấu trúc bộ 3D (Chỉ Ghế, Cốc, Điếu cày)
@@ -578,7 +581,7 @@
         }
 
         build3DSet(group3D);
-        camera3D.position.z = 4.8; // Phóng to hơn một tẹo nhưng vẫn trọn vẹn khung hình
+        camera3D.position.z = 5.2; 
 
         let mouseX3D = 0, mouseY3D = 0;
         window.addEventListener('mousemove', (e) => { mouseX3D = (e.clientX / window.innerWidth - 0.5) * 0.8; mouseY3D = (e.clientY / window.innerHeight - 0.5) * 0.8; }, { passive: true });
