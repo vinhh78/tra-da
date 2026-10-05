@@ -160,7 +160,7 @@
             50% { opacity: 0; }
         }
 
-        /* --- CODE HIỆU ỨNG: THE BIN EATS THE LABEL --- */
+        /* --- CSS NÚT XÓA ANIMATION --- */
         .btn-animated-delete {
             position: relative;
             display: inline-flex;
@@ -183,9 +183,7 @@
             box-shadow: 0 6px 16px rgba(244, 63, 94, 0.4);
             transform: translateY(-1px);
         }
-        .btn-animated-delete:active {
-            transform: translateY(1px);
-        }
+        .btn-animated-delete:active { transform: translateY(1px); }
         
         .btn-animated-delete .icon-bin {
             width: 14px;
@@ -201,38 +199,30 @@
             display: inline-block;
         }
 
-        .btn-animated-delete .lid {
-            transform-origin: 20% 80%; /* Tâm xoay ở góc nắp */
-        }
+        .btn-animated-delete .lid { transform-origin: 20% 80%; }
 
-        /* Khi class .is-deleting được thêm vào qua JS */
         .btn-animated-delete.is-deleting {
-            pointer-events: none; /* Khóa nút không cho bấm 2 lần */
+            pointer-events: none; 
             animation: buttonShake 0.4s 0.6s forwards;
         }
-        
         .btn-animated-delete.is-deleting .lid {
             animation: openLid 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
-        
         .btn-animated-delete.is-deleting .text-label {
             animation: suckText 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
 
-        /* Các Keyframes hoạt họa */
         @keyframes openLid {
             0% { transform: translateY(0) rotate(0); }
             30%, 60% { transform: translateY(-3px) rotate(-18deg); }
             100% { transform: translateY(0) rotate(0); }
         }
-
         @keyframes suckText {
             0% { transform: translateX(0) scale(1); opacity: 1; }
             40% { transform: translateX(-15px) scale(0.4); opacity: 1; }
             70% { transform: translateX(-20px) scale(0); opacity: 0; }
             100% { transform: translateX(-20px) scale(0); opacity: 0; }
         }
-
         @keyframes buttonShake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-2px) rotate(-2deg); }
@@ -273,6 +263,7 @@
             </div>
 
             <div class="pt-2">
+                <!-- NÚT NÀY SẼ KÍCH HOẠT NHẠC KHI VÀO APP -->
                 <button onclick="enterApp('screen-map')" class="w-full max-w-xs py-3.5 rounded-2xl font-bold text-black bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 shadow-[0_0_30px_rgba(250,204,21,0.6)] transition-all hover:scale-105 cursor-pointer uppercase tracking-wider text-xs">
                     Vào Ngay Trải Nghiệm 🚀
                 </button>
@@ -365,7 +356,7 @@
 
         <div id="screen-highlight" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 bg-[#030305] z-20">
             <div class="max-w-2xl mx-auto pb-16">
-                <h2 class="text-2xl font-light mb-2 flex items-center gap-2"><span>🛡️</span> Góp Ý & Báo Cáo Lỗi Website</h2>
+                <h2 class="text-2xl font-light mb-2 flex items-center gap-2"><span>🛡️️</span> Góp Ý & Báo Cáo Lỗi Website</h2>
                 <p class="text-gray-400 text-sm mb-6">Gửi ý kiến đóng góp hoặc báo cáo lỗi trực tiếp về máy chủ quản trị của bạn.</p>
                 
                 <div class="liquid-glass rounded-2xl p-6 border border-white/10 space-y-4">
@@ -394,27 +385,23 @@
         </div>
     </div>
 
+    <!-- CÁC MODAL ẨN -->
     <div id="donate-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md modal-hidden">
         <div class="liquid-glass border border-yellow-500/40 p-6 w-full max-w-sm relative rounded-3xl text-center shadow-2xl">
             <button onclick="closeDonateModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-base cursor-pointer">✕</button>
-            
             <div class="inline-block bg-[#1a1005] px-4 py-1.5 rounded-full border border-yellow-500/40 mb-3">
                 <span class="text-xs font-bold tracking-widest text-yellow-400">MB BANK</span>
             </div>
-            
             <h3 class="text-sm font-light text-gray-300 mb-4">Ủng Hộ Duy Trì Máy Chủ Trà Đá</h3>
-            
             <div class="bg-white p-3 rounded-2xl inline-block shadow-lg mb-4 border border-white/20">
                 <img src="https://api.vietqr.io/image/970422-0599999998386-compact2.jpg?accountName=PHAM%20CONG%20VINH&amount=0&addInfo=Donate%20Tra%20Da%20Ha%20Noi" class="w-52 h-52 object-contain mx-auto rounded-lg" alt="QR Code MB Bank">
             </div>
-
             <div class="mb-4">
                 <p class="text-xs text-gray-400">Chủ tài khoản</p>
                 <p class="text-sm font-bold text-yellow-400 uppercase tracking-wider">PHAM CONG VINH</p>
                 <p class="text-xs text-gray-400 mt-2">Số tài khoản</p>
                 <p id="stk-number" class="text-base font-mono font-bold text-white tracking-widest">0599999998386</p>
             </div>
-
             <button onclick="copyStk()" class="w-full led-glow-pill py-3 rounded-xl font-semibold text-white bg-red-600/80 hover:bg-red-600 text-xs shadow-lg transition cursor-pointer">
                 Sao chép STK
             </button>
@@ -430,15 +417,12 @@
             <a href="#" onclick="openAiChat(); return false;" class="nav-item px-3.5 py-2 text-center text-cyan-300 flex-none">✨ AI</a>
             <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-3.5 py-2 text-center text-yellow-300 flex-none">➕ Thêm</a>
         </nav>
-
         <div class="w-28 h-1 bg-white/30 rounded-full mt-2 mb-0.5"></div>
-        
-        <div class="text-[9px] text-gray-400 mt-1">
-            Trà Đá Hà Nội • Developed by <b class="text-yellow-400">dembevinh</b>
-        </div>
+        <div class="text-[9px] text-gray-400 mt-1">Trà Đá Hà Nội • Developed by <b class="text-yellow-400">dembevinh</b></div>
     </div>
 
-    <div id="youtube-player-container" style="display:none;"></div>
+    <!-- BỎ ẨN DISPLAY NONE Ở ĐÂY ĐỂ TRÁNH LỖI API -->
+    <div id="youtube-player-container" class="absolute w-0 h-0 opacity-0 pointer-events-none"></div>
 
     <div id="ai-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md modal-hidden">
         <div class="liquid-glass border border-cyan-500/30 p-5 w-full max-w-lg relative rounded-2xl flex flex-col h-[480px]">
@@ -495,38 +479,33 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-        // HÀM FETCH ĐỌC DỮ LIỆU TỪ FILE data.json
+        // CỜ KIỂM SOÁT ĐỒ HỌA NẶNG TRÊN MOBILE
+        let isIntroActive = true;
+
         async function loadAppConfig() {
             try {
                 const response = await fetch('data.json');
-                if (response.ok) {
-                    const configData = await response.json();
-                    console.log("Đã tải thành công data.json:", configData);
-                }
-            } catch (error) {
-                console.log("Không tìm thấy hoặc lỗi đọc file data.json:", error);
-            }
+                if (response.ok) { const configData = await response.json(); console.log("Đã tải:", configData); }
+            } catch (error) { console.log("Lỗi file json:", error); }
         }
         loadAppConfig();
 
-        // THREE.JS: MÔ HÌNH 3D CỐC TRÀ ĐÁ TRẮNG TRONG SUỐT & ĐIẾU CÀY PHA LÊ
+        // THREE.JS
         const scene3D = new THREE.Scene();
         const camera3D = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer3D = new THREE.WebGLRenderer({ canvas: document.getElementById('web3d-canvas'), alpha: true, antialias: true });
         renderer3D.setSize(window.innerWidth, window.innerHeight);
-        renderer3D.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        // Tối ưu hóa pixel ratio trên mobile để giảm giật lag
+        renderer3D.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 1.8);
         scene3D.add(ambientLight);
-        
         const dirLight = new THREE.DirectionalLight(0xffffff, 2.5);
         dirLight.position.set(5, 10, 10);
         scene3D.add(dirLight);
-
         const pointLight1 = new THREE.PointLight(0xfde047, 4, 30);
         pointLight1.position.set(-3, 2, 2);
         scene3D.add(pointLight1);
-
         const pointLight2 = new THREE.PointLight(0x38bdf8, 3, 30);
         pointLight2.position.set(3, -2, 2);
         scene3D.add(pointLight2);
@@ -534,21 +513,11 @@
         const group3D = new THREE.Group();
         scene3D.add(group3D);
 
-        const whiteGlassMaterial = new THREE.MeshPhysicalMaterial({ 
-            color: 0xffffff, 
-            transparent: true, 
-            opacity: 0.35, 
-            roughness: 0.05, 
-            metalness: 0.1, 
-            transmission: 0.9, 
-            ior: 1.5 
-        });
-
+        const whiteGlassMaterial = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.35, roughness: 0.05, metalness: 0.1, transmission: 0.9, ior: 1.5 });
         const cupGroup = new THREE.Group();
         const cupGeo = new THREE.CylinderGeometry(0.9, 0.65, 2.2, 32);
         const cupMesh = new THREE.Mesh(cupGeo, whiteGlassMaterial);
         cupGroup.add(cupMesh);
-
         const teaGeo = new THREE.CylinderGeometry(0.85, 0.62, 1.5, 32);
         const teaMat = new THREE.MeshPhysicalMaterial({ color: 0xd97706, transparent: true, opacity: 0.85, roughness: 0.2 });
         const teaMesh = new THREE.Mesh(teaGeo, teaMat);
@@ -562,7 +531,6 @@
             ice.position.set((Math.random()-0.5)*0.4, 0.2 + i*0.25, (Math.random()-0.5)*0.4);
             cupGroup.add(ice);
         }
-
         cupGroup.position.set(-4.0, -0.5, 0);
         cupGroup.rotation.z = -0.1;
         group3D.add(cupGroup);
@@ -571,44 +539,33 @@
         const thanGeo = new THREE.CylinderGeometry(0.32, 0.32, 4.5, 24);
         const thanMesh = new THREE.Mesh(thanGeo, whiteGlassMaterial);
         dieuGroup.add(thanMesh);
-
         const ringTopGeo = new THREE.CylinderGeometry(0.33, 0.33, 0.5, 24);
         const ringMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, metalness: 0.9, roughness: 0.15 });
         const ringTop = new THREE.Mesh(ringTopGeo, ringMat);
         ringTop.position.y = 2.0;
         dieuGroup.add(ringTop);
-
         const ringBottom = new THREE.Mesh(ringTopGeo, ringMat);
         ringBottom.position.y = -2.0;
         dieuGroup.add(ringBottom);
-
         const noGeo = new THREE.CylinderGeometry(0.18, 0.35, 1.0, 16);
         const noMat = new THREE.MeshStandardMaterial({ color: 0x1c1917, roughness: 0.3, metalness: 0.4 });
         const noMesh = new THREE.Mesh(noGeo, noMat);
         noMesh.position.set(0.7, -0.3, 0);
         noMesh.rotation.z = -Math.PI / 4;
         dieuGroup.add(noMesh);
-
         dieuGroup.position.set(4.0, -0.2, 0);
         dieuGroup.rotation.z = 0.1;
         group3D.add(dieuGroup);
-
         camera3D.position.z = 7;
 
         let mouseX3D = 0, mouseY3D = 0;
-        window.addEventListener('mousemove', (e) => {
-            mouseX3D = (e.clientX / window.innerWidth - 0.5) * 0.8;
-            mouseY3D = (e.clientY / window.innerHeight - 0.5) * 0.8;
-        });
-
+        window.addEventListener('mousemove', (e) => { mouseX3D = (e.clientX / window.innerWidth - 0.5) * 0.8; mouseY3D = (e.clientY / window.innerHeight - 0.5) * 0.8; });
         window.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0) {
-                mouseX3D = (e.touches[0].clientX / window.innerWidth - 0.5) * 0.8;
-                mouseY3D = (e.touches[0].clientY / window.innerHeight - 0.5) * 0.8;
-            }
+            if (e.touches.length > 0) { mouseX3D = (e.touches[0].clientX / window.innerWidth - 0.5) * 0.8; mouseY3D = (e.touches[0].clientY / window.innerHeight - 0.5) * 0.8; }
         }, { passive: true });
 
         function animate3D() {
+            if (!isIntroActive) return; // CHỐNG LAG: Tắt ngay render 3D khi đã vào app
             requestAnimationFrame(animate3D);
             group3D.rotation.y += 0.006;
             group3D.rotation.x += (mouseY3D - group3D.rotation.x) * 0.05;
@@ -617,73 +574,41 @@
         }
         animate3D();
 
-        window.addEventListener('resize', () => {
-            camera3D.aspect = window.innerWidth / window.innerHeight;
-            camera3D.updateProjectionMatrix();
-            renderer3D.setSize(window.innerWidth, window.innerHeight);
-        });
-
         const titleText = "HANOI TEA MAP";
         let titleIndex = 0;
         const typedTitleContainer = document.getElementById('typed-title');
-
         function typeTitleWriter() {
             if (titleIndex < titleText.length) {
                 let char = titleText.charAt(titleIndex);
-                if (titleIndex >= 6) {
-                    typedTitleContainer.innerHTML += `<span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500">${char}</span>`;
-                } else {
-                    typedTitleContainer.innerHTML += `<span class="text-white">${char}</span>`;
-                }
+                if (titleIndex >= 6) { typedTitleContainer.innerHTML += `<span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500">${char}</span>`; } 
+                else { typedTitleContainer.innerHTML += `<span class="text-white">${char}</span>`; }
                 titleIndex++;
                 setTimeout(typeTitleWriter, 90);
             }
         }
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(typeTitleWriter, 300);
-        });
+        window.addEventListener('DOMContentLoaded', () => { setTimeout(typeTitleWriter, 300); });
 
+        // ANTIGRAVITY CANVAS
         const canvas = document.getElementById('antigravity-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        const numParticles = 75;
+        // Giảm số lượng hạt trên mobile để chống giật
+        const numParticles = window.innerWidth < 768 ? 30 : 75; 
         let mouse = { x: null, y: null, radius: 140 };
 
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
+        window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+        window.addEventListener('touchmove', (e) => { if (e.touches.length > 0) { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; } }, { passive: true });
+        window.addEventListener('touchend', () => { mouse.x = null; mouse.y = null; }, { passive: true });
 
-        window.addEventListener('mouseleave', () => {
-            mouse.x = null;
-            mouse.y = null;
-        });
-
-        window.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0) {
-                mouse.x = e.touches[0].clientX;
-                mouse.y = e.touches[0].clientY;
-            }
-        }, { passive: true });
-
-        window.addEventListener('touchend', () => {
-            mouse.x = null;
-            mouse.y = null;
-        }, { passive: true });
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
         for (let i = 0; i < numParticles; i++) {
             particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                vx: (Math.random() - 0.5) * 0.7,
-                vy: (Math.random() - 0.5) * 0.7,
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.7, vy: (Math.random() - 0.5) * 0.7,
                 size: Math.random() * 3 + 1,
                 color: ['#fde047', '#38bdf8', '#c084fc', '#f43f5e', '#ffffff'][Math.floor(Math.random() * 5)],
                 alpha: Math.random() * 0.7 + 0.3
@@ -691,51 +616,29 @@
         }
 
         function animateAntigravity() {
+            if (!isIntroActive) return; // CHỐNG LAG: Dừng vẽ hạt khi vào trong
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
             particles.forEach((p, index) => {
-                p.x += p.vx;
-                p.y += p.vy;
-
-                if (p.x < 0) p.x = canvas.width;
-                if (p.x > canvas.width) p.x = 0;
-                if (p.y < 0) p.y = canvas.height;
-                if (p.y > canvas.height) p.y = 0;
+                p.x += p.vx; p.y += p.vy;
+                if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
 
                 if (mouse.x !== null && mouse.y !== null) {
-                    let dx = mouse.x - p.x;
-                    let dy = mouse.y - p.y;
+                    let dx = mouse.x - p.x; let dy = mouse.y - p.y;
                     let distance = Math.sqrt(dx * dx + dy * dy);
                     if (distance < mouse.radius) {
                         let force = (mouse.radius - distance) / mouse.radius;
-                        p.x -= (dx / distance) * force * 3.5;
-                        p.y -= (dy / distance) * force * 3.5;
+                        p.x -= (dx / distance) * force * 3.5; p.y -= (dy / distance) * force * 3.5;
                     }
                 }
-
-                ctx.save();
-                ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = p.color;
-                ctx.shadowBlur = 12;
-                ctx.shadowColor = p.color;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
+                ctx.save(); ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color; ctx.shadowBlur = 12; ctx.shadowColor = p.color;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); ctx.restore();
 
                 for (let j = index + 1; j < particles.length; j++) {
-                    let p2 = particles[j];
-                    let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    let p2 = particles[j]; let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
                     if (dist < 100) {
-                        ctx.save();
-                        ctx.globalAlpha = (1 - (dist / 100)) * 0.18;
-                        ctx.strokeStyle = p.color;
-                        ctx.lineWidth = 0.5;
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.stroke();
-                        ctx.restore();
+                        ctx.save(); ctx.globalAlpha = (1 - (dist / 100)) * 0.18; ctx.strokeStyle = p.color; ctx.lineWidth = 0.5;
+                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke(); ctx.restore();
                     }
                 }
             });
@@ -743,27 +646,32 @@
         }
         animateAntigravity();
 
+        // FIX NHẠC BỊ LỖI VÀ TỐI ƯU HIỆU NĂNG KHI VÀO APP
         function enterApp(targetScreen) {
             const intro = document.getElementById('intro-screen');
             intro.style.opacity = '0';
             intro.style.visibility = 'hidden';
-            setTimeout(() => {
-                intro.style.display = 'none';
-            }, 600);
+            
+            // Tắt vòng lặp nặng để điện thoại chạy cực kì mượt
+            isIntroActive = false; 
+            document.getElementById('antigravity-canvas').style.display = 'none';
+
+            setTimeout(() => { intro.style.display = 'none'; }, 600);
+            
+            // Bypass chính sách chặn nhạc của điện thoại qua tương tác nút này
+            if (player && typeof player.playVideo === 'function' && !isPlaying) {
+                player.playVideo();
+            }
+
             switchScreen(targetScreen);
         }
 
         // FIREBASE LOGIC
         const firebaseConfig = {
-            apiKey: "AIzaSyCMayrZCPTTBiN43Aj9qu5doGRMPhliOvs",
-            authDomain: "trada-be900.firebaseapp.com",
-            projectId: "trada-be900",
-            storageBucket: "trada-be900.firebasestorage.app",
-            messagingSenderId: "722426334392",
-            appId: "1:722426334392:web:4ed75d3ab8e770d79db84d",
-            measurementId: "G-SC0DHB4L0D"
+            apiKey: "AIzaSyCMayrZCPTTBiN43Aj9qu5doGRMPhliOvs", authDomain: "trada-be900.firebaseapp.com",
+            projectId: "trada-be900", storageBucket: "trada-be900.firebasestorage.app",
+            messagingSenderId: "722426334392", appId: "1:722426334392:web:4ed75d3ab8e770d79db84d", measurementId: "G-SC0DHB4L0D"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
@@ -777,59 +685,35 @@
 
         const sheet = document.getElementById('shop-sheet');
         const dragHeader = document.getElementById('sheet-header-drag');
-        let startY = 0;
-        let startHeight = 0;
-        let isDragging = false;
+        let startY = 0; let startHeight = 0; let isDragging = false;
 
         dragHeader.addEventListener('touchstart', (e) => {
-            if (window.innerWidth < 1024) {
-                isDragging = true;
-                startY = e.touches[0].clientY;
-                startHeight = sheet.offsetHeight;
-                sheet.style.transition = 'none';
-            }
+            if (window.innerWidth < 1024) { isDragging = true; startY = e.touches[0].clientY; startHeight = sheet.offsetHeight; sheet.style.transition = 'none'; }
         }, { passive: true });
-
         window.addEventListener('touchmove', (e) => {
             if (!isDragging || window.innerWidth >= 1024) return;
-            const deltaY = startY - e.touches[0].clientY;
-            let newHeight = startHeight + deltaY;
-            const maxHeight = window.innerHeight * 0.75;
-            const minHeight = window.innerHeight * 0.22;
-            
-            if (newHeight > maxHeight) newHeight = maxHeight;
-            if (newHeight < minHeight) newHeight = minHeight;
-            
+            const deltaY = startY - e.touches[0].clientY; let newHeight = startHeight + deltaY;
+            const maxHeight = window.innerHeight * 0.75; const minHeight = window.innerHeight * 0.22;
+            if (newHeight > maxHeight) newHeight = maxHeight; if (newHeight < minHeight) newHeight = minHeight;
             sheet.style.height = newHeight + 'px';
         }, { passive: true });
-
         window.addEventListener('touchend', () => {
             if (!isDragging || window.innerWidth >= 1024) return;
-            isDragging = false;
-            sheet.style.transition = 'height 0.35s cubic-bezier(0.1, 0.9, 0.2, 1)';
-            
-            const currentH = sheet.offsetHeight;
-            const screenH = window.innerHeight;
-            
-            if (currentH > screenH * 0.45) {
-                sheet.style.height = '72vh';
-            } else {
-                sheet.style.height = '38vh';
-            }
+            isDragging = false; sheet.style.transition = 'height 0.35s cubic-bezier(0.1, 0.9, 0.2, 1)';
+            sheet.style.height = (sheet.offsetHeight > window.innerHeight * 0.45) ? '72vh' : '38vh';
             setTimeout(() => map.invalidateSize(), 350);
         });
 
+        // HỆ THỐNG PHÁT NHẠC ĐÃ ĐƯỢC CẤU HÌNH LẠI
         let player;
         let isPlaying = false;
-
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player-container', {
-                height: '0',
-                width: '0',
+                height: '1', width: '1', // Tránh lỗi API khi để 0x0 trên Safari
                 videoId: 'hEUlsNMNiXQ',
-                playerVars: { 'autoplay': 1, 'loop': 1, 'playlist': 'hEUlsNMNiXQ', 'controls': 0 },
+                playerVars: { 'playsinline': 1, 'loop': 1, 'playlist': 'hEUlsNMNiXQ', 'controls': 0 }, // Loại bỏ thẻ Autoplay
                 events: {
-                    'onReady': (event) => { event.target.setVolume(100); event.target.playVideo(); },
+                    'onReady': (event) => { event.target.setVolume(100); },
                     'onStateChange': (event) => {
                         const playBtn = document.getElementById('play-btn');
                         const vinylIcon = document.getElementById('vinyl-icon');
@@ -842,14 +726,10 @@
                 }
             });
         }
-
-        window.addEventListener('click', () => { if (player && player.playVideo && !isPlaying) player.playVideo(); }, { once: true });
-        window.addEventListener('touchstart', () => { if (player && player.playVideo && !isPlaying) player.playVideo(); }, { once: true });
         function togglePlayMusic() { if (!player || !player.playVideo) return; isPlaying ? player.pauseVideo() : player.playVideo(); }
 
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
         const map = L.map('map', { zoomControl: false, fadeAnimation: false, markerZoomAnimation: false }).setView([21.0285, 105.8541], 13);
-        
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
         L.control.zoom({ position: 'bottomright' }).addTo(map);
         mapMarkersLayer = L.layerGroup().addTo(map);
@@ -858,11 +738,7 @@
 
         function promptLogin() {
             const name = prompt("Nhập tên hiển thị của bạn:", currentUserName);
-            if (name && name.trim() !== "") {
-                currentUserName = name.trim();
-                localStorage.setItem('trada_username', currentUserName);
-                updateAuthUI();
-            }
+            if (name && name.trim() !== "") { currentUserName = name.trim(); localStorage.setItem('trada_username', currentUserName); updateAuthUI(); }
         }
         function updateAuthUI() { if (currentUserName) document.getElementById('auth-btn-text').innerText = currentUserName; }
         updateAuthUI();
@@ -920,7 +796,6 @@
                 const card = document.createElement('div');
                 card.className = "liquid-glass-card rounded-xl p-2.5 cursor-pointer flex gap-2.5 items-center";
                 
-                // MÃ JS CHÈN NÚT XÓA ANIMATION
                 const deleteBtnHtml = `
                     <button onclick="deleteShopAnimated('${shop.id}', event, this)" class="btn-animated-delete" title="Xóa quán">
                         <span class="icon-bin">
@@ -959,20 +834,13 @@
             window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
         }
 
-        // JS XỬ LÝ CLICK NUỐT CHỮ THÙNG RÁC - ĐỢI ANIMATION XONG MỚI XÓA
         window.deleteShopAnimated = function(id, event, btnElement) {
             event.stopPropagation();
             if(confirm("Bạn có chắc chắn muốn xóa quán này không?")) {
-                // Bước 1: Thêm class .is-deleting để kích hoạt hiệu ứng CSS animation (mất ~0.7s)
                 btnElement.classList.add('is-deleting');
-                
-                // Bước 2: Đợi animation chạy xong (900ms) rồi gọi Firebase để xóa dữ liệu
                 setTimeout(() => {
-                    db.collection("shops").doc(id).delete().then(() => {
-                        renderApp(); // Render lại giao diện sau khi xóa thành công
-                    }).catch((error) => {
-                        alert("Lỗi khi xóa: " + error.message);
-                        btnElement.classList.remove('is-deleting');
+                    db.collection("shops").doc(id).delete().then(() => { renderApp(); }).catch((error) => {
+                        alert("Lỗi khi xóa: " + error.message); btnElement.classList.remove('is-deleting');
                     });
                 }, 900); 
             }
