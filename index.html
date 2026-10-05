@@ -99,6 +99,20 @@
             box-shadow: 0 0 25px rgba(52, 211, 153, 0.7), inset 0 0 15px rgba(52, 211, 153, 0.3);
         }
 
+        /* HIỆU ỨNG CHỮ TỐI PHÁT SÁNG NEON VÀNG ĐỒNG */
+        .dark-neon-glow-text {
+            color: #111115; /* Màu chữ tối sâu thẳm bên trong */
+            text-shadow: 
+                -1px -1px 0 rgba(253, 224, 71, 0.8),  
+                 1px -1px 0 rgba(253, 224, 71, 0.8),
+                -1px  1px 0 rgba(253, 224, 71, 0.8),
+                 1px  1px 0 rgba(253, 224, 71, 0.8),
+                 0 0 10px rgba(250, 204, 21, 0.7),
+                 0 0 20px rgba(250, 204, 21, 0.5),
+                 0 0 30px rgba(250, 204, 21, 0.3);
+            letter-spacing: 0.15em;
+        }
+
         .liquid-glass-card {
             background: rgba(30, 30, 35, 0.6);
             backdrop-filter: blur(15px);
@@ -273,29 +287,30 @@
                 <span id="typed-title" class="typing-cursor"></span>
             </h1>
 
-            <div class="text-xs sm:text-sm font-light text-yellow-400 tracking-[0.2em] uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
+            <!-- ĐÃ CẬP NHẬT HIỆU ỨNG CHỮ TỐI PHÁT SÁNG NEON -->
+            <div class="text-xs sm:text-sm font-black tracking-[0.2em] uppercase dark-neon-glow-text py-1">
                 Impossible is Nothing.
             </div>
 
             <!-- CÁC NÚT OPTION -->
             <div class="grid grid-cols-2 gap-3.5 pt-3 w-full max-w-[340px] mx-auto">
                 <button onclick="enterApp('screen-map')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-yellow-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
-                    <span class="text-base"></span> Bản đồ
+                    <span class="text-base">🗺️</span> Bản đồ
                 </button>
                 <button onclick="enterApp('screen-category')" class="led-glow-pill led-glow-cyan py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-cyan-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
-                    <span class="text-base"></span> Phân loại
+                    <span class="text-base">🍵</span> Phân loại
                 </button>
                 <button onclick="filterByCategory('Local Eatery')" class="led-glow-pill led-glow-purple py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-purple-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
-                    <span class="text-base"></span> Local Eatery
+                    <span class="text-base">🍲</span> Local Eatery
                 </button>
                 <button onclick="enterApp('screen-highlight')" class="led-glow-pill led-glow-emerald py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-emerald-300 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/75 shadow-lg">
-                    <span class="text-base"></span> Góp ý
+                    <span class="text-base">🛡️</span> Góp ý
                 </button>
             </div>
 
             <div class="pt-2 w-full max-w-[340px] mx-auto">
                 <button onclick="enterApp('screen-map')" class="w-full py-3.5 rounded-2xl font-bold text-black bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 shadow-[0_0_25px_rgba(250,204,21,0.7)] transition-all hover:scale-105 cursor-pointer uppercase tracking-wider text-xs sm:text-sm">
-                    Trải Nghiệm Ngay!🚀
+                    Vào Ngay Trải Nghiệm 🚀
                 </button>
             </div>
 
@@ -359,22 +374,22 @@
                 <p class="text-gray-400 text-sm mb-6">Thống kê số lượng quán thực tế theo danh mục trên Firebase.</p>
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                     <div onclick="filterByCategory('Trà đá vỉa hè')" class="liquid-glass-card rounded-xl p-4 cursor-pointer h-36 flex flex-col justify-end relative">
-                        <span class="text-2xl mb-1 pointer-events-none"></span>
+                        <span class="text-2xl mb-1 pointer-events-none">🍵</span>
                         <h3 class="font-medium text-yellow-300 text-xs pointer-events-none">Trà đá vỉa hè</h3>
                         <span id="count-trada" class="absolute top-3 right-3 text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30 pointer-events-none">0 quán</span>
                     </div>
                     <div onclick="filterByCategory('Trà chanh chém gió')" class="liquid-glass-card rounded-xl p-4 cursor-pointer h-36 flex flex-col justify-end relative">
-                        <span class="text-2xl mb-1 pointer-events-none"></span>
+                        <span class="text-2xl mb-1 pointer-events-none">🍋</span>
                         <h3 class="font-medium text-yellow-300 text-xs pointer-events-none">Trà chanh chém gió</h3>
                         <span id="count-trachanh" class="absolute top-3 right-3 text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30 pointer-events-none">0 quán</span>
                     </div>
                     <div onclick="filterByCategory('Cafe vỉа hè')" class="liquid-glass-card rounded-xl p-4 cursor-pointer h-36 flex flex-col justify-end relative">
-                        <span class="text-2xl mb-1 pointer-events-none"></span>
+                        <span class="text-2xl mb-1 pointer-events-none">☕</span>
                         <h3 class="font-medium text-yellow-300 text-xs pointer-events-none">Cafe vỉа hè</h3>
                         <span id="count-cafe" class="absolute top-3 right-3 text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30 pointer-events-none">0 quán</span>
                     </div>
                     <div onclick="filterByCategory('Local Eatery')" class="liquid-glass-card rounded-xl p-4 cursor-pointer h-36 flex flex-col justify-end relative border-purple-500/40">
-                        <span class="text-2xl mb-1 pointer-events-none"></span>
+                        <span class="text-2xl mb-1 pointer-events-none">🍲</span>
                         <h3 class="font-medium text-purple-300 text-xs pointer-events-none">Local Eatery</h3>
                         <span id="count-eatery" class="absolute top-3 right-3 text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full border border-purple-500/30 pointer-events-none">0 quán</span>
                     </div>
@@ -392,7 +407,7 @@
 
         <div id="screen-highlight" class="screen-view hidden h-full w-full p-6 md:p-10 overflow-y-auto custom-scrollbar absolute inset-0 z-20 bg-transparent">
             <div class="max-w-2xl mx-auto pb-16">
-                <h2 class="text-2xl font-light mb-2 flex items-center gap-2"><span></span> Góp Ý & Báo Cáo Lỗi Website</h2>
+                <h2 class="text-2xl font-light mb-2 flex items-center gap-2"><span>🛡️</span> Góp Ý & Báo Cáo Lỗi Website</h2>
                 <p class="text-gray-400 text-sm mb-6">Gửi ý kiến đóng góp hoặc báo cáo lỗi trực tiếp về máy chủ quản trị của bạn.</p>
                 
                 <div class="liquid-glass rounded-2xl p-6 border border-white/10 space-y-4">
@@ -447,11 +462,11 @@
     <!-- THANH MENU DOCK DƯỚI -->
     <div class="ios-dock-container fixed bottom-0 left-0 right-0 z-[999] px-2 py-2 flex flex-col items-center">
         <nav id="main-nav" class="ios-pill-slider flex items-center gap-0.5 px-1.5 py-1.5 rounded-full text-[11px] font-medium overflow-x-auto custom-scrollbar max-w-xl w-full justify-around relative">
-            <a href="#" data-target="screen-map" class="nav-item px-2.5 py-2 active text-center flex-none touch-manipulation">Bản đồ</a>
-            <a href="#" data-target="screen-category" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">Phân loại</a>
+            <a href="#" data-target="screen-map" class="nav-item px-2.5 py-2 active text-center flex-none touch-manipulation">🗺 Bản đồ</a>
+            <a href="#" data-target="screen-category" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">🍵 Phân loại</a>
             <a href="#" onclick="filterByCategory('Local Eatery'); return false;" class="nav-item px-2.5 py-2 text-center text-purple-300 flex-none touch-manipulation">🍲 Eatery</a>
             <a href="#" data-target="screen-leaderboard" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">🏆 Bảng vàng</a>
-            <a href="#" data-target="screen-highlight" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">Góp ý</a>
+            <a href="#" data-target="screen-highlight" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">🛡 Góp ý</a>
             <a href="#" onclick="openAiChat(); return false;" class="nav-item px-2.5 py-2 text-center text-cyan-300 flex-none touch-manipulation">✨ AI</a>
             <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-2.5 py-2 text-center text-yellow-300 flex-none touch-manipulation">➕ Thêm</a>
         </nav>
@@ -475,7 +490,6 @@
         </div>
     </div>
 
-    <!-- MODAL THÊM QUÁN MỚI (ĐÃ CÓ LOCAL EATERY) -->
     <div id="add-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-3 bg-black/75 backdrop-blur-md modal-hidden">
         <div class="liquid-glass border border-white/20 p-5 w-full max-w-md relative rounded-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
             <button type="button" onclick="closeModal()" class="absolute top-3 right-3 text-gray-400 hover:text-white cursor-pointer">✕</button>
@@ -504,7 +518,7 @@
                             <option value="Trà đá vỉa hè">Trà đá vỉa hè</option>
                             <option value="Trà chanh chém gió">Trà chanh chém gió</option>
                             <option value="Cafe vỉа hè">Cafe vỉа hè</option>
-                            <option value="Local Eatery">Local Eatery (Quán ăn)</option>
+                            <option value="Local Eatery">🍲 Local Eatery (Quán ăn)</option>
                         </select>
                     </div>
                 </div>
@@ -898,10 +912,10 @@
         document.querySelectorAll('.nav-item').forEach(item => { item.addEventListener('click', function(e) { const t = this.getAttribute('data-target'); if(t) { e.preventDefault(); switchScreen(t); } }); });
 
         map.on('click', (e) => { currentLatLng = e.latlng; openModalQuick(); });
-        window.openModalQuick = function() { if(!currentUserName) { promptLogin(); if(!currentUserName) return; } document.getElementById('add-modal').classList.remove('modal-hidden'); document.getElementById('add-modal').classList.add('modal-visible'); }
-        window.closeModal = function() { document.getElementById('add-modal').classList.remove('modal-visible'); document.getElementById('add-modal').classList.add('modal-hidden'); }
-        window.openAiChat = function() { document.getElementById('ai-modal').classList.remove('modal-hidden'); document.getElementById('ai-modal').classList.add('modal-visible'); }
-        window.closeAiChat = function() { document.getElementById('ai-modal').classList.remove('modal-visible'); document.getElementById('ai-modal').classList.add('modal-hidden'); }
+        window.openModalQuick = function() { if(!currentUserName) { promptLogin(); if(!currentUserName) return; } document.getElementById('add-modal').classList.add('modal-visible'); }
+        window.closeModal = function() { document.getElementById('add-modal').classList.remove('modal-visible'); }
+        window.openAiChat = function() { document.getElementById('ai-modal').classList.add('modal-visible'); }
+        window.closeAiChat = function() { document.getElementById('ai-modal').classList.remove('modal-visible'); }
 
         document.getElementById('add-shop-form').addEventListener('submit', function(e) {
             e.preventDefault();
