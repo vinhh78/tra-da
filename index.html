@@ -134,7 +134,6 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(250, 204, 21, 0.3); border-radius: 10px; }
         
-        /* Sử dụng bản đồ CartoDB Dark Matter trực quan, không cần bộ lọc CSS phức tạp gây lỗi */
         .custom-dark-map {
             background-color: #0b0b0f !important;
         }
@@ -780,11 +779,11 @@
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
         const map = L.map('map', { zoomControl: false, fadeAnimation: false, markerZoomAnimation: false }).setView([21.0285, 105.8541], 13);
         
-        /* Cập nhật lớp bản đồ nền tối chuẩn CartoDB Dark Matter (Không bị lỗi tile, load cực nhanh và tương thích hoàn hảo với giao diện) */
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            maxZoom: 19,
+        /* Thay thế bằng Jawg Dark Tile (Miễn phí, không yêu cầu API key công khai khắt khe, hiển thị map tối hoàn hảo không watermark) */
+        L.tileLayer('https://{s}.tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=public', {
+            maxZoom: 22,
             subdomains: 'abcd',
-            attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
+            attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps">&copy; Jawg</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
         L.control.zoom({ position: 'bottomright' }).addTo(map);
