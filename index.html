@@ -923,9 +923,9 @@
         window.openModalQuick = function() { if(!currentUserName) { promptLogin(); if(!currentUserName) return; } document.getElementById('add-modal').classList.add('modal-visible'); }
         window.closeModal = function() { document.getElementById('add-modal').classList.remove('modal-visible'); }
         window.openAiChat = function() { document.getElementById('ai-modal').classList.add('modal-visible'); }
-        window.closeAiChat = function() { document.getElementById('ai-modal').classList.add('modal-hidden'); }
+        window.closeAiChat = function() { document.getElementById('ai-modal').classList.remove('modal-visible'); }
 
-        // Hàm xử lý và nén ảnh tải lên để tránh vượt quá dung lượng lưu trữ Firestore
+        // Hàm tối ưu nén ảnh trực tiếp qua Canvas để giải quyết triệt để lỗi dung lượng lớn
         window.handleImageUpload = function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -952,7 +952,7 @@
                     ctx.drawImage(img, 0, 0, width, height);
 
                     uploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
-                    document.getElementById('image-preview-container.container') || document.getElementById('image-preview-container').innerHTML = `✅ Đã chọn ảnh thành công (${width}x${height}px)`;
+                    document.getElementById('image-preview-container').innerHTML = `✅ Đã chọn ảnh thành công (${width}x${height}px)`;
                 }
                 img.src = e.target.result;
             }
