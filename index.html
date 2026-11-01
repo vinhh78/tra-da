@@ -41,9 +41,21 @@
         .nav-item {
             transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
             white-space: nowrap;
-            color: #d1d5db; /* Sáng hơn chút để dễ nhìn */
+            color: #fca5a5; /* Đỏ sáng Formula */
             border-radius: 9999px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .nav-item svg {
+            width: 15px;
+            height: 15px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
         .nav-item.active {
             background: rgba(220, 38, 38, 0.35);
@@ -79,33 +91,6 @@
         }
         .led-glow-pill:active { transform: scale(0.95); }
 
-        .led-glow-cyan {
-            border-color: rgba(239, 68, 68, 0.6);
-            box-shadow: 0 0 15px rgba(220, 38, 38, 0.35), inset 0 0 10px rgba(220, 38, 38, 0.15);
-        }
-        .led-glow-cyan:hover {
-            border-color: rgba(239, 68, 68, 1);
-            box-shadow: 0 0 25px rgba(239, 68, 68, 0.7), inset 0 0 15px rgba(239, 68, 68, 0.3);
-        }
-
-        .led-glow-purple {
-            border-color: rgba(248, 113, 113, 0.6);
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.35), inset 0 0 10px rgba(239, 68, 68, 0.15);
-        }
-        .led-glow-purple:hover {
-            border-color: rgba(248, 113, 113, 1);
-            box-shadow: 0 0 25px rgba(239, 68, 68, 0.7), inset 0 0 15px rgba(239, 68, 68, 0.3);
-        }
-
-        .led-glow-emerald {
-            border-color: rgba(220, 38, 38, 0.6);
-            box-shadow: 0 0 15px rgba(220, 38, 38, 0.35), inset 0 0 10px rgba(220, 38, 38, 0.15);
-        }
-        .led-glow-emerald:hover {
-            border-color: rgba(220, 38, 38, 1);
-            box-shadow: 0 0 25px rgba(220, 38, 38, 0.7), inset 0 0 15px rgba(220, 38, 38, 0.3);
-        }
-
         .dark-neon-glow-text {
             color: #1a0505;
             text-shadow: 
@@ -134,7 +119,7 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(239, 68, 68, 0.4); border-radius: 10px; }
         
-        /* Bộ lọc chuyển bản đồ Google Maps sang Dark Mode ánh đỏ Formula sang trọng */
+        /* Bộ lọc bản đồ màu tối đậm chất thể thao tốc độ */
         .custom-dark-map {
             background-color: #070507 !important;
             filter: brightness(0.75) invert(1) contrast(1.3) hue-rotate(180deg) saturate(0.4);
@@ -302,13 +287,13 @@
                 <button onclick="enterApp('screen-map')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-red-400 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/80 shadow-lg">
                     <span class="text-base">🗺️</span> Bản đồ
                 </button>
-                <button onclick="enterApp('screen-category')" class="led-glow-pill led-glow-cyan py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-red-400 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/80 shadow-lg">
+                <button onclick="enterApp('screen-category')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-red-400 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/80 shadow-lg">
                     <span class="text-base">🍵</span> Phân loại
                 </button>
-                <button onclick="filterByCategory('Local Eatery')" class="led-glow-pill led-glow-purple py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-red-400 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/80 shadow-lg">
+                <button onclick="filterByCategory('Local Eatery')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-red-400 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/80 shadow-lg">
                     <span class="text-base">🍲</span> Local Eatery
                 </button>
-                <button onclick="enterApp('screen-highlight')" class="led-glow-pill led-glow-emerald py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-red-400 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/80 shadow-lg">
+                <button onclick="enterApp('screen-highlight')" class="led-glow-pill py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold text-red-400 cursor-pointer flex flex-col items-center justify-center gap-1.5 bg-black/80 shadow-lg">
                     <span class="text-base">🛡️</span> Góp ý
                 </button>
             </div>
@@ -341,7 +326,7 @@
             </div>
 
             <div id="auth-container">
-                <button type="button" onclick="promptLogin()" class="led-glow-pill led-glow-cyan bg-white/10 text-white text-xs px-3 py-1.5 rounded-full font-medium flex items-center gap-1 cursor-pointer relative z-50">
+                <button type="button" onclick="promptLogin()" class="led-glow-pill bg-white/10 text-white text-xs px-3 py-1.5 rounded-full font-medium flex items-center gap-1 cursor-pointer relative z-50">
                     <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg> 
                     <span id="auth-btn-text" class="pointer-events-none">Tên</span>
                 </button>
@@ -461,15 +446,37 @@
         </div>
     </div>
 
+    <!-- Thanh Dock dưới đã được thay thế hoàn toàn bằng SVG Icon màu đỏ ánh kim -->
     <div class="ios-dock-container fixed bottom-0 left-0 right-0 z-[999] px-2 py-2 flex flex-col items-center">
-        <nav id="main-nav" class="ios-pill-slider flex items-center gap-0.5 px-1.5 py-1.5 rounded-full text-[11px] font-medium overflow-x-auto custom-scrollbar max-w-xl w-full justify-around relative">
-            <a href="#" data-target="screen-map" class="nav-item px-2.5 py-2 active text-center flex-none touch-manipulation">🗺 Bản đồ</a>
-            <a href="#" data-target="screen-category" class="nav-item px-2.5 py-2 text-center text-red-300 flex-none touch-manipulation">🍵 Phân loại</a>
-            <a href="#" onclick="filterByCategory('Local Eatery'); return false;" class="nav-item px-2.5 py-2 text-center text-red-300 flex-none touch-manipulation">🍲 Eatery</a>
-            <a href="#" data-target="screen-leaderboard" class="nav-item px-2.5 py-2 text-center text-red-300 flex-none touch-manipulation">🏆 Bảng vàng</a>
-            <a href="#" data-target="screen-highlight" class="nav-item px-2.5 py-2 text-center text-red-300 flex-none touch-manipulation">🛡 Góp ý</a>
-            <a href="#" onclick="openAiChat(); return false;" class="nav-item px-2.5 py-2 text-center text-red-300 flex-none touch-manipulation">✨ AI</a>
-            <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-2.5 py-2 text-center text-red-400 flex-none touch-manipulation">➕ Thêm</a>
+        <nav id="main-nav" class="ios-pill-slider flex items-center gap-1 px-2 py-1.5 rounded-full text-[11px] font-medium overflow-x-auto custom-scrollbar max-w-xl w-full justify-around relative">
+            <a href="#" data-target="screen-map" class="nav-item px-2.5 py-2 active text-center flex-none touch-manipulation">
+                <svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                Bản đồ
+            </a>
+            <a href="#" data-target="screen-category" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Phân loại
+            </a>
+            <a href="#" onclick="filterByCategory('Local Eatery'); return false;" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">
+                <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+                Eatery
+            </a>
+            <a href="#" data-target="screen-leaderboard" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">
+                <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+                Bảng vàng
+            </a>
+            <a href="#" data-target="screen-highlight" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">
+                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                Góp ý
+            </a>
+            <a href="#" onclick="openAiChat(); return false;" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">
+                <svg viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path></svg>
+                AI
+            </a>
+            <a href="#" onclick="openModalQuick(); return false;" class="nav-item px-2.5 py-2 text-center flex-none touch-manipulation">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                Thêm
+            </a>
         </nav>
         <div class="w-28 h-1 bg-red-500/30 rounded-full mt-2 mb-0.5 pointer-events-none"></div>
         <div class="text-[9px] text-gray-400 mt-1 pointer-events-none">Trà Đá Hà Nội • Developed by <b class="text-red-500">dembevinh</b></div>
@@ -782,7 +789,7 @@
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
         const map = L.map('map', { zoomControl: false, fadeAnimation: false, markerZoomAnimation: false }).setView([21.0285, 105.8541], 13);
         
-        /* Sử dụng Google Maps Tiles kết hợp bộ lọc CSS .custom-dark-map để tạo Dark Mode ánh đỏ Formula */
+        /* Bản đồ nền tối đậm chất thể thao tốc độ */
         L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
             maxZoom: 20,
             subdomains: '0123',
