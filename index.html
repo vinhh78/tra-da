@@ -134,9 +134,9 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(250, 204, 21, 0.3); border-radius: 10px; }
         
-        /* Đảm bảo map hiện sáng, rõ nét không bị tối xám */
+        /* Sử dụng bản đồ CartoDB Dark Matter trực quan, không cần bộ lọc CSS phức tạp gây lỗi */
         .custom-dark-map {
-            background-color: #121218 !important;
+            background-color: #0b0b0f !important;
         }
 
         .leaflet-popup-content-wrapper {
@@ -780,7 +780,13 @@
         const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop";
         const map = L.map('map', { zoomControl: false, fadeAnimation: false, markerZoomAnimation: false }).setView([21.0285, 105.8541], 13);
         
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+        /* Cập nhật lớp bản đồ nền tối chuẩn CartoDB Dark Matter (Không bị lỗi tile, load cực nhanh và tương thích hoàn hảo với giao diện) */
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19,
+            subdomains: 'abcd',
+            attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
+        }).addTo(map);
+
         L.control.zoom({ position: 'bottomright' }).addTo(map);
         mapMarkersLayer = L.layerGroup().addTo(map);
 
@@ -888,7 +894,6 @@
         window.deleteShopAnimated = function(id, event, btnElement) {
             event.stopPropagation();
             if(confirm("Bạn có chắc chắn muốn xóa quán này không?")) {
-                btnElement.classList.isDeleting = true;
                 btnElement.classList.add('is-deleting');
                 setTimeout(() => {
                     db.collection("shops").doc(id).delete().then(() => { renderApp(); }).catch((error) => {
@@ -903,11 +908,7 @@
         function switchScreen(targetId) {
             document.querySelectorAll('.screen-view').forEach(s => s.classList.add('hidden'));
             document.getElementById(targetId).classList.remove('hidden');
-            if(targetId === 'screen-map') {
-                setTimeout(() => {
-                    map.invalidateSize();
-                }, 150);
-            }
+            if(targetId === 'screen-map') setTimeout(() => map.invalidateSize(), 100);
             document.querySelectorAll('.nav-item').forEach(n => { n.getAttribute('data-target') === targetId ? n.classList.add('active') : n.classList.remove('active'); });
         }
         document.querySelectorAll('.nav-item').forEach(item => { item.addEventListener('click', function(e) { const t = this.getAttribute('data-target'); if(t) { e.preventDefault(); switchScreen(t); } }); });
